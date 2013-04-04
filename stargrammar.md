@@ -20,7 +20,7 @@ Tokens:
 
     space      :=  blank  |  newline
 
-    special    :=  '"'    |  '#'   |  '_'  |  blank  |  newline
+    special    :=  '"'    |  '#'   |  '_'  |  space
 
     stop       :=  "stop_"
 
