@@ -12,12 +12,12 @@ def parserFactory(Type):
         def __init__(self, parse):
             self.parse = parse
         
-        def fmap(self, f):
+        def fmap(self, g):
             def h(r):
-                return result(f(r['result']), r['rest'], r['state'])
-            def g(xs, s):
+                return result(g(r['result']), r['rest'], r['state'])
+            def f(xs, s):
                 return self.parse(xs, s).fmap(h)
-            return Parser(g)
+            return Parser(f)
         
         @staticmethod
         def pure(x):
@@ -25,12 +25,12 @@ def parserFactory(Type):
                 return good(x, xs, s)
             return Parser(f)
             
-        def bind(self, f):
+        def bind(self, g):
             def f(xs, s):
                 r = self.parse(xs, s)
                 val = r.value
                 if r.status == 'success':
-                    return f(val.result).parse(val.rest, val.state)
+                    return g(val['result']).parse(val['rest'], val['state'])
                 else:
                     return r
             return Parser(f)
@@ -46,10 +46,10 @@ def parserFactory(Type):
                 return Type.error(e)
             return Parser(f)
             
-        def mapError(self, f):
-            def g(xs, s):
-                return self.parse(xs, s).mapError(f)
-            return Parser(g)
+        def mapError(self, g):
+            def f(xs, s):
+                return self.parse(xs, s).mapError(g)
+            return Parser(f)
         
         @staticmethod
         def put(xs):
@@ -64,10 +64,10 @@ def parserFactory(Type):
             return Parser(f)
             
         @staticmethod
-        def updateState(f):
-            def g(xs, s):
-                return good(None, xs, f(s))
-            return Parser(g)
+        def updateState(g):
+            def f(xs, s):
+                return good(None, xs, g(s))
+            return Parser(f)
         
         def check(self, p):
             def f(xs, s):
@@ -97,7 +97,7 @@ def parserFactory(Type):
                     if r.status == 'success':
                         vals.append(r.value['result'])
                         state = r.value['state']
-                        tokens = r.value['tokens']
+                        tokens = r.value['rest']
                     elif r.status == 'failure':
                         return good(vals, tokens, state)
                     else: # must respect errors
