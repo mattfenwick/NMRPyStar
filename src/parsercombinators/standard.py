@@ -1,5 +1,5 @@
-import maybeerror as me
-import parsercombinators as pc
+import parsercombinators.maybeerror as me
+import parsercombinators.combinators as pc
 
 
 # interpreter workaround

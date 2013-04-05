@@ -9,6 +9,12 @@ class MaybeError(object):
             raise ValueError("invalid MaybeError status: %s" % status)
         self.status = status
         self.value = value
+
+    # must have same status and value to be equal
+    def __eq__(self, other):
+        if self.status != other.status:
+            return False
+        return self.value == other.value
     
     def fmap(self, f):
         if self.status == 'success':
@@ -42,6 +48,10 @@ class MaybeError(object):
         if self.status == 'failure':
             return other
         return self
+
+    def __repr__(self):
+        return repr({'type': 'MaybeError', 
+                     'status': self.status, 'value': self.value})
 
 
 MaybeError.zero = MaybeError('failure', None)
