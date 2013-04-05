@@ -1,4 +1,4 @@
-from parsercombinators.maybeerror import MaybeError
+from parse.maybeerror import MaybeError
 import unittest as u
 
 m = MaybeError

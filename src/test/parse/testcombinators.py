@@ -1,5 +1,5 @@
-import parsercombinators.standard as s
-import parsercombinators.maybeerror as me
+import parse.standard as s
+import parse.maybeerror as me
 import unittest as u
 
 
