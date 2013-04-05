@@ -179,9 +179,9 @@ def parserFactory(Type):
     Parser.zero = Parser(lambda xs, s: Type.zero)
         
     def f_item(xs, s):
-        if len(xs) == 0:
+        if xs.isEmpty():
             return Type.zero
-        first, rest = xs[0], xs[1:]
+        first, rest = xs.first(), xs.rest()
         return good(first, rest, s)
 
     Parser.item = Parser(f_item)
