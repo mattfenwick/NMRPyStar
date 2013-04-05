@@ -1,4 +1,4 @@
-from parser import Parser
+from parse.standard import Parser
 from tokens import Token
 
 
@@ -19,7 +19,7 @@ def str(cs):
     return Parser.all(map(lit, cs))
 
 def extract(cs):
-    return [x.char for x in cs]
+    return ''.join([x.char for x in cs])
 
 
 newline = Parser.any(map(lit, '\n\r\f'))
@@ -30,59 +30,83 @@ space = blank.plus(newline)
 
 special = Parser.any(map(lit, '"#_')).plus(space)
 
-stop = str("stop_")
-    .fmap(lambda xs: Token('stop', extract(xs), xs[0].meta))
+stop = str("stop_").fmap(lambda xs: Token('stop', extract(xs), xs[0].meta))
 
-saveclose = str("save_")
-    .fmap(lambda xs: Token('saveclose', extract(xs), xs[0].meta))
+saveclose = str("save_").fmap(lambda xs: Token('saveclose', extract(xs), xs[0].meta))
 
-loop = str("loop_")
-    .fmap(lambda xs: Token('loop', extract(xs), xs[0].meta))
+loop = str("loop_").fmap(lambda xs: Token('loop', extract(xs), xs[0].meta))
 
 
 def commentAction(pd, chars):
     return Token('comment', extract(chars), pd.meta)
     
-comment = P.app(commentAction, lit('#'), newline.not1().many0())
+comment = Parser.app(commentAction, lit('#'), newline.not1().many0())
 
 
 def dataAction(open, name):
     return Token('dataopen', extract(name), open[0].meta)
 
-dataopen = P.app(dataAction, str("data_"), space.not1().many1())
+dataopen = Parser.app(dataAction, str("data_"), space.not1().many1())
     
     
 def saveAction(open, name):
-    return Token('saveopen', [x.char for x in name], open[0].meta)
+    return Token('saveopen', extract(name), open[0].meta)
 
-saveopen = P.app(saveAction, str("save_"), space.not1().many1())
+saveopen = Parser.app(saveAction, str("save_"), space.not1().many1())
 
 
 def idAction(und, name):
-    return Token('identifier', [x.char for x in name], und.meta)
+    return Token('identifier', extract(name), und.meta)
 
-identifier = P.app(idAction, lit('_'), space.not1().many1())
+identifier = Parser.app(idAction, lit('_'), space.not1().many1())
 
-# stopped here
-# the function is just cons
-unquoted = Parser.app(lambda c, cs: [c] + cs, special.not1(), space.not1().many0())
+
+def uqAction(c, cs):
+    return Token('value', extract([c] + cs), c.meta)
+    
+unquoted = Parser.app(uqAction, special.not1(), space.not1().many0())
 
 sc, sq, dq = map(lit, ';\'"')
 
 endsc = newline.seq2R(sc)
 
-scstring = sc.seq2R(sc.not1().many0()).seq2L(sc)
+def scAction(open, body, close):
+    return Token('value', extract(body), open.meta)
+    
+scstring = Parser.app(scAction, sc, endsc.not1().many0(), endsc)
 
-sqstring = sq.seq2R(sq.not1().many1()).seq2L(sq)
+def sqRest(open):
+    def action(cs):
+        return Token('value', extract(cs), open.meta)
+    return sq.not1().many1().fmap(action).seq2L(sq)
 
-dqstring = dq.seq2R(dq.not1().many1()).seq2L(dq)
+sqstring = sq.bind(sqRest)
+
+def dqRest(open):
+    def action(cs):
+        return Token('value', extract(cs), open.meta)
+    return dq.not1().many1().fmap(action).seq2L(dq)
+
+dqstring = dq.bind(dqRest)
 
 value = Parser.any([sqstring, dqstring, scstring, unquoted])
 
-whitespace = blank.many1()
 
-newlines = newline.many1()
+whitespace = blank.many1().fmap(lambda xs: Token('whitespace', extract(xs), xs[0].meta))
+
+newlines = newline.many1().fmap(lambda xs: Token('newlines', extract(xs), xs[0].meta))
 
 token = Parser.any([dataopen, saveopen, saveclose,
                     loop, stop, value, whitespace,
                     newlines, comment, identifier])
+                    
+def noParse(ts):
+    if len(ts) == 0:
+        return Parser.zero
+    else:
+        return token.commit({'message': 'unable to parse token', 'position': ts[0].meta})
+        
+scanner = Parser.get.bind(noParse).many0()
+
+# scanner = token.many0().seq2L(Parser.get(lambda xs: if len(xs) == 0 then Parser.pure(None) else 
+
