@@ -1,0 +1,1216 @@
+data_17661
+
+#######################
+#  Entry information  #
+#######################
+
+save_entry_information
+   _Entry.Sf_category                    entry_information
+   _Entry.Sf_framecode                   entry_information
+   _Entry.ID                             17661
+   _Entry.Title                         
+;
+Solution structure of the long sarafotoxin srtx-i3
+;
+   _Entry.Version_type                   original
+   _Entry.Submission_date                2011-05-24
+   _Entry.Accession_date                 2011-05-24
+   _Entry.Last_release_date              .
+   _Entry.Original_release_date          .
+   _Entry.Origination                    author
+   _Entry.NMR_STAR_version               3.1.1.24
+   _Entry.Original_NMR_STAR_version      3.1
+   _Entry.Experimental_method            NMR
+   _Entry.Experimental_method_subtype    SOLUTION
+   _Entry.Details                        .
+   _Entry.BMRB_internal_directory_name   .
+
+   loop_
+      _Entry_author.Ordinal
+      _Entry_author.Given_name
+      _Entry_author.Family_name
+      _Entry_author.First_initial
+      _Entry_author.Middle_initials
+      _Entry_author.Family_title
+      _Entry_author.Entry_ID
+
+      1 Florence Cordier    . . . 17661 
+      2 Adelajda Zorba      . . . 17661 
+      3 Marianna Hajj       . . . 17661 
+      4 Frederic Ducancel   . . . 17661 
+      5 Denis    Servent    . . . 17661 
+      6 Muriel   Delepierre . . . 17661 
+
+   stop_
+
+   loop_
+      _SG_project.SG_project_ID
+      _SG_project.Project_name
+      _SG_project.Full_name_of_center
+      _SG_project.Initial_of_center
+      _SG_project.Entry_ID
+
+      1 'not applicable' 'not applicable' . 17661 
+
+   stop_
+
+   loop_
+      _Struct_keywords.Keywords
+      _Struct_keywords.Text
+      _Struct_keywords.Entry_ID
+
+      'long sarafotoxin'        . 17661 
+      'endothelin-like peptide' . 17661 
+
+   stop_
+
+   loop_
+      _Data_set.Type
+      _Data_set.Count
+      _Data_set.Entry_ID
+
+      assigned_chemical_shifts 1 17661 
+
+   stop_
+
+   loop_
+      _Datum.Type
+      _Datum.Count
+      _Datum.Entry_ID
+
+      '1H chemical shifts' 170 17661 
+
+   stop_
+
+   loop_
+      _Release.Release_number
+      _Release.Format_type
+      _Release.Format_version
+      _Release.Date
+      _Release.Submission_date
+      _Release.Type
+      _Release.Author
+      _Release.Detail
+      _Release.Entry_ID
+
+      1 . . 2012-05-09 2011-05-24 original author . 17661 
+
+   stop_
+
+   loop_
+      _Related_entries.Database_name
+      _Related_entries.Database_accession_code
+      _Related_entries.Relationship
+      _Related_entries.Entry_ID
+
+      BMRB 17662 'sarafotoxin srtx-m' 17661 
+
+   stop_
+
+save_
+
+
+###############
+#  Citations  #
+###############
+
+save_entry_citation
+   _Citation.Sf_category                  citations
+   _Citation.Sf_framecode                 entry_citation
+   _Citation.Entry_ID                     17661
+   _Citation.ID                           1
+   _Citation.Class                       'entry citation'
+   _Citation.CAS_abstract_code            .
+   _Citation.MEDLINE_UI_code              .
+   _Citation.DOI                          .
+   _Citation.PubMed_ID                    21889567
+   _Citation.Full_citation                .
+   _Citation.Title                       'Pharmacological and structural characterization of long-sarafotoxins, a new family of endothelin-like peptides: Role of the C-terminus extension.'
+   _Citation.Status                       published
+   _Citation.Type                         journal
+   _Citation.Journal_abbrev               Biochimie
+   _Citation.Journal_name_full            Biochimie
+   _Citation.Journal_volume               94
+   _Citation.Journal_issue                2
+   _Citation.Journal_ASTM                 .
+   _Citation.Journal_ISSN                 .
+   _Citation.Journal_CSD                  .
+   _Citation.Book_title                   .
+   _Citation.Book_chapter_title           .
+   _Citation.Book_volume                  .
+   _Citation.Book_series                  .
+   _Citation.Book_publisher               .
+   _Citation.Book_publisher_city          .
+   _Citation.Book_ISBN                    .
+   _Citation.Conference_title             .
+   _Citation.Conference_site              .
+   _Citation.Conference_state_province    .
+   _Citation.Conference_country           .
+   _Citation.Conference_start_date        .
+   _Citation.Conference_end_date          .
+   _Citation.Conference_abstract_number   .
+   _Citation.Thesis_institution           .
+   _Citation.Thesis_institution_city      .
+   _Citation.Thesis_institution_country   .
+   _Citation.WWW_URL                      .
+   _Citation.Page_first                   461
+   _Citation.Page_last                    470
+   _Citation.Year                         2012
+   _Citation.Details                      .
+
+   loop_
+      _Citation_author.Ordinal
+      _Citation_author.Given_name
+      _Citation_author.Family_name
+      _Citation_author.First_initial
+      _Citation_author.Middle_initials
+      _Citation_author.Family_title
+      _Citation_author.Entry_ID
+      _Citation_author.Citation_ID
+
+       1 Gilles    Mourier    . . . 17661 1 
+       2 Mariana   Hajj       . . . 17661 1 
+       3 Florence  Cordier    . . . 17661 1 
+       4 Adelajda  Zorba      . . . 17661 1 
+       5 XingHuang Gao        . . . 17661 1 
+       6 Tolga     Coskun     . . . 17661 1 
+       7 Amaury    Herbet     . . . 17661 1 
+       8 Elodie    Marcon     . . . 17661 1 
+       9 Fabrice   Beau       . . . 17661 1 
+      10 Muriel    Delepierre . . . 17661 1 
+      11 Frederic  Ducancel   . . . 17661 1 
+      12 Denis     Servent    . . . 17661 1 
+
+   stop_
+
+save_
+
+
+#############################################
+#  Molecular system (assembly) description  #
+#############################################
+
+save_assembly
+   _Assembly.Sf_category                       assembly
+   _Assembly.Sf_framecode                      assembly
+   _Assembly.Entry_ID                          17661
+   _Assembly.ID                                1
+   _Assembly.Name                              srtx-i3
+   _Assembly.BMRB_code                         .
+   _Assembly.Number_of_components              1
+   _Assembly.Organic_ligands                   .
+   _Assembly.Metal_ions                        .
+   _Assembly.Non_standard_bonds                .
+   _Assembly.Ambiguous_conformational_states   .
+   _Assembly.Ambiguous_chem_comp_sites         .
+   _Assembly.Molecules_in_chemical_exchange    .
+   _Assembly.Paramagnetic                      no
+   _Assembly.Thiol_state                       .
+   _Assembly.Molecular_mass                    .
+   _Assembly.Enzyme_commission_number          .
+   _Assembly.Details                           .
+   _Assembly.DB_query_date                     .
+   _Assembly.DB_query_revised_last_date        .
+
+   loop_
+      _Entity_assembly.ID
+      _Entity_assembly.Entity_assembly_name
+      _Entity_assembly.Entity_ID
+      _Entity_assembly.Entity_label
+      _Entity_assembly.Asym_ID
+      _Entity_assembly.PDB_chain_ID
+      _Entity_assembly.Experimental_data_reported
+      _Entity_assembly.Physical_state
+      _Entity_assembly.Conformational_isomer
+      _Entity_assembly.Chemical_exchange_state
+      _Entity_assembly.Magnetic_equivalence_group_code
+      _Entity_assembly.Role
+      _Entity_assembly.Details
+      _Entity_assembly.Entry_ID
+      _Entity_assembly.Assembly_ID
+
+      1 srtx-i3 1 $srtx-i3 A . yes native no no . . . 17661 1 
+
+   stop_
+
+save_
+
+
+    ####################################
+    #  Biological polymers and ligands #
+    ####################################
+
+save_srtx-i3
+   _Entity.Sf_category                       entity
+   _Entity.Sf_framecode                      srtx-i3
+   _Entity.Entry_ID                          17661
+   _Entity.ID                                1
+   _Entity.BMRB_code                         .
+   _Entity.Name                              srtx-i3
+   _Entity.Type                              polymer
+   _Entity.Polymer_common_type               .
+   _Entity.Polymer_type                      polypeptide(L)
+   _Entity.Polymer_type_details              .
+   _Entity.Polymer_strand_ID                 A
+   _Entity.Polymer_seq_one_letter_code_can   .
+   _Entity.Polymer_seq_one_letter_code      
+;
+CSCTDMSDLECMNFCHKDVI
+WVNRN
+;
+   _Entity.Target_identifier                 .
+   _Entity.Polymer_author_defined_seq        .
+   _Entity.Polymer_author_seq_details        .
+   _Entity.Ambiguous_conformational_states   no
+   _Entity.Ambiguous_chem_comp_sites         no
+   _Entity.Nstd_monomer                      no
+   _Entity.Nstd_chirality                    no
+   _Entity.Nstd_linkage                      no
+   _Entity.Nonpolymer_comp_ID                .
+   _Entity.Nonpolymer_comp_label             .
+   _Entity.Number_of_monomers                25
+   _Entity.Number_of_nonpolymer_components   .
+   _Entity.Paramagnetic                      no
+   _Entity.Thiol_state                      'all disulfide bound'
+   _Entity.Src_method                        man
+   _Entity.Parent_entity_ID                  .
+   _Entity.Fragment                          .
+   _Entity.Mutation                          .
+   _Entity.EC_number                         .
+   _Entity.Calc_isoelectric_point            .
+   _Entity.Formula_weight                    2967.403
+   _Entity.Formula_weight_exptl              .
+   _Entity.Formula_weight_exptl_meth         .
+   _Entity.Details                           .
+   _Entity.DB_query_date                     .
+   _Entity.DB_query_revised_last_date        2012-05-20
+
+   loop_
+      _Entity_db_link.Author_supplied
+      _Entity_db_link.Database_code
+      _Entity_db_link.Accession_code
+      _Entity_db_link.Entry_mol_code
+      _Entity_db_link.Entry_mol_name
+      _Entity_db_link.Entry_experimental_method
+      _Entity_db_link.Entry_structure_resolution
+      _Entity_db_link.Entry_relation_type
+      _Entity_db_link.Entry_details
+      _Entity_db_link.Chimera_segment_ID
+      _Entity_db_link.Seq_query_to_submitted_percent
+      _Entity_db_link.Seq_subject_length
+      _Entity_db_link.Seq_identity
+      _Entity_db_link.Seq_positive
+      _Entity_db_link.Seq_homology_expectation_val
+      _Entity_db_link.Seq_align_begin
+      _Entity_db_link.Seq_align_end
+      _Entity_db_link.Seq_difference_details
+      _Entity_db_link.Seq_alignment_details
+      _Entity_db_link.Entry_ID
+      _Entity_db_link.Entity_ID
+
+      no PDB 2LDE . "Solution Structure Of The Long Sarafotoxin Srtx-I3" . . . . . 100.00 25 100.00 100.00 3.90e-09 . . . . 17661 1 
+
+   stop_
+
+   loop_
+      _Entity_comp_index.ID
+      _Entity_comp_index.Auth_seq_ID
+      _Entity_comp_index.Comp_ID
+      _Entity_comp_index.Comp_label
+      _Entity_comp_index.Entry_ID
+      _Entity_comp_index.Entity_ID
+
+       1 . CYS . 17661 1 
+       2 . SER . 17661 1 
+       3 . CYS . 17661 1 
+       4 . THR . 17661 1 
+       5 . ASP . 17661 1 
+       6 . MET . 17661 1 
+       7 . SER . 17661 1 
+       8 . ASP . 17661 1 
+       9 . LEU . 17661 1 
+      10 . GLU . 17661 1 
+      11 . CYS . 17661 1 
+      12 . MET . 17661 1 
+      13 . ASN . 17661 1 
+      14 . PHE . 17661 1 
+      15 . CYS . 17661 1 
+      16 . HIS . 17661 1 
+      17 . LYS . 17661 1 
+      18 . ASP . 17661 1 
+      19 . VAL . 17661 1 
+      20 . ILE . 17661 1 
+      21 . TRP . 17661 1 
+      22 . VAL . 17661 1 
+      23 . ASN . 17661 1 
+      24 . ARG . 17661 1 
+      25 . ASN . 17661 1 
+
+   stop_
+
+   loop_
+      _Entity_poly_seq.Hetero
+      _Entity_poly_seq.Mon_ID
+      _Entity_poly_seq.Num
+      _Entity_poly_seq.Comp_index_ID
+      _Entity_poly_seq.Entry_ID
+      _Entity_poly_seq.Entity_ID
+
+      . CYS  1  1 17661 1 
+      . SER  2  2 17661 1 
+      . CYS  3  3 17661 1 
+      . THR  4  4 17661 1 
+      . ASP  5  5 17661 1 
+      . MET  6  6 17661 1 
+      . SER  7  7 17661 1 
+      . ASP  8  8 17661 1 
+      . LEU  9  9 17661 1 
+      . GLU 10 10 17661 1 
+      . CYS 11 11 17661 1 
+      . MET 12 12 17661 1 
+      . ASN 13 13 17661 1 
+      . PHE 14 14 17661 1 
+      . CYS 15 15 17661 1 
+      . HIS 16 16 17661 1 
+      . LYS 17 17 17661 1 
+      . ASP 18 18 17661 1 
+      . VAL 19 19 17661 1 
+      . ILE 20 20 17661 1 
+      . TRP 21 21 17661 1 
+      . VAL 22 22 17661 1 
+      . ASN 23 23 17661 1 
+      . ARG 24 24 17661 1 
+      . ASN 25 25 17661 1 
+
+   stop_
+
+save_
+
+
+    ####################
+    #  Natural source  #
+    ####################
+
+save_natural_source
+   _Entity_natural_src_list.Sf_category    natural_source
+   _Entity_natural_src_list.Sf_framecode   natural_source
+   _Entity_natural_src_list.Entry_ID       17661
+   _Entity_natural_src_list.ID             1
+
+   loop_
+      _Entity_natural_src.ID
+      _Entity_natural_src.Entity_ID
+      _Entity_natural_src.Entity_label
+      _Entity_natural_src.Entity_chimera_segment_ID
+      _Entity_natural_src.NCBI_taxonomy_ID
+      _Entity_natural_src.Type
+      _Entity_natural_src.Common
+      _Entity_natural_src.Organism_name_scientific
+      _Entity_natural_src.Organism_name_common
+      _Entity_natural_src.Organism_acronym
+      _Entity_natural_src.ICTVdb_decimal_code
+      _Entity_natural_src.Superkingdom
+      _Entity_natural_src.Kingdom
+      _Entity_natural_src.Genus
+      _Entity_natural_src.Species
+      _Entity_natural_src.Strain
+      _Entity_natural_src.Variant
+      _Entity_natural_src.Subvariant
+      _Entity_natural_src.Organ
+      _Entity_natural_src.Tissue
+      _Entity_natural_src.Tissue_fraction
+      _Entity_natural_src.Cell_line
+      _Entity_natural_src.Cell_type
+      _Entity_natural_src.ATCC_number
+      _Entity_natural_src.Organelle
+      _Entity_natural_src.Cellular_location
+      _Entity_natural_src.Fragment
+      _Entity_natural_src.Fraction
+      _Entity_natural_src.Secretion
+      _Entity_natural_src.Plasmid
+      _Entity_natural_src.Plasmid_details
+      _Entity_natural_src.Gene_mnemonic
+      _Entity_natural_src.Dev_stage
+      _Entity_natural_src.Details
+      _Entity_natural_src.Citation_ID
+      _Entity_natural_src.Citation_label
+      _Entity_natural_src.Entry_ID
+      _Entity_natural_src.Entity_natural_src_list_ID
+
+      1 1 $srtx-i3 . 512568 organism . 'Atractaspis irregularis' snake . . Eukaryota Metazoa Atractaspis irregularis . . . . . . . . . . . . . . . . . . . . . 17661 1 
+
+   stop_
+
+save_
+
+
+    #########################
+    #  Experimental source  #
+    #########################
+
+save_experimental_source
+   _Entity_experimental_src_list.Sf_category    experimental_source
+   _Entity_experimental_src_list.Sf_framecode   experimental_source
+   _Entity_experimental_src_list.Entry_ID       17661
+   _Entity_experimental_src_list.ID             1
+
+   loop_
+      _Entity_experimental_src.ID
+      _Entity_experimental_src.Entity_ID
+      _Entity_experimental_src.Entity_label
+      _Entity_experimental_src.Entity_chimera_segment_ID
+      _Entity_experimental_src.Production_method
+      _Entity_experimental_src.Host_org_scientific_name
+      _Entity_experimental_src.Host_org_name_common
+      _Entity_experimental_src.Host_org_details
+      _Entity_experimental_src.Host_org_NCBI_taxonomy_ID
+      _Entity_experimental_src.Host_org_genus
+      _Entity_experimental_src.Host_org_species
+      _Entity_experimental_src.Host_org_strain
+      _Entity_experimental_src.Host_org_variant
+      _Entity_experimental_src.Host_org_subvariant
+      _Entity_experimental_src.Host_org_organ
+      _Entity_experimental_src.Host_org_tissue
+      _Entity_experimental_src.Host_org_tissue_fraction
+      _Entity_experimental_src.Host_org_cell_line
+      _Entity_experimental_src.Host_org_cell_type
+      _Entity_experimental_src.Host_org_cellular_location
+      _Entity_experimental_src.Host_org_organelle
+      _Entity_experimental_src.Host_org_gene
+      _Entity_experimental_src.Host_org_culture_collection
+      _Entity_experimental_src.Host_org_ATCC_number
+      _Entity_experimental_src.Vector_type
+      _Entity_experimental_src.PDBview_host_org_vector_name
+      _Entity_experimental_src.PDBview_plasmid_name
+      _Entity_experimental_src.Vector_name
+      _Entity_experimental_src.Vector_details
+      _Entity_experimental_src.Vendor_name
+      _Entity_experimental_src.Host_org_dev_stage
+      _Entity_experimental_src.Details
+      _Entity_experimental_src.Citation_ID
+      _Entity_experimental_src.Citation_label
+      _Entity_experimental_src.Entry_ID
+      _Entity_experimental_src.Entity_experimental_src_list_ID
+
+      1 1 $srtx-i3 . 'chemical synthesis' . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17661 1 
+
+   stop_
+
+save_
+
+
+#####################################
+#  Sample contents and methodology  #
+#####################################
+	 
+    ########################
+    #  Sample description  #
+    ########################
+
+save_sample_1
+   _Sample.Sf_category                      sample
+   _Sample.Sf_framecode                     sample_1
+   _Sample.Entry_ID                         17661
+   _Sample.ID                               1
+   _Sample.Type                             solution
+   _Sample.Sub_type                         .
+   _Sample.Details                          .
+   _Sample.Aggregate_sample_number          .
+   _Sample.Solvent_system                  '90% H2O/10% D2O'
+   _Sample.Preparation_date                 .
+   _Sample.Preparation_expiration_date      .
+   _Sample.Polycrystallization_protocol     .
+   _Sample.Single_crystal_protocol          .
+   _Sample.Crystal_grow_apparatus           .
+   _Sample.Crystal_grow_atmosphere          .
+   _Sample.Crystal_grow_details             .
+   _Sample.Crystal_grow_method              .
+   _Sample.Crystal_grow_method_cit_ID       .
+   _Sample.Crystal_grow_pH                  .
+   _Sample.Crystal_grow_pH_range            .
+   _Sample.Crystal_grow_pressure            .
+   _Sample.Crystal_grow_pressure_esd        .
+   _Sample.Crystal_grow_seeding             .
+   _Sample.Crystal_grow_seeding_cit_ID      .
+   _Sample.Crystal_grow_temp                .
+   _Sample.Crystal_grow_temp_details        .
+   _Sample.Crystal_grow_temp_esd            .
+   _Sample.Crystal_grow_time                .
+   _Sample.Oriented_sample_prep_protocol    .
+   _Sample.Lyophilization_cryo_protectant   .
+   _Sample.Storage_protocol                 .
+
+   loop_
+      _Sample_component.ID
+      _Sample_component.Mol_common_name
+      _Sample_component.Isotopic_labeling
+      _Sample_component.Assembly_ID
+      _Sample_component.Assembly_label
+      _Sample_component.Entity_ID
+      _Sample_component.Entity_label
+      _Sample_component.Product_ID
+      _Sample_component.Type
+      _Sample_component.Concentration_val
+      _Sample_component.Concentration_val_min
+      _Sample_component.Concentration_val_max
+      _Sample_component.Concentration_val_units
+      _Sample_component.Concentration_val_err
+      _Sample_component.Vendor
+      _Sample_component.Vendor_product_name
+      _Sample_component.Vendor_product_code
+      _Sample_component.Entry_ID
+      _Sample_component.Sample_ID
+
+      1 srtx-i3 'natural abundance' . . 1 $srtx-i3 . .  3 . . mM . . . . 17661 1 
+      2 H2O     'natural abundance' . .  .  .       . . 90 . . %  . . . . 17661 1 
+      3 D2O     'natural abundance' . .  .  .       . . 10 . . %  . . . . 17661 1 
+
+   stop_
+
+save_
+
+
+#######################
+#  Sample conditions  #
+#######################
+
+save_sample_25C
+   _Sample_condition_list.Sf_category    sample_conditions
+   _Sample_condition_list.Sf_framecode   sample_25C
+   _Sample_condition_list.Entry_ID       17661
+   _Sample_condition_list.ID             1
+   _Sample_condition_list.Details        .
+
+   loop_
+      _Sample_condition_variable.Type
+      _Sample_condition_variable.Val
+      _Sample_condition_variable.Val_err
+      _Sample_condition_variable.Val_units
+      _Sample_condition_variable.Entry_ID
+      _Sample_condition_variable.Sample_condition_list_ID
+
+       temperature     298   . K   17661 1 
+       pH                4.5 . pH  17661 1 
+       pressure          1   . atm 17661 1 
+      'ionic strength'   0   . M   17661 1 
+
+   stop_
+
+save_
+
+
+save_sample_35C
+   _Sample_condition_list.Sf_category    sample_conditions
+   _Sample_condition_list.Sf_framecode   sample_35C
+   _Sample_condition_list.Entry_ID       17661
+   _Sample_condition_list.ID             2
+   _Sample_condition_list.Details        .
+
+   loop_
+      _Sample_condition_variable.Type
+      _Sample_condition_variable.Val
+      _Sample_condition_variable.Val_err
+      _Sample_condition_variable.Val_units
+      _Sample_condition_variable.Entry_ID
+      _Sample_condition_variable.Sample_condition_list_ID
+
+       temperature     308   . K   17661 2 
+       pH                4.5 . pH  17661 2 
+       pressure          1   . atm 17661 2 
+      'ionic strength'   0   . M   17661 2 
+
+   stop_
+
+save_
+
+
+############################
+#  Computer software used  #
+############################
+
+save_VNMRJ
+   _Software.Sf_category    software
+   _Software.Sf_framecode   VNMRJ
+   _Software.Entry_ID       17661
+   _Software.ID             1
+   _Software.Name           VNMRJ
+   _Software.Version        .
+   _Software.Details        .
+
+   loop_
+      _Vendor.Name
+      _Vendor.Address
+      _Vendor.Electronic_address
+      _Vendor.Entry_ID
+      _Vendor.Software_ID
+
+      Varian . . 17661 1 
+
+   stop_
+
+   loop_
+      _Task.Task
+      _Task.Entry_ID
+      _Task.Software_ID
+
+      collection 17661 1 
+
+   stop_
+
+save_
+
+
+save_NMRPipe
+   _Software.Sf_category    software
+   _Software.Sf_framecode   NMRPipe
+   _Software.Entry_ID       17661
+   _Software.ID             2
+   _Software.Name           NMRPipe
+   _Software.Version        .
+   _Software.Details        .
+
+   loop_
+      _Vendor.Name
+      _Vendor.Address
+      _Vendor.Electronic_address
+      _Vendor.Entry_ID
+      _Vendor.Software_ID
+
+      'Delaglio, Grzesiek, Vuister, Zhu, Pfeifer and Bax' . . 17661 2 
+
+   stop_
+
+   loop_
+      _Task.Task
+      _Task.Entry_ID
+      _Task.Software_ID
+
+      processing 17661 2 
+
+   stop_
+
+save_
+
+
+save_NMRView
+   _Software.Sf_category    software
+   _Software.Sf_framecode   NMRView
+   _Software.Entry_ID       17661
+   _Software.ID             3
+   _Software.Name           NMRView
+   _Software.Version        .
+   _Software.Details        .
+
+   loop_
+      _Vendor.Name
+      _Vendor.Address
+      _Vendor.Electronic_address
+      _Vendor.Entry_ID
+      _Vendor.Software_ID
+
+      'Johnson, One Moon Scientific' . . 17661 3 
+
+   stop_
+
+   loop_
+      _Task.Task
+      _Task.Entry_ID
+      _Task.Software_ID
+
+      'data analysis'             17661 3 
+      'peak picking'              17661 3 
+      'chemical shift assignment' 17661 3 
+
+   stop_
+
+save_
+
+
+save_ARIA
+   _Software.Sf_category    software
+   _Software.Sf_framecode   ARIA
+   _Software.Entry_ID       17661
+   _Software.ID             4
+   _Software.Name           ARIA
+   _Software.Version        .
+   _Software.Details        .
+
+   loop_
+      _Vendor.Name
+      _Vendor.Address
+      _Vendor.Electronic_address
+      _Vendor.Entry_ID
+      _Vendor.Software_ID
+
+      'Linge, O'Donoghue and Nilges' . . 17661 4 
+
+   stop_
+
+   loop_
+      _Task.Task
+      _Task.Entry_ID
+      _Task.Software_ID
+
+      'structure solution' 17661 4 
+       refinement          17661 4 
+
+   stop_
+
+save_
+
+
+#########################
+#  Experimental detail  #
+#########################
+
+    ##################################
+    #  NMR Spectrometer definitions  #
+    ##################################
+
+save_spectrometer_1
+   _NMR_spectrometer.Sf_category      NMR_spectrometer
+   _NMR_spectrometer.Sf_framecode     spectrometer_1
+   _NMR_spectrometer.Entry_ID         17661
+   _NMR_spectrometer.ID               1
+   _NMR_spectrometer.Details         'Spectrometer equipped with a cryoprobe'
+   _NMR_spectrometer.Manufacturer     Varian
+   _NMR_spectrometer.Model            INOVA
+   _NMR_spectrometer.Serial_number    .
+   _NMR_spectrometer.Field_strength   600
+
+save_
+
+
+save_spectrometer_2
+   _NMR_spectrometer.Sf_category      NMR_spectrometer
+   _NMR_spectrometer.Sf_framecode     spectrometer_2
+   _NMR_spectrometer.Entry_ID         17661
+   _NMR_spectrometer.ID               2
+   _NMR_spectrometer.Details          .
+   _NMR_spectrometer.Manufacturer     Varian
+   _NMR_spectrometer.Model            INOVA
+   _NMR_spectrometer.Serial_number    .
+   _NMR_spectrometer.Field_strength   500
+
+save_
+
+
+save_NMR_spectrometer_list
+   _NMR_spectrometer_list.Sf_category    NMR_spectrometer_list
+   _NMR_spectrometer_list.Sf_framecode   NMR_spectrometer_list
+   _NMR_spectrometer_list.Entry_ID       17661
+   _NMR_spectrometer_list.ID             1
+
+   loop_
+      _NMR_spectrometer_view.ID
+      _NMR_spectrometer_view.Name
+      _NMR_spectrometer_view.Manufacturer
+      _NMR_spectrometer_view.Model
+      _NMR_spectrometer_view.Serial_number
+      _NMR_spectrometer_view.Field_strength
+      _NMR_spectrometer_view.Details
+      _NMR_spectrometer_view.Citation_ID
+      _NMR_spectrometer_view.Citation_label
+      _NMR_spectrometer_view.Entry_ID
+      _NMR_spectrometer_view.NMR_spectrometer_list_ID
+
+      1 spectrometer_1 Varian INOVA . 600 'Spectrometer equipped with a cryoprobe' . . 17661 1 
+      2 spectrometer_2 Varian INOVA . 500  .                                       . . 17661 1 
+
+   stop_
+
+save_
+
+
+    #############################
+    #  NMR applied experiments  #
+    #############################
+
+save_experiment_list
+   _Experiment_list.Sf_category    experiment_list
+   _Experiment_list.Sf_framecode   experiment_list
+   _Experiment_list.Entry_ID       17661
+   _Experiment_list.ID             1
+   _Experiment_list.Details        .
+
+   loop_
+      _Experiment.ID
+      _Experiment.Name
+      _Experiment.Raw_data_flag
+      _Experiment.NMR_spec_expt_ID
+      _Experiment.NMR_spec_expt_label
+      _Experiment.MS_expt_ID
+      _Experiment.MS_expt_label
+      _Experiment.SAXS_expt_ID
+      _Experiment.SAXS_expt_label
+      _Experiment.FRET_expt_ID
+      _Experiment.FRET_expt_label
+      _Experiment.EMR_expt_ID
+      _Experiment.EMR_expt_label
+      _Experiment.Sample_ID
+      _Experiment.Sample_label
+      _Experiment.Sample_state
+      _Experiment.Sample_volume
+      _Experiment.Sample_volume_units
+      _Experiment.Sample_condition_list_ID
+      _Experiment.Sample_condition_list_label
+      _Experiment.Sample_spinning_rate
+      _Experiment.Sample_angle
+      _Experiment.NMR_tube_type
+      _Experiment.NMR_spectrometer_ID
+      _Experiment.NMR_spectrometer_label
+      _Experiment.NMR_spectrometer_probe_ID
+      _Experiment.NMR_spectrometer_probe_label
+      _Experiment.NMR_spectral_processing_ID
+      _Experiment.NMR_spectral_processing_label
+      _Experiment.Mass_spectrometer_ID
+      _Experiment.Mass_spectrometer_label
+      _Experiment.X_ray_instrument_ID
+      _Experiment.X_ray_instrument_label
+      _Experiment.Fluorescence_instrument_ID
+      _Experiment.Fluorescence_instrument_label
+      _Experiment.EMR_instrument_ID
+      _Experiment.EMR_instrument_label
+      _Experiment.Chromatographic_system_ID
+      _Experiment.Chromatographic_system_label
+      _Experiment.Chromatographic_column_ID
+      _Experiment.Chromatographic_column_label
+      _Experiment.Entry_ID
+      _Experiment.Experiment_list_ID
+
+      1 '2D 1H-1H COSY'  no . . . . . . . . . . 1 $sample_1 isotropic . . 1 $sample_25C . . . 1 $spectrometer_1 . . . . . . . . . . . . . . . . 17661 1 
+      2 '2D 1H-1H TOCSY' no . . . . . . . . . . 1 $sample_1 isotropic . . 1 $sample_25C . . . 1 $spectrometer_1 . . . . . . . . . . . . . . . . 17661 1 
+      3 '2D 1H-1H NOESY' no . . . . . . . . . . 1 $sample_1 isotropic . . 1 $sample_25C . . . 1 $spectrometer_1 . . . . . . . . . . . . . . . . 17661 1 
+      4 '2D 1H-1H TOCSY' no . . . . . . . . . . 1 $sample_1 isotropic . . 2 $sample_35C . . . 1 $spectrometer_1 . . . . . . . . . . . . . . . . 17661 1 
+      5 '2D 1H-1H NOESY' no . . . . . . . . . . 1 $sample_1 isotropic . . 2 $sample_35C . . . 1 $spectrometer_1 . . . . . . . . . . . . . . . . 17661 1 
+
+   stop_
+
+save_
+
+
+####################
+#  NMR parameters  #
+####################
+
+    ##############################
+    #  Assigned chemical shifts  #
+    ##############################
+
+	################################
+	#  Chemical shift referencing  #
+	################################
+
+save_chemical_shift_reference_1
+   _Chem_shift_reference.Sf_category    chem_shift_reference
+   _Chem_shift_reference.Sf_framecode   chemical_shift_reference_1
+   _Chem_shift_reference.Entry_ID       17661
+   _Chem_shift_reference.ID             1
+   _Chem_shift_reference.Details        .
+
+   loop_
+      _Chem_shift_ref.Atom_type
+      _Chem_shift_ref.Atom_isotope_number
+      _Chem_shift_ref.Mol_common_name
+      _Chem_shift_ref.Atom_group
+      _Chem_shift_ref.Concentration_val
+      _Chem_shift_ref.Concentration_units
+      _Chem_shift_ref.Solvent
+      _Chem_shift_ref.Rank
+      _Chem_shift_ref.Chem_shift_units
+      _Chem_shift_ref.Chem_shift_val
+      _Chem_shift_ref.Ref_method
+      _Chem_shift_ref.Ref_type
+      _Chem_shift_ref.Indirect_shift_ratio
+      _Chem_shift_ref.External_ref_loc
+      _Chem_shift_ref.External_ref_sample_geometry
+      _Chem_shift_ref.External_ref_axis
+      _Chem_shift_ref.Indirect_shift_ratio_cit_ID
+      _Chem_shift_ref.Indirect_shift_ratio_cit_label
+      _Chem_shift_ref.Ref_correction_type
+      _Chem_shift_ref.Correction_val
+      _Chem_shift_ref.Correction_val_cit_ID
+      _Chem_shift_ref.Correction_val_cit_label
+      _Chem_shift_ref.Entry_ID
+      _Chem_shift_ref.Chem_shift_reference_ID
+
+      H 1 DSS 'methyl protons' . . . . ppm 0.00 internal direct 1.000000000 . . . . . . . . . 17661 1 
+
+   stop_
+
+save_
+
+
+     ###################################
+     #  Assigned chemical shift lists  #
+     ###################################
+
+###################################################################
+#       Chemical Shift Ambiguity Index Value Definitions          #
+#                                                                 #
+# The values other than 1 are used for those atoms with different #
+# chemical shifts that cannot be assigned to stereospecific atoms #
+# or to specific residues or chains.                              #
+#                                                                 #
+#   Index Value            Definition                             #
+#                                                                 #
+#      1             Unique (including isolated methyl protons,   #
+#                         geminal atoms, and geminal methyl       #
+#                         groups with identical chemical shifts)  #
+#                         (e.g. ILE HD11, HD12, HD13 protons)     #
+#      2             Ambiguity of geminal atoms or geminal methyl #
+#                         proton groups (e.g. ASP HB2 and HB3     #
+#                         protons, LEU CD1 and CD2 carbons, or    #
+#                         LEU HD11, HD12, HD13 and HD21, HD22,    #
+#                         HD23 methyl protons)                    #
+#      3             Aromatic atoms on opposite sides of          #
+#                         symmetrical rings (e.g. TYR HE1 and HE2 #
+#                         protons)                                #
+#      4             Intraresidue ambiguities (e.g. LYS HG and    #
+#                         HD protons or TRP HZ2 and HZ3 protons)  #
+#      5             Interresidue ambiguities (LYS 12 vs. LYS 27) #
+#      6             Intermolecular ambiguities (e.g. ASP 31 CA   #
+#                         in monomer 1 and ASP 31 CA in monomer 2 #
+#                         of an asymmetrical homodimer, duplex    #
+#                         DNA assignments, or other assignments   #
+#                         that may apply to atoms in one or more  #
+#                         molecule in the molecular assembly)     #
+#      9             Ambiguous, specific ambiguity not defined    #
+#                                                                 #
+###################################################################
+save_assigned_chem_shift_list_1
+   _Assigned_chem_shift_list.Sf_category                   assigned_chemical_shifts
+   _Assigned_chem_shift_list.Sf_framecode                  assigned_chem_shift_list_1
+   _Assigned_chem_shift_list.Entry_ID                      17661
+   _Assigned_chem_shift_list.ID                            1
+   _Assigned_chem_shift_list.Sample_condition_list_ID      1
+   _Assigned_chem_shift_list.Sample_condition_list_label  $sample_25C
+   _Assigned_chem_shift_list.Chem_shift_reference_ID       1
+   _Assigned_chem_shift_list.Chem_shift_reference_label   $chemical_shift_reference_1
+   _Assigned_chem_shift_list.Chem_shift_1H_err             .
+   _Assigned_chem_shift_list.Chem_shift_13C_err            .
+   _Assigned_chem_shift_list.Chem_shift_15N_err            .
+   _Assigned_chem_shift_list.Chem_shift_31P_err            .
+   _Assigned_chem_shift_list.Chem_shift_2H_err             .
+   _Assigned_chem_shift_list.Chem_shift_19F_err            .
+   _Assigned_chem_shift_list.Error_derivation_method       .
+   _Assigned_chem_shift_list.Details                       .
+   _Assigned_chem_shift_list.Text_data_format              .
+   _Assigned_chem_shift_list.Text_data                     .
+
+   loop_
+      _Chem_shift_experiment.Experiment_ID
+      _Chem_shift_experiment.Experiment_name
+      _Chem_shift_experiment.Sample_ID
+      _Chem_shift_experiment.Sample_label
+      _Chem_shift_experiment.Sample_state
+      _Chem_shift_experiment.Entry_ID
+      _Chem_shift_experiment.Assigned_chem_shift_list_ID
+
+      1 '2D 1H-1H COSY'  . . . 17661 1 
+      2 '2D 1H-1H TOCSY' . . . 17661 1 
+      3 '2D 1H-1H NOESY' . . . 17661 1 
+
+   stop_
+
+   loop_
+      _Atom_chem_shift.ID
+      _Atom_chem_shift.Assembly_atom_ID
+      _Atom_chem_shift.Entity_assembly_ID
+      _Atom_chem_shift.Entity_ID
+      _Atom_chem_shift.Comp_index_ID
+      _Atom_chem_shift.Seq_ID
+      _Atom_chem_shift.Comp_ID
+      _Atom_chem_shift.Atom_ID
+      _Atom_chem_shift.Atom_type
+      _Atom_chem_shift.Atom_isotope_number
+      _Atom_chem_shift.Val
+      _Atom_chem_shift.Val_err
+      _Atom_chem_shift.Assign_fig_of_merit
+      _Atom_chem_shift.Ambiguity_code
+      _Atom_chem_shift.Occupancy
+      _Atom_chem_shift.Resonance_ID
+      _Atom_chem_shift.Auth_entity_assembly_ID
+      _Atom_chem_shift.Auth_asym_ID
+      _Atom_chem_shift.Auth_seq_ID
+      _Atom_chem_shift.Auth_comp_ID
+      _Atom_chem_shift.Auth_atom_ID
+      _Atom_chem_shift.Details
+      _Atom_chem_shift.Entry_ID
+      _Atom_chem_shift.Assigned_chem_shift_list_ID
+
+        1 . 1 1  1  1 CYS HA   H 1  4.183 . . 1 . . . A  1 CYS HA   . 17661 1 
+        2 . 1 1  1  1 CYS HB2  H 1  3.321 . . 2 . . . A  1 CYS HB2  . 17661 1 
+        3 . 1 1  1  1 CYS HB3  H 1  3.073 . . 2 . . . A  1 CYS HB3  . 17661 1 
+        4 . 1 1  2  2 SER H    H 1  8.942 . . 1 . . . A  2 SER H    . 17661 1 
+        5 . 1 1  2  2 SER HA   H 1  4.734 . . 1 . . . A  2 SER HA   . 17661 1 
+        6 . 1 1  2  2 SER HB2  H 1  3.821 . . 2 . . . A  2 SER HB2  . 17661 1 
+        7 . 1 1  2  2 SER HB3  H 1  3.821 . . 2 . . . A  2 SER HB3  . 17661 1 
+        8 . 1 1  3  3 CYS H    H 1  8.728 . . 1 . . . A  3 CYS H    . 17661 1 
+        9 . 1 1  3  3 CYS HA   H 1  4.897 . . 1 . . . A  3 CYS HA   . 17661 1 
+       10 . 1 1  3  3 CYS HB2  H 1  3.370 . . 2 . . . A  3 CYS HB2  . 17661 1 
+       11 . 1 1  3  3 CYS HB3  H 1  2.940 . . 2 . . . A  3 CYS HB3  . 17661 1 
+       12 . 1 1  4  4 THR H    H 1  8.058 . . 1 . . . A  4 THR H    . 17661 1 
+       13 . 1 1  4  4 THR HA   H 1  4.104 . . 1 . . . A  4 THR HA   . 17661 1 
+       14 . 1 1  4  4 THR HB   H 1  3.958 . . 1 . . . A  4 THR HB   . 17661 1 
+       15 . 1 1  4  4 THR HG21 H 1  1.135 . . 1 . . . A  4 THR HG21 . 17661 1 
+       16 . 1 1  4  4 THR HG22 H 1  1.135 . . 1 . . . A  4 THR HG22 . 17661 1 
+       17 . 1 1  4  4 THR HG23 H 1  1.135 . . 1 . . . A  4 THR HG23 . 17661 1 
+       18 . 1 1  5  5 ASP H    H 1  8.871 . . 1 . . . A  5 ASP H    . 17661 1 
+       19 . 1 1  5  5 ASP HA   H 1  4.494 . . 1 . . . A  5 ASP HA   . 17661 1 
+       20 . 1 1  5  5 ASP HB2  H 1  3.073 . . 2 . . . A  5 ASP HB2  . 17661 1 
+       21 . 1 1  5  5 ASP HB3  H 1  2.805 . . 2 . . . A  5 ASP HB3  . 17661 1 
+       22 . 1 1  6  6 MET H    H 1  7.903 . . 1 . . . A  6 MET H    . 17661 1 
+       23 . 1 1  6  6 MET HA   H 1  4.630 . . 1 . . . A  6 MET HA   . 17661 1 
+       24 . 1 1  6  6 MET HB2  H 1  2.066 . . 2 . . . A  6 MET HB2  . 17661 1 
+       25 . 1 1  6  6 MET HB3  H 1  1.765 . . 2 . . . A  6 MET HB3  . 17661 1 
+       26 . 1 1  6  6 MET HG2  H 1  2.438 . . 2 . . . A  6 MET HG2  . 17661 1 
+       27 . 1 1  6  6 MET HG3  H 1  2.322 . . 2 . . . A  6 MET HG3  . 17661 1 
+       28 . 1 1  6  6 MET HE1  H 1  1.690 . . 1 . . . A  6 MET HE1  . 17661 1 
+       29 . 1 1  6  6 MET HE2  H 1  1.690 . . 1 . . . A  6 MET HE1  . 17661 1 
+       30 . 1 1  6  6 MET HE3  H 1  1.690 . . 1 . . . A  6 MET HE1  . 17661 1 
+       31 . 1 1  7  7 SER H    H 1  8.179 . . 1 . . . A  7 SER H    . 17661 1 
+       32 . 1 1  7  7 SER HA   H 1  4.471 . . 1 . . . A  7 SER HA   . 17661 1 
+       33 . 1 1  7  7 SER HB2  H 1  4.235 . . 2 . . . A  7 SER HB2  . 17661 1 
+       34 . 1 1  7  7 SER HB3  H 1  3.973 . . 2 . . . A  7 SER HB3  . 17661 1 
+       35 . 1 1  8  8 ASP H    H 1  8.809 . . 1 . . . A  8 ASP H    . 17661 1 
+       36 . 1 1  8  8 ASP HA   H 1  4.385 . . 1 . . . A  8 ASP HA   . 17661 1 
+       37 . 1 1  8  8 ASP HB2  H 1  2.884 . . 2 . . . A  8 ASP HB2  . 17661 1 
+       38 . 1 1  8  8 ASP HB3  H 1  2.837 . . 2 . . . A  8 ASP HB3  . 17661 1 
+       39 . 1 1  9  9 LEU H    H 1  8.331 . . 1 . . . A  9 LEU H    . 17661 1 
+       40 . 1 1  9  9 LEU HA   H 1  4.048 . . 1 . . . A  9 LEU HA   . 17661 1 
+       41 . 1 1  9  9 LEU HB2  H 1  1.625 . . 2 . . . A  9 LEU HB2  . 17661 1 
+       42 . 1 1  9  9 LEU HB3  H 1  1.625 . . 2 . . . A  9 LEU HB3  . 17661 1 
+       43 . 1 1  9  9 LEU HG   H 1  1.537 . . 1 . . . A  9 LEU HG   . 17661 1 
+       44 . 1 1  9  9 LEU HD11 H 1  0.853 . . 4 . . . A  9 LEU HD11 . 17661 1 
+       45 . 1 1  9  9 LEU HD12 H 1  0.853 . . 4 . . . A  9 LEU HD12 . 17661 1 
+       46 . 1 1  9  9 LEU HD13 H 1  0.853 . . 4 . . . A  9 LEU HD13 . 17661 1 
+       47 . 1 1  9  9 LEU HD21 H 1  0.904 . . 4 . . . A  9 LEU HD21 . 17661 1 
+       48 . 1 1  9  9 LEU HD22 H 1  0.904 . . 4 . . . A  9 LEU HD22 . 17661 1 
+       49 . 1 1  9  9 LEU HD23 H 1  0.904 . . 4 . . . A  9 LEU HD23 . 17661 1 
+       50 . 1 1 10 10 GLU H    H 1  7.757 . . 1 . . . A 10 GLU H    . 17661 1 
+       51 . 1 1 10 10 GLU HA   H 1  4.069 . . 1 . . . A 10 GLU HA   . 17661 1 
+       52 . 1 1 10 10 GLU HB2  H 1  2.149 . . 2 . . . A 10 GLU HB2  . 17661 1 
+       53 . 1 1 10 10 GLU HB3  H 1  2.071 . . 2 . . . A 10 GLU HB3  . 17661 1 
+       54 . 1 1 10 10 GLU HG2  H 1  2.537 . . 2 . . . A 10 GLU HG2  . 17661 1 
+       55 . 1 1 10 10 GLU HG3  H 1  2.537 . . 2 . . . A 10 GLU HG3  . 17661 1 
+       56 . 1 1 11 11 CYS H    H 1  8.510 . . 1 . . . A 11 CYS H    . 17661 1 
+       57 . 1 1 11 11 CYS HA   H 1  4.585 . . 1 . . . A 11 CYS HA   . 17661 1 
+       58 . 1 1 11 11 CYS HB2  H 1  3.108 . . 2 . . . A 11 CYS HB2  . 17661 1 
+       59 . 1 1 11 11 CYS HB3  H 1  3.108 . . 2 . . . A 11 CYS HB3  . 17661 1 
+       60 . 1 1 12 12 MET H    H 1  8.203 . . 1 . . . A 12 MET H    . 17661 1 
+       61 . 1 1 12 12 MET HA   H 1  4.097 . . 1 . . . A 12 MET HA   . 17661 1 
+       62 . 1 1 12 12 MET HB2  H 1  2.150 . . 2 . . . A 12 MET HB2  . 17661 1 
+       63 . 1 1 12 12 MET HB3  H 1  2.081 . . 2 . . . A 12 MET HB3  . 17661 1 
+       64 . 1 1 12 12 MET HG2  H 1  2.615 . . 2 . . . A 12 MET HG2  . 17661 1 
+       65 . 1 1 12 12 MET HG3  H 1  2.534 . . 2 . . . A 12 MET HG3  . 17661 1 
+       66 . 1 1 12 12 MET HE1  H 1  2.002 . . 1 . . . A 12 MET HE1  . 17661 1 
+       67 . 1 1 12 12 MET HE2  H 1  2.002 . . 1 . . . A 12 MET HE1  . 17661 1 
+       68 . 1 1 12 12 MET HE3  H 1  2.002 . . 1 . . . A 12 MET HE1  . 17661 1 
+       69 . 1 1 13 13 ASN H    H 1  7.819 . . 1 . . . A 13 ASN H    . 17661 1 
+       70 . 1 1 13 13 ASN HA   H 1  4.469 . . 1 . . . A 13 ASN HA   . 17661 1 
+       71 . 1 1 13 13 ASN HB2  H 1  2.752 . . 2 . . . A 13 ASN HB2  . 17661 1 
+       72 . 1 1 13 13 ASN HB3  H 1  2.752 . . 2 . . . A 13 ASN HB3  . 17661 1 
+       73 . 1 1 13 13 ASN HD21 H 1  6.857 . . 2 . . . A 13 ASN HD21 . 17661 1 
+       74 . 1 1 13 13 ASN HD22 H 1  7.428 . . 2 . . . A 13 ASN HD22 . 17661 1 
+       75 . 1 1 14 14 PHE H    H 1  8.408 . . 1 . . . A 14 PHE H    . 17661 1 
+       76 . 1 1 14 14 PHE HA   H 1  4.375 . . 1 . . . A 14 PHE HA   . 17661 1 
+       77 . 1 1 14 14 PHE HB2  H 1  3.210 . . 2 . . . A 14 PHE HB2  . 17661 1 
+       78 . 1 1 14 14 PHE HB3  H 1  3.158 . . 2 . . . A 14 PHE HB3  . 17661 1 
+       79 . 1 1 14 14 PHE HD1  H 1  7.277 . . 2 . . . A 14 PHE HD1  . 17661 1 
+       80 . 1 1 14 14 PHE HD2  H 1  7.277 . . 2 . . . A 14 PHE HD2  . 17661 1 
+       81 . 1 1 14 14 PHE HE1  H 1  7.308 . . 2 . . . A 14 PHE HE1  . 17661 1 
+       82 . 1 1 14 14 PHE HE2  H 1  7.308 . . 2 . . . A 14 PHE HE2  . 17661 1 
+       83 . 1 1 14 14 PHE HZ   H 1  7.384 . . 1 . . . A 14 PHE HZ   . 17661 1 
+       84 . 1 1 15 15 CYS H    H 1  8.416 . . 1 . . . A 15 CYS H    . 17661 1 
+       85 . 1 1 15 15 CYS HA   H 1  4.631 . . 1 . . . A 15 CYS HA   . 17661 1 
+       86 . 1 1 15 15 CYS HB2  H 1  3.125 . . 2 . . . A 15 CYS HB2  . 17661 1 
+       87 . 1 1 15 15 CYS HB3  H 1  2.807 . . 2 . . . A 15 CYS HB3  . 17661 1 
+       88 . 1 1 16 16 HIS H    H 1  7.847 . . 1 . . . A 16 HIS H    . 17661 1 
+       89 . 1 1 16 16 HIS HA   H 1  4.628 . . 1 . . . A 16 HIS HA   . 17661 1 
+       90 . 1 1 16 16 HIS HB2  H 1  3.305 . . 2 . . . A 16 HIS HB2  . 17661 1 
+       91 . 1 1 16 16 HIS HB3  H 1  3.305 . . 2 . . . A 16 HIS HB3  . 17661 1 
+       92 . 1 1 16 16 HIS HD2  H 1  7.198 . . 2 . . . A 16 HIS HD2  . 17661 1 
+       93 . 1 1 16 16 HIS HE1  H 1  8.536 . . 2 . . . A 16 HIS HE1  . 17661 1 
+       94 . 1 1 17 17 LYS H    H 1  7.969 . . 1 . . . A 17 LYS H    . 17661 1 
+       95 . 1 1 17 17 LYS HA   H 1  4.268 . . 1 . . . A 17 LYS HA   . 17661 1 
+       96 . 1 1 17 17 LYS HB2  H 1  1.788 . . 2 . . . A 17 LYS HB2  . 17661 1 
+       97 . 1 1 17 17 LYS HB3  H 1  1.726 . . 2 . . . A 17 LYS HB3  . 17661 1 
+       98 . 1 1 17 17 LYS HG2  H 1  1.341 . . 2 . . . A 17 LYS HG2  . 17661 1 
+       99 . 1 1 17 17 LYS HG3  H 1  1.341 . . 2 . . . A 17 LYS HG3  . 17661 1 
+      100 . 1 1 17 17 LYS HD2  H 1  1.618 . . 2 . . . A 17 LYS HD2  . 17661 1 
+      101 . 1 1 17 17 LYS HD3  H 1  1.618 . . 2 . . . A 17 LYS HD3  . 17661 1 
+      102 . 1 1 17 17 LYS HE2  H 1  2.922 . . 2 . . . A 17 LYS HE2  . 17661 1 
+      103 . 1 1 17 17 LYS HE3  H 1  2.922 . . 2 . . . A 17 LYS HE3  . 17661 1 
+      104 . 1 1 17 17 LYS HZ1  H 1  7.489 . . 1 . . . A 17 LYS HZ1  . 17661 1 
+      105 . 1 1 17 17 LYS HZ2  H 1  7.489 . . 1 . . . A 17 LYS HZ2  . 17661 1 
+      106 . 1 1 17 17 LYS HZ3  H 1  7.489 . . 1 . . . A 17 LYS HZ3  . 17661 1 
+      107 . 1 1 18 18 ASP H    H 1  8.353 . . 1 . . . A 18 ASP H    . 17661 1 
+      108 . 1 1 18 18 ASP HA   H 1  4.650 . . 1 . . . A 18 ASP HA   . 17661 1 
+      109 . 1 1 18 18 ASP HB2  H 1  2.874 . . 2 . . . A 18 ASP HB2  . 17661 1 
+      110 . 1 1 18 18 ASP HB3  H 1  2.743 . . 2 . . . A 18 ASP HB3  . 17661 1 
+      111 . 1 1 19 19 VAL H    H 1  7.901 . . 1 . . . A 19 VAL H    . 17661 1 
+      112 . 1 1 19 19 VAL HA   H 1  4.029 . . 1 . . . A 19 VAL HA   . 17661 1 
+      113 . 1 1 19 19 VAL HB   H 1  1.920 . . 1 . . . A 19 VAL HB   . 17661 1 
+      114 . 1 1 19 19 VAL HG11 H 1  0.710 . . 4 . . . A 19 VAL HG11 . 17661 1 
+      115 . 1 1 19 19 VAL HG12 H 1  0.710 . . 4 . . . A 19 VAL HG12 . 17661 1 
+      116 . 1 1 19 19 VAL HG13 H 1  0.710 . . 4 . . . A 19 VAL HG13 . 17661 1 
+      117 . 1 1 19 19 VAL HG21 H 1  0.805 . . 4 . . . A 19 VAL HG21 . 17661 1 
+      118 . 1 1 19 19 VAL HG22 H 1  0.805 . . 4 . . . A 19 VAL HG22 . 17661 1 
+      119 . 1 1 19 19 VAL HG23 H 1  0.805 . . 4 . . . A 19 VAL HG23 . 17661 1 
+      120 . 1 1 20 20 ILE H    H 1  8.032 . . 1 . . . A 20 ILE H    . 17661 1 
+      121 . 1 1 20 20 ILE HA   H 1  4.108 . . 1 . . . A 20 ILE HA   . 17661 1 
+      122 . 1 1 20 20 ILE HB   H 1  1.754 . . 1 . . . A 20 ILE HB   . 17661 1 
+      123 . 1 1 20 20 ILE HG12 H 1  1.361 . . 9 . . . A 20 ILE HG12 . 17661 1 
+      124 . 1 1 20 20 ILE HG13 H 1  1.089 . . 9 . . . A 20 ILE HG13 . 17661 1 
+      125 . 1 1 20 20 ILE HG21 H 1  0.770 . . 4 . . . A 20 ILE HG21 . 17661 1 
+      126 . 1 1 20 20 ILE HG22 H 1  0.770 . . 4 . . . A 20 ILE HG22 . 17661 1 
+      127 . 1 1 20 20 ILE HG23 H 1  0.770 . . 4 . . . A 20 ILE HG23 . 17661 1 
+      128 . 1 1 20 20 ILE HD11 H 1  0.770 . . 1 . . . A 20 ILE HD11 . 17661 1 
+      129 . 1 1 20 20 ILE HD12 H 1  0.770 . . 1 . . . A 20 ILE HD12 . 17661 1 
+      130 . 1 1 20 20 ILE HD13 H 1  0.770 . . 1 . . . A 20 ILE HD13 . 17661 1 
+      131 . 1 1 21 21 TRP H    H 1  8.230 . . 1 . . . A 21 TRP H    . 17661 1 
+      132 . 1 1 21 21 TRP HA   H 1  4.657 . . 1 . . . A 21 TRP HA   . 17661 1 
+      133 . 1 1 21 21 TRP HB2  H 1  3.213 . . 2 . . . A 21 TRP HB2  . 17661 1 
+      134 . 1 1 21 21 TRP HB3  H 1  3.136 . . 2 . . . A 21 TRP HB3  . 17661 1 
+      135 . 1 1 21 21 TRP HD1  H 1  7.162 . . 1 . . . A 21 TRP HD1  . 17661 1 
+      136 . 1 1 21 21 TRP HE1  H 1 10.033 . . 2 . . . A 21 TRP HE1  . 17661 1 
+      137 . 1 1 21 21 TRP HE3  H 1  7.564 . . 2 . . . A 21 TRP HE3  . 17661 1 
+      138 . 1 1 21 21 TRP HZ2  H 1  7.429 . . 2 . . . A 21 TRP HZ2  . 17661 1 
+      139 . 1 1 21 21 TRP HZ3  H 1  7.090 . . 2 . . . A 21 TRP HZ3  . 17661 1 
+      140 . 1 1 21 21 TRP HH2  H 1  7.174 . . 1 . . . A 21 TRP HH2  . 17661 1 
+      141 . 1 1 22 22 VAL H    H 1  7.795 . . 1 . . . A 22 VAL H    . 17661 1 
+      142 . 1 1 22 22 VAL HA   H 1  3.958 . . 1 . . . A 22 VAL HA   . 17661 1 
+      143 . 1 1 22 22 VAL HB   H 1  1.885 . . 1 . . . A 22 VAL HB   . 17661 1 
+      144 . 1 1 22 22 VAL HG11 H 1  0.801 . . 4 . . . A 22 VAL HG11 . 17661 1 
+      145 . 1 1 22 22 VAL HG12 H 1  0.801 . . 4 . . . A 22 VAL HG12 . 17661 1 
+      146 . 1 1 22 22 VAL HG13 H 1  0.801 . . 4 . . . A 22 VAL HG13 . 17661 1 
+      147 . 1 1 22 22 VAL HG21 H 1  0.801 . . 2 . . . A 22 VAL HG21 . 17661 1 
+      148 . 1 1 22 22 VAL HG22 H 1  0.801 . . 2 . . . A 22 VAL HG22 . 17661 1 
+      149 . 1 1 22 22 VAL HG23 H 1  0.801 . . 2 . . . A 22 VAL HG23 . 17661 1 
+      150 . 1 1 23 23 ASN H    H 1  8.308 . . 1 . . . A 23 ASN H    . 17661 1 
+      151 . 1 1 23 23 ASN HA   H 1  4.510 . . 1 . . . A 23 ASN HA   . 17661 1 
+      152 . 1 1 23 23 ASN HB2  H 1  2.768 . . 2 . . . A 23 ASN HB2  . 17661 1 
+      153 . 1 1 23 23 ASN HB3  H 1  2.620 . . 2 . . . A 23 ASN HB3  . 17661 1 
+      154 . 1 1 23 23 ASN HD21 H 1  6.891 . . 2 . . . A 23 ASN HD21 . 17661 1 
+      155 . 1 1 23 23 ASN HD22 H 1  7.549 . . 2 . . . A 23 ASN HD22 . 17661 1 
+      156 . 1 1 24 24 ARG H    H 1  8.214 . . 1 . . . A 24 ARG H    . 17661 1 
+      157 . 1 1 24 24 ARG HA   H 1  4.282 . . 1 . . . A 24 ARG HA   . 17661 1 
+      158 . 1 1 24 24 ARG HB2  H 1  1.821 . . 2 . . . A 24 ARG HB2  . 17661 1 
+      159 . 1 1 24 24 ARG HB3  H 1  1.667 . . 2 . . . A 24 ARG HB3  . 17661 1 
+      160 . 1 1 24 24 ARG HG2  H 1  1.533 . . 2 . . . A 24 ARG HG2  . 17661 1 
+      161 . 1 1 24 24 ARG HG3  H 1  1.533 . . 2 . . . A 24 ARG HG3  . 17661 1 
+      162 . 1 1 24 24 ARG HD2  H 1  3.068 . . 2 . . . A 24 ARG HD2  . 17661 1 
+      163 . 1 1 24 24 ARG HD3  H 1  3.068 . . 2 . . . A 24 ARG HD3  . 17661 1 
+      164 . 1 1 24 24 ARG HE   H 1  7.069 . . 1 . . . A 24 ARG HE   . 17661 1 
+      165 . 1 1 25 25 ASN H    H 1  8.279 . . 1 . . . A 25 ASN H    . 17661 1 
+      166 . 1 1 25 25 ASN HA   H 1  4.649 . . 1 . . . A 25 ASN HA   . 17661 1 
+      167 . 1 1 25 25 ASN HB2  H 1  2.816 . . 2 . . . A 25 ASN HB2  . 17661 1 
+      168 . 1 1 25 25 ASN HB3  H 1  2.750 . . 2 . . . A 25 ASN HB3  . 17661 1 
+      169 . 1 1 25 25 ASN HD21 H 1  6.846 . . 2 . . . A 25 ASN HD21 . 17661 1 
+      170 . 1 1 25 25 ASN HD22 H 1  7.537 . . 2 . . . A 25 ASN HD22 . 17661 1 
+
+   stop_
+
+save_
+
