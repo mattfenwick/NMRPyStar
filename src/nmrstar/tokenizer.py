@@ -101,10 +101,10 @@ token = Parser.any([dataopen, saveopen, saveclose,
                     newlines, comment, identifier])
                     
 def noParse(ts):
-    if len(ts) == 0:
+    if ts.isEmpty():
         return Parser.zero
     else:
-        return token.commit({'message': 'unable to parse token', 'position': ts[0].meta})
+        return token.commit({'message': 'unable to parse token', 'position': ts.first().meta})
         
 scanner = Parser.get.bind(noParse).many0()
 
