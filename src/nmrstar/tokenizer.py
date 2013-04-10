@@ -78,7 +78,8 @@ scstring = Parser.app(scAction, sc, endsc.not1().many0(), endsc)
 def sqRest(open):
     def action(cs):
         return Token('value', extract(cs), open.meta)
-    return sq.not1().many1().fmap(action).seq2L(sq)
+    nonEndingSq = sq.seq2L(space.not0())
+    return nonEndingSq.plus(sq.not1()).many1().fmap(action).seq2L(sq)
 
 sqstring = sq.bind(sqRest)
 

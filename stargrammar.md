@@ -43,6 +43,8 @@ Tokens:
     scstring   :=  ';'  (not endsc)(*)  endsc
 
     sqstring   :=  '\''  (not '\'')(+)  '\''
+    
+    sqstring   :=  '\''  ( ('\'' (not space))  |  (not '\'') )(+)  '\''
 
     dqstring   :=  '"'  (not '"')(+)  '"'
 

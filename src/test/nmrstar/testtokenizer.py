@@ -55,13 +55,14 @@ class TestTokenizer(u.TestCase):
     
     def testValue(self):
         cases = [["'abc' 123", 5, 'abc', 'single-quoted string'],
+                 ["'ab, c'd e' oh", 11, "ab, c'd e", 'tricky single-quoted string'],
                  ['"abc" 123', 5, 'abc', 'double-quoted string'],
                  [';abc\nqrs;xy\n;..???', 13, 'abc\nqrs;xy', 'semicolon string'],
                  ['ab##_"123def\t???', 12, 'ab##_"123def', 'unquoted value']]
         for (str, consumed, value, message) in cases:
             input = np.addLineCol(str)
             output = good(l(input[consumed:]), None, Token("value", value, first))
-            print repr(run(tokenp, l(input))) + "\n" + repr(output)
+            print repr(run(tokenp, l(input))) + "\n" + repr(output) + "\n\n"
             self.assertEqual(run(tokenp, l(input)), output, message)
     
     def testWhitespace(self):
