@@ -11,14 +11,14 @@ def str(cs):
 def extract(cs):
     return ''.join([x.char for x in cs])
 
+def oneOf(cs):
+    return Parser.satisfy(lambda x: x.char in cs)
 
-newline = Parser.any(map(lit, '\n\r\f'))
+NEWLINES, BLANKS = set('\n\r\f'), set(' \t')
+SPACES = NEWLINES.union(BLANKS)
+SPECIALS = SPACES.union(set('"#_'))
 
-blank = lit(' ').plus(lit('\t'))
-
-space = blank.plus(newline)
-
-special = Parser.any(map(lit, '"#_')).plus(space)
+newline, blank, space, special = map(oneOf, [NEWLINES, BLANKS, SPACES, SPECIALS])
 
 stop = str("stop_").fmap(lambda xs: Token('stop', extract(xs), xs[0].meta))
 
