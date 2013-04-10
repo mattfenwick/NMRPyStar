@@ -2,47 +2,54 @@
 
 class Loop(object):
 
-    def __init__(self, rows):
+    def __init__(self, rows, meta):
         if not isinstance(rows, list):
             raise TypeError('Loop needs list of rows')
         for r in rows:
             if not isinstance(r, dict):
                 raise TypeError('Loop rows must be dictionaries')
         self.rows = rows
+        self.meta = meta
     
     @staticmethod
-    def fromSimple(keys, vals):
+    def fromSimple(keys, vals, meta = None):
         # no values
         if len(vals) == 0:
-            return Loop([])
+            return Loop([], meta)
 
         # values, but no keys -> throws ZeroDivisionError
         if len(vals) % len(keys) != 0:
-            raise ValueError('number of values must be integer multiple of number of keys')
+            raise ValueError(('number of values must be integer multiple of number of keys', len(vals), len(keys), meta))
 
         rows, numKeys, valArr = [], len(keys), vals
         while len(valArr) > 0:
             rows.append(dict(zip(keys, valArr[:numKeys])))
             valArr = valArr[numKeys:]
 
-        return Loop(rows)
+        return Loop(rows, meta)
     
     def __repr__(self):
-        return repr({'type': 'Loop', 'rows': self.rows})
+        return repr({'type': 'Loop', 'rows': self.rows, 'meta': self.meta})
+        
+    def __eq__(self, other):
+        # should 'meta' be included in the equality check?
+        # should row order matter?
+        return self.__dict__ == other.__dict__
     
 
 class Save(object):
 
-    def __init__(self, datums, loops):
+    def __init__(self, datums, loops, meta):
         if not isinstance(datums, dict):
             raise TypeError('saveframe datums must be a dict')
         if not isinstance(loops, list):
             raise TypeError('saveframe loops must be a list')
         self.datums = datums
         self.loops = loops
+        self.meta = meta
 
     @staticmethod
-    def fromSimple(vals):
+    def fromSimple(vals, meta = None):
         ''' 
         list of loop/datum -> SaveFrame
         error conditions:
@@ -61,20 +68,26 @@ class Save(object):
                 loops.append(v)
             else:
                 raise TypeError(('invalid type', v))
-        return Save(datums, loops)
+        return Save(datums, loops, meta)
         
     def __repr__(self):
-        return repr({'type': 'Save', 'datums': self.datums, 'loops': self.loops})
+        return repr({'type': 'Save', 'datums': self.datums, 'loops': self.loops, 'meta': self.meta})
+    
+    def __eq__(self, other):
+        # should 'meta' be included in the equality check?
+        # should loop/datum order matter?
+        return self.__dict__ == other.__dict__
 
 
 class Data(object):
 
-    def __init__(self, name, saves):
+    def __init__(self, name, saves, meta):
         self.name = name
         self.saves = saves
+        self.meta = meta
 
     @staticmethod
-    def fromSimple(dataName, saves):
+    def fromSimple(dataName, saves, meta = None):
         mySaves = {}
         for (name, s) in saves:
             if not isinstance(s, Save):
@@ -82,9 +95,14 @@ class Data(object):
             if mySaves.has_key(name):
                 raise ValueError(('repeated save frame name', (name, s)))
             mySaves[name] = s
-        return Data(dataName, mySaves)
+        return Data(dataName, mySaves, meta)
     
     def __repr__(self):
-        return repr({'type': 'Data', 'name': self.name, 'save frames': self.saves})
+        return repr({'type': 'Data', 'name': self.name, 'save frames': self.saves, 'meta': self.meta})
+        
+    def __eq__(self, other):
+        # should 'meta' be included in the equality check?
+        # should save frame order matter?
+        return self.__dict__ == other.__dict__
 
 

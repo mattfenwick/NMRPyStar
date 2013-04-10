@@ -16,7 +16,7 @@ class TestModel(u.TestCase):
         self.assertEqual(l(['a', 'b'], []).rows, [])
     
     def testSave(self):
-        self.assertEqual(s([]).__dict__, m.Save({}, []).__dict__)
+        self.assertEqual(s([]).__dict__, m.Save({}, [], None).__dict__)
         sf1 = s([('a', 3), l([], []), ('b', 22)])
         self.assertEqual(sf1.datums, {'a': 3, 'b': 22})
         self.assertEqual(len(sf1.loops), 1)
