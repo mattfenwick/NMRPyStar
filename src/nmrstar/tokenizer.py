@@ -2,16 +2,6 @@ from parse.standard import Parser
 from tokens import Token
 
 
-# token regexes
-#
-# newline = "^[\n\r\f]"
-# blank = "^[ \t]"
-# space = 
-
-# tokens
-#   needs error reporting
-#   and take care of return values
-
 def lit(c):
     return Parser.satisfy(lambda t: t.char == c)
 
@@ -108,6 +98,3 @@ def noParse(ts):
         return token.commit({'message': 'unable to parse token', 'position': ts.first().meta})
         
 scanner = Parser.get.bind(noParse).many0()
-
-# scanner = token.many0().seq2L(Parser.get(lambda xs: if len(xs) == 0 then Parser.pure(None) else 
-
