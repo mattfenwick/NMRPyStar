@@ -3,6 +3,7 @@ import parse.position as p
 import parse.conslist as c
 import cProfile
 import pstats
+import nmrstar.parser as nmp
 
 
 def parseFile(input):
@@ -19,3 +20,8 @@ def profile():
     #   cProfile.run('parseFile(readMe())', 'profile.txt')
     cProfile.runctx('parseFile(readMe())', {}, {'parseFile': parseFile, 'readMe': readMe}, 'profile.txt')
     return pstats.Stats('profile.txt')
+    
+    
+def fullProfile():
+    cProfile.runctx('parseIt(str)', {}, {'parseIt': nmp.parse, 'str': readMe()}, 'fullprofile.txt')
+    return pstats.Stats('fullprofile.txt')
