@@ -33,8 +33,12 @@ Tokens:
     saveopen   :=  "save_"  (not whitespace)(+)
 
     identifier :=  '_'  (not whitespace)(+)
+    
+    simplechar :=  (not  ( '"'  |  '\\' ))
+    
+    escape     :=  '\\'  ( '"'  |  '\\' )
 
-    value      :=  '"'  ((not  '"') | '\\"')(*)  '"'
+    value      :=  '"'  ( simplechar  |  escape )(*)  '"'
 
     token      :=  dataopen   |  saveopen  |  saveclose  |  
                    loop       |  stop      |  value      |  

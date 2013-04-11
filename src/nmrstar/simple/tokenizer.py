@@ -50,14 +50,17 @@ def idAction(und, name):
 identifier = Parser.app(idAction, lit('_'), _blank.not1().many1())
 
 
-dq, esc_dq = lit('"'), lit('\\').seq2R(lit('"'))
+_dq = lit('"')
+_special = oneOf(set('\\"'))
+_simplechar = Parser.satisfy(lambda x: x.char not in set('\\"'))
+_escape = lit('\\').seq2R(_special)
 
 def valueRest(open):
     def action(cs):
         return Token('value', extract(cs), open.meta)
-    return (dq.not1()).plus(esc_dq).many1().fmap(action).seq2L(dq)
+    return (_simplechar).plus(_escape).many1().fmap(action).seq2L(_dq) # why many1?
 
-value = dq.bind(valueRest)
+value = _dq.bind(valueRest)
 
 
 whitespace = _blank.many1().fmap(lambda xs: Token('whitespace', extract(xs), xs[0].meta))

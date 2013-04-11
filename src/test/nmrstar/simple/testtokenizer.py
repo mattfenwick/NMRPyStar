@@ -81,7 +81,7 @@ class TestTokenizer(u.TestCase):
     def testScanner(self):
         self.assertEqual(run(tok.scanner, l(np.addLineCol('"abc'))), 
             m.error({'message': 'unable to parse token', 'position': {'line': 1, 'column': 1}}))
-        self.assertEqual(run(tok.scanner, l(np.addLineCol('abc \n "abc'))), 
+        self.assertEqual(run(tok.scanner, l(np.addLineCol('_abc \n "abc'))), 
             m.error({'message': 'unable to parse token', 'position': {'line': 2, 'column': 2}}))
         self.assertEqual(run(tok.scanner, l(np.addLineCol('# abc \n"123"'))),
             m.pure({'rest': l([]), 'state': None, 'result': [Token('comment', ' abc ', {'line': 1, 'column': 1}),
