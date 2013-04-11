@@ -1,4 +1,5 @@
-import nmrstar.tokenizer as t
+import nmrstar.tokenizer as tfull
+import nmrstar.simple.tokenizer as tsimple
 import parse.position as p
 import parse.conslist as c
 import nmrstar.astparser as a

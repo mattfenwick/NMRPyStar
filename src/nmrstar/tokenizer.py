@@ -1,5 +1,5 @@
 from parse.standard import Parser
-from tokens import Token
+from nmrstar.tokens import Token
 
 
 def lit(c):
