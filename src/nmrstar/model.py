@@ -2,12 +2,12 @@
 
 class Loop(object):
 
-    def __init__(self, rows, meta):
+    def __init__(self, keys, rows, meta):
+        if not isinstance(keys, list):
+            raise TypeError('Loop needs list of keys')
         if not isinstance(rows, list):
-            raise TypeError('Loop needs list of rows')
-        for r in rows:
-            if not isinstance(r, dict):
-                raise TypeError('Loop rows must be dictionaries')
+            raise TypeError('Loop neews list of rows')
+        self.keys = keys
         self.rows = rows
         self.meta = meta
     
@@ -15,7 +15,7 @@ class Loop(object):
     def fromSimple(keys, vals, meta = None):
         # no values
         if len(vals) == 0:
-            return Loop([], meta)
+            return Loop(keys, [], meta)
 
         # values, but no keys -> throws ZeroDivisionError
         if len(vals) % len(keys) != 0:
@@ -23,13 +23,14 @@ class Loop(object):
 
         rows, numKeys, valArr = [], len(keys), vals
         while len(valArr) > 0:
-            rows.append(dict(zip(keys, valArr[:numKeys])))
+            rows.append(valArr[:numKeys])
             valArr = valArr[numKeys:]
 
-        return Loop(rows, meta)
+        return Loop(keys, rows, meta)
     
     def __repr__(self):
-        return repr({'type': 'Loop', 'rows': self.rows, 'meta': self.meta})
+        return repr({'type': 'Loop', 'keys': self.keys, 
+                     'rows': self.rows, 'meta': self.meta})
         
     def __eq__(self, other):
         # should 'meta' be included in the equality check?

@@ -8,7 +8,8 @@ l, s, d = m.Loop.fromSimple, m.Save.fromSimple, m.Data.fromSimple
 class TestModel(u.TestCase):
 
     def testLoop(self):
-        self.assertEqual(l(['a', 'b'], range(6)).rows, [{'a': 0, 'b': 1}, {'a': 2, 'b': 3}, {'a': 4, 'b': 5}])
+        self.assertEqual(l(['a', 'b'], range(6)).rows, 
+                         [[0, 1], [2, 3], [4, 5]])
         
     def testLoopExceptions(self):
         self.assertRaises(ValueError, l, ['a', 'b'], range(5))
