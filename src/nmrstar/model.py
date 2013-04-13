@@ -84,6 +84,8 @@ class Data(object):
 
     def __init__(self, name, saves, meta):
         self.name = name
+        if not isinstance(saves, dict):
+            raise TypeError(('save frames must be a dict', saves, type(saves)))
         self.saves = saves
         self.meta = meta
 

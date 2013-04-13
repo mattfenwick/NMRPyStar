@@ -59,7 +59,15 @@ class TestUnparser(u.TestCase):
 
   save_
 '''
-        self.assertEqual(j(unp.save(*s1)), up1)
+        self.assertEqual(j(unp.save(*s1)), up1[1:])  # skip opening \n
 
     def testData(self):
-        pass
+        d1 = m.Data('hi', {'ab': m.Save({}, [], None)}, None)
+        ud1 = '''
+data_hi
+
+  save_ab
+
+  save_
+'''
+        self.assertEqual(unp.unparse(d1), ud1[1:])

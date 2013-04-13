@@ -15,7 +15,7 @@ def sortByFirst(pairs):
     return sorted(pairs, key=lambda x: x[0])
 
 def data(node):
-    chunks = ['data_', node.name, '\n']
+    chunks = ['data_', node.name, '\n\n']
     for (savename, saveframe) in sortByFirst(node.saves.iteritems()):
         chunks.extend(save(savename, saveframe))
     return chunks
@@ -32,12 +32,14 @@ def datum(key, val):
     return chunks
 
 def save(name, node):
-    chunks = ['\n  save_', name, '\n\n']
+    chunks = ['  save_', name, '\n\n']
     for (key, val) in sortByFirst(node.datums.iteritems()):
         chunks.extend(datum(key, val))
+    chunks.append('\n')  # <-- extra newline when save frame is empty !!!
     for myloop in node.loops:
         chunks.extend(loop(myloop))
-    chunks.append('\n  save_\n')
+        chunks.append('\n')
+    chunks.append('  save_\n')
     return chunks
 
 SPECIALS = set('"\\')
