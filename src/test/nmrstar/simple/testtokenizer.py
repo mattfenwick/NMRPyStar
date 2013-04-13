@@ -56,7 +56,8 @@ class TestTokenizer(u.TestCase):
     def testValue(self):
         cases = [['"abc" 123', 5, 'abc', 'double-quoted string'],
                  ['"ab\n ;\n\r\f\t " hmm', 12, 'ab\n ;\n\r\f\t ', 'double-quoted with line breaks'],
-                 ['"ab\\"cd"oo', 8, 'ab"cd', 'double-quoted with escaped "']]
+                 ['"ab\\"cd"oo', 8, 'ab"cd', 'double-quoted with escaped "'],
+                 ['""ab', 2, '', 'empty value']]
         for (str, consumed, value, message) in cases:
             input = np.addLineCol(str)
             output = good(l(input[consumed:]), None, Token("value", value, first))

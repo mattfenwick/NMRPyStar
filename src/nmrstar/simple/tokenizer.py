@@ -58,7 +58,7 @@ _escape = _literal('\\').seq2R(_special)
 def _valueRest(open_):
     def action(cs):
         return Token('value', _extract(cs), open_.meta)
-    return (_simplechar).plus(_escape).many1().fmap(action).seq2L(_dq) # why many1?
+    return (_simplechar).plus(_escape).many0().fmap(action).seq2L(_dq)
 
 value = _dq.bind(_valueRest)
 
