@@ -6,26 +6,38 @@ import nmrstar.astparser as a
 
 
 
-def tokenize(scanner, str):
-    lcChars = c.ConsList.fromIterable(p.addLineCol(str))
+def tokenize(scanner, string):
+    lcChars = c.ConsList.fromIterable(p.addLineCol(string))
     return scanner.parse(lcChars, None)
 
+
 JUNKTYPES = set(['comment', 'whitespace', 'newlines'])
-    
+
 def stripJunk(tokens):
     return [t for t in tokens if t.tokentype not in JUNKTYPES]
+
 
 def astParse(tokenization):
     stripped = stripJunk(tokenization['result'])
     return a.nmrstar.parse(c.ConsList.fromIterable(stripped), None)
 
-def parse(scanner, input):
-    tokens = tokenize(scanner, input)
+
+def parse(scanner, string):
+    tokens = tokenize(scanner, string)
     return tokens.bind(astParse)
 
 
-def fullParse(input):
-    return parse(tfull.scanner, input)
+def fullParse(string):
+    '''
+    Parse string according to full NMR-Star
+    syntactic definition.
+    '''
+    return parse(tfull.scanner, string)
 
-def simpleParse(input):
-    return parse(tsimple.scanner, input)    
+
+def simpleParse(string):
+    '''
+    Parse string according to simplified NMR-Star
+    syntactic definition.
+    '''
+    return parse(tsimple.scanner, string)
