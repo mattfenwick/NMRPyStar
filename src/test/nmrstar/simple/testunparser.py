@@ -35,13 +35,24 @@ class TestUnparser(u.TestCase):
     loop_
       _abc
       _def
-      "123" "456"
-      "hi" "bye"
+      "123" "456" 
+      "hi" "bye" 
     stop_
-'''
+'''            # yes, the trailing spaces are intended to be there
         self.assertEqual(j(unp.loop(l2)), s2[1:])  # skip opening \n
 
     def testSave(self):
+        s2 = ('us', m.Save({}, [m.Loop([], [], None)], None))
+        up2 = '''
+  save_us
+
+
+    loop_
+    stop_
+
+  save_
+'''
+        self.assertEqual(j(unp.save(*s2)), up2[1:])
         s1 = ('me', m.Save({'ab': '12', 'cd': '34'},
                            [m.Loop([], [], None), m.Loop([], [], None)],
                            None))
@@ -60,6 +71,8 @@ class TestUnparser(u.TestCase):
   save_
 '''
         self.assertEqual(j(unp.save(*s1)), up1[1:])  # skip opening \n
+        # save names should not have whitespace
+        self.assertRaises(ValueError, lambda: j(unp.save('x y', m.Save({}, [], None))))
 
     def testData(self):
         d1 = m.Data('hi', {'ab': m.Save({}, [], None)}, None)
@@ -68,6 +81,8 @@ data_hi
 
   save_ab
 
+
   save_
 '''
         self.assertEqual(unp.unparse(d1), ud1[1:])
+        self.assertRaises(ValueError, lambda: j(unp.data(m.Data('a b', {}, None))))

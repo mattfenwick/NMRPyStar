@@ -1,27 +1,34 @@
 import nmrstar.model as m
+import nmrstar.simple.tokenizer as t
 
 
 # see http://stackoverflow.com/questions/2158395/flatten-an-irregular-list-of-lists-in-python
 #   for a possibly better solution to nested list flattening
 #
 # issues:
-#   - surround values in "..."
-#   - indentation
-#   - empty lines
-#   - whether " and \ can go in save/data names and identifier names
-#   - escaping "..." values -- ab"c\d -> ab\"c\\d
+#   - whether " and \ can go in save/data names and identifier names (yes)
+#   - whether whitespace can be in data block, save frame, and identifier names (no)
 
 def sortByFirst(pairs):
     return sorted(pairs, key=lambda x: x[0])
 
+
 def data(node):
-    chunks = ['data_', node.name, '\n\n']
+    chunks = ['data_', checkName(node.name), '\n\n']
     for (savename, saveframe) in sortByFirst(node.saves.iteritems()):
         chunks.extend(save(savename, saveframe))
     return chunks
 
+
+def checkName(key):
+    if set(key).intersection(t._WHITESPACE) != set([]):
+        raise ValueError("identifiers may not contain whitespace")
+    return key
+
+
 def identifier(key):
-    return ['_', key]
+    return ['_', checkName(key)]
+
 
 def datum(key, val):
     chunks = ['    ']
@@ -31,8 +38,9 @@ def datum(key, val):
     chunks.append('\n')
     return chunks
 
+
 def save(name, node):
-    chunks = ['  save_', name, '\n\n']
+    chunks = ['  save_', checkName(name), '\n\n']
     for (key, val) in sortByFirst(node.datums.iteritems()):
         chunks.extend(datum(key, val))
     chunks.append('\n')  # <-- extra newline when save frame is empty !!!
@@ -41,6 +49,7 @@ def save(name, node):
         chunks.append('\n')
     chunks.append('  save_\n')
     return chunks
+
 
 SPECIALS = set('"\\')
 def escapeVal(val):
@@ -51,8 +60,10 @@ def escapeVal(val):
         newVal.append(c)
     return ''.join(newVal)
 
+
 def value(val):
     return ['"', escapeVal(val), '"']
+
 
 def loop(node):
     chunks = ['    ', 'loop_', '\n']

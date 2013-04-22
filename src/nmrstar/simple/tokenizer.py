@@ -28,7 +28,7 @@ loop = _string("loop_").fmap(lambda xs: Token('loop', _extract(xs), xs[0].meta))
 
 def _commentAction(pd, chars):
     return Token('comment', _extract(chars), pd.meta)
-    
+
 comment = Parser.app(_commentAction, _literal('#'), _newline.not1().many0())
 
 
@@ -36,8 +36,8 @@ def _dataAction(open_, name):
     return Token('dataopen', _extract(name), open_[0].meta)
 
 dataopen = Parser.app(_dataAction, _string("data_"), _blank.not1().many1())
-    
-    
+
+
 def _saveAction(open_, name):
     return Token('saveopen', _extract(name), open_[0].meta)
 
@@ -68,11 +68,11 @@ whitespace = _blank.many1().fmap(lambda xs: Token('whitespace', _extract(xs), xs
 token = Parser.any([dataopen, saveopen, saveclose,
                     loop, stop, value, whitespace,
                     comment, identifier])
-                    
+
 def noParse(ts):
     if ts.isEmpty():
         return Parser.zero
     else:
         return token.commit({'message': 'unable to parse token', 'position': ts.first().meta})
-        
+
 scanner = Parser.get.bind(noParse).many0()
