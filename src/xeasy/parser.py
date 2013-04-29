@@ -30,6 +30,9 @@ _space       = _oneOf(' \t')
 line1 = _string('# Number of dimensions ').seq2R(_digit).seq2L(_newline)
 
 
+# the dim numbers are ignored; they're assumed
+# to be the integers 1..n, in order and without
+# any skipping
 def dimAction(_1, _4, _2, dimName, _3):
     return dimName.char
 
