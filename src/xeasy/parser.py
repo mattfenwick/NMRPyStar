@@ -4,6 +4,7 @@ Created on Apr 22, 2013
 @author: mattf
 '''
 from parse.standard import Parser
+import xeasy.model as m
 
 
 def _literal(c):
@@ -12,25 +13,46 @@ def _literal(c):
 def _string(cs):
     return Parser.all(map(_literal, cs))
 
-_digs = dict(zip(map(str, range(10)), range(10)))  # {'0': 0, '1': 1, ...}
+def _oneOf(cs):
+    chars = set(cs)
+    return Parser.satisfy(lambda x: x.char in chars)
 
-_digit = Parser.item.bind(lambda x: Parser.pure(_digs[x.char]) if x.char in _digs else Parser.zero)
+_dig         = _oneOf('0123456789').fmap(lambda x: x.char)
+_digit       = _dig.fmap(int)
+_int         = _dig.many1().fmap(lambda xs: ''.join(xs))
+_integer     = _int.fmap(int)
+_float       = Parser.app(lambda a, b, c: float(''.join([a, '.', c])), _int, _literal('.'), _int)
 
-_newline = Parser.satisfy(lambda x: x.char in '\n\r\f')
-
-_space = Parser.satisfy(lambda x: x.char in ' \t')
+_newline     = _oneOf('\n\r\f')
+_space       = _oneOf(' \t')
 
 
 line1 = _string('# Number of dimensions ').seq2R(_digit).seq2L(_newline)
 
+
 def dimAction(_1, dimNumber, _2, dimName, _3):
-    return (dimNumber, dimName)
+    return (dimNumber, dimName.char)
 
 dim = Parser.app(dimAction, _string('# INAME '), _digit, _space, Parser.item, _newline)
 
-field = _newline.plus(_space).not1().many1()
+def dims(n):
+    return Parser.all([dim] * n)
+
+
+_ws_integer = _space.many1().seq2R(_integer)
+_ws_float   = _space.many1().seq2R(_float)
+_ws_field = _space.many1().seq2R(_newline.plus(_space).not1().many1())
 
 def peakline(n):
-    return Parser.app(lambda ident, shifts, _1: (ident, shifts), field, _space.many1().seq2R(Parser.all([field] * n)), _newline.not1().many0(), _newline)
+    return Parser.app(lambda ident, shifts, _fields, _1: m.Peak(ident, shifts), 
+                      _ws_integer, 
+                      Parser.all([_ws_float] * n), 
+                      _ws_field.many0(), 
+                      _newline)
+    # Parser.get.bind(lambda x: _newline.commit((x, 'fuck me'))))
 
-xeasy = line1.bind(lambda n: dim.many1().seq2L(peakline(n).many0()))  # why many1 and many0 ??
+
+def xeasyAction(dims, peaks):
+    return m.PeakFile(dims, peaks)
+
+xeasy = line1.bind(lambda n: Parser.app(xeasyAction, dims(n), peakline(n).many0()))
