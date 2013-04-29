@@ -30,8 +30,8 @@ _space       = _oneOf(' \t')
 line1 = _string('# Number of dimensions ').seq2R(_digit).seq2L(_newline)
 
 
-def dimAction(_1, dimNumber, _2, dimName, _3):
-    return (dimNumber, dimName.char)
+def dimAction(_1, _4, _2, dimName, _3):
+    return dimName.char
 
 dim = Parser.app(dimAction, _string('# INAME '), _digit, _space, Parser.item, _newline)
 
@@ -41,10 +41,10 @@ def dims(n):
 
 _ws_integer = _space.many1().seq2R(_integer)
 _ws_float   = _space.many1().seq2R(_float)
-_ws_field = _space.many1().seq2R(_newline.plus(_space).not1().many1())
+_ws_field   = _space.many1().seq2R(_newline.plus(_space).not1().many1())
 
 def peakline(n):
-    return Parser.app(lambda ident, shifts, _fields, _1: m.Peak(ident, shifts), 
+    return Parser.app(lambda ident, shifts, _fields, _1: (ident, m.Peak(shifts)), 
                       _ws_integer, 
                       Parser.all([_ws_float] * n), 
                       _ws_field.many0(), 
@@ -53,6 +53,6 @@ def peakline(n):
 
 
 def xeasyAction(dims, peaks):
-    return m.PeakFile(dims, peaks)
+    return m.PeakFile.fromSimple(dims, peaks)
 
 xeasy = line1.bind(lambda n: Parser.app(xeasyAction, dims(n), peakline(n).many0()))
