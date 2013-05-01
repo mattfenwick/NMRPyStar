@@ -43,6 +43,10 @@ def star_project_dumper(pmodel, starpath):
 def xez_2_star_test():
     q = xeasy_project_parser('hnco_peaks.xeasy', 'peaks.xeasy')
     star_project_dumper(q, 'proj_star.txt')
+    
+def xez_to_star(hnco, nhsqc, star):
+    q = xeasy_project_parser(hnco, nhsqc)
+    star_project_dumper(q, star)
 
 
 
@@ -63,3 +67,7 @@ def xeasy_project_dumper(pmodel, hncopath, nhsqcpath):
 def star_2_xez_test():
     q = star_project_parser('proj_star.txt')
     xeasy_project_dumper(q, 'hnco_out.txt', 'nhsqc_out.txt')
+
+def star_to_xez(hnco, nhsqc, star):
+    q = star_project_parser(star)
+    xeasy_project_dumper(q, hnco, nhsqc)

@@ -66,9 +66,9 @@ def fromStarSpectrum(saveFrame):
     for pk in l_peaks.rows:
         peaks[pk[0]] = pmod.Peak(pk[1:], [], [])
     for tg in l_tags.rows:
-        peaks[tg[0]].tags.append(tg[1])
+        peaks[tg[0]].tags.append(tg[1]) # peaks.has_key(tg[0]) ?
     for ats in l_atomtypes.rows:
-        peaks[ats[0]].atomtypes.append(ats[1])
+        peaks[ats[0]].atomtypes.append(ats[1]) # peaks.has_key(ats[0]) ?
     return pmod.Spectrum(axes, peaks)
 
 # star model -> my model
