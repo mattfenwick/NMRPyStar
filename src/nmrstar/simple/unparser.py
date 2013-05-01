@@ -17,6 +17,7 @@ def data(node):
     chunks = ['data_', checkName(node.name), '\n\n']
     for (savename, saveframe) in sortByFirst(node.saves.iteritems()):
         chunks.extend(save(savename, saveframe))
+        chunks.append('\n')
     return chunks
 
 

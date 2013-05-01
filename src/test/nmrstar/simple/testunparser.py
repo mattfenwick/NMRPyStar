@@ -75,7 +75,8 @@ class TestUnparser(u.TestCase):
         self.assertRaises(ValueError, lambda: j(unp.save('x y', m.Save({}, [], None))))
 
     def testData(self):
-        d1 = m.Data('hi', {'ab': m.Save({}, [], None)}, None)
+        d1 = m.Data('hi', {'ab': m.Save({}, [], None),
+                           'bc': m.Save({}, [], None)}, None)
         ud1 = '''
 data_hi
 
@@ -83,6 +84,12 @@ data_hi
 
 
   save_
+
+  save_bc
+
+
+  save_
+
 '''
         self.assertEqual(unp.unparse(d1), ud1[1:])
         self.assertRaises(ValueError, lambda: j(unp.data(m.Data('a b', {}, None))))
