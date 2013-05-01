@@ -8,13 +8,19 @@ import parse.conslist as c
 import parse.position as ps
 
 import patcher.star as pstar
+import nmrstar.parser as nsp
 import nmrstar.simple.unparser as unp
+import xeasy.unparser as xunp
 
 
+reload(pstar)
 
 
 def xeasy_peakfile_parser(inp):
     return p.xeasy.parse(c.ConsList.fromIterable(ps.addLineCol(inp)), None)
+
+def star_projectfile_parser(inp):
+    return nsp.fullParse(inp)
 
 
 def xeasy_project_parser(hncopath, nhsqcpath):
@@ -30,7 +36,30 @@ def xeasy_project_parser(hncopath, nhsqcpath):
 
 def star_project_dumper(pmodel, starpath):
     text = unp.unparse(pstar.star_out(pmodel))
-    print ('shit', text, type(text))
     with open(starpath, 'w') as outfile:
         outfile.write(text)
     return None
+
+def xez_2_star_test():
+    q = xeasy_project_parser('hnco_peaks.xeasy', 'peaks.xeasy')
+    star_project_dumper(q, 'proj_star.txt')
+
+
+
+def star_project_parser(starpath):
+    with open(starpath, 'r') as starfile:
+        star = star_projectfile_parser(starfile.read())
+    if star.status != 'success':
+        raise ValueError(('unable to parse star project file', star))
+    return pstar.star_in(star.value['result'])
+
+def xeasy_project_dumper(pmodel, hncopath, nhsqcpath):
+    hnco, nhsqc = pstar.xeasy_out(pmodel)
+    with open(hncopath, 'w') as hncoout:
+        hncoout.write(xunp.xeasy((hnco)))
+    with open(nhsqcpath, 'w') as nhsqcout:
+        nhsqcout.write(xunp.xeasy((nhsqc)))
+
+def star_2_xez_test():
+    q = star_project_parser('proj_star.txt')
+    xeasy_project_dumper(q, 'hnco_out.txt', 'nhsqc_out.txt')
