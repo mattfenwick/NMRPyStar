@@ -13,7 +13,7 @@ import nmrstar.simple.unparser as unp
 import xeasy.unparser as xunp
 
 
-reload(pstar)
+reload(pstar) # repl hack
 
 
 def xeasy_peakfile_parser(inp):
