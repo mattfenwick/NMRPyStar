@@ -7,6 +7,9 @@ Created on Apr 29, 2013
 class Peak(object):
     
     def __init__(self, shifts, tags, atomtypes):
+        for s in shifts:
+            if not isinstance(s, (float, int)):
+                raise TypeError('peak shifts must be integers or floats')
         self.shifts = shifts
         self.tags = tags
         self.atomtypes = atomtypes
@@ -28,7 +31,9 @@ class Spectrum(object):
     '''
     
     def __init__(self, axes, peaks):
-        for (_, pk) in peaks.iteritems():
+        for (pkid, pk) in peaks.iteritems():
+            if not isinstance(pkid, int):
+                raise TypeError('peak ids must be integers')
             if len(pk.shifts) != len(axes):
                 raise ValueError('peak dimensions must match spectral axes')
         self.axes = axes

@@ -1,8 +1,3 @@
-'''
-Created on May 1, 2013
-
-@author: mattf
-'''
 import patcher.model as pm
 
 
@@ -14,15 +9,27 @@ def addTagAll(tag, spec):
         pk.tags.append(tag)
 
 def addTagSome(tag, spec, pkids):
+    '''
+    Add a tag to some peaks in a spectrum,
+    where the peaks are specified by a list
+    of peak ids.
+    '''
     for pkid in pkids:
-        try:
-            spec.peaks[pkid].tags.append(tag)
-        except:
-            pass # control flow by exception!  whee!
+        spec.peaks[pkid].tags.append(tag)
         
 def filterSpecPeaks(pred, spec):
+    '''
+    Filter peaks from a spectrum based on a predicate,
+    returning a new spectrum.
+    '''
     peaks = filter(pred, spec.peaks)
     return pm.Spectrum(spec.axes, peaks)
+
+def peakHasTag(tag):
+    '''
+    A predicate for checking whether a peak has a tag.
+    '''
+    return lambda pk: tag in pk.tags
 
 def addAtomtypeAll(aa, spec):
     '''
