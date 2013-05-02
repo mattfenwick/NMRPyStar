@@ -8,12 +8,11 @@ import parse.conslist as c
 import parse.position as ps
 
 import patcher.star as pstar
+import patcher.util as ut
 import nmrstar.parser as nsp
 import nmrstar.simple.unparser as unp
 import xeasy.unparser as xunp
 
-
-reload(pstar) # repl hack
 
 
 def xeasy_peakfile_parser(inp):
@@ -60,9 +59,9 @@ def star_project_parser(starpath):
 def xeasy_project_dumper(pmodel, hncopath, nhsqcpath):
     hnco, nhsqc = pstar.xeasy_out(pmodel)
     with open(hncopath, 'w') as hncoout:
-        hncoout.write(xunp.xeasy((hnco)))
+        hncoout.write(xunp.xeasy(hnco))
     with open(nhsqcpath, 'w') as nhsqcout:
-        nhsqcout.write(xunp.xeasy((nhsqc)))
+        nhsqcout.write(xunp.xeasy(nhsqc))
 
 def star_2_xez_test():
     q = star_project_parser('proj_star.txt')
@@ -70,4 +69,11 @@ def star_2_xez_test():
 
 def star_to_xez(hnco, nhsqc, star):
     q = star_project_parser(star)
+    # <- here:  cut some peaks/spectra out
     xeasy_project_dumper(q, hnco, nhsqc)
+
+def star_hsqc_to_xez(nhsqc, star, tag):
+    q = star_project_parser(star)
+    new_nhsqc = ut.filterSpecPeaks(ut.peakHasTag(tag), q.spectra['nhsqc'])
+    q.spectra['nhsqc'] = new_nhsqc
+    xeasy_project_dumper(q, 'dontcare.txt', nhsqc)

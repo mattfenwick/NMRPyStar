@@ -22,7 +22,7 @@ def filterSpecPeaks(pred, spec):
     Filter peaks from a spectrum based on a predicate,
     returning a new spectrum.
     '''
-    peaks = filter(pred, spec.peaks)
+    peaks = dict([(pkid, pk) for (pkid, pk) in spec.peaks.iteritems() if pred(pk)]) # filter(pred, spec.peaks)
     return pm.Spectrum(spec.axes, peaks)
 
 def peakHasTag(tag):
