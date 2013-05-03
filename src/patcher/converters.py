@@ -8,6 +8,10 @@ import nmrstar.model as nmod
 import xeasy.model as xmod
 
 
+def fmap_dict(f, dic):
+    return dict((key, f(value)) for (key, value) in dic.iteritems())
+
+
 def _save_to_spectrum(saveFrame):
     l_axes, l_peaks, l_tags, l_atomtypes = saveFrame.loops
     axes = [axis_name for (_, axis_name) in l_axes.rows]
@@ -21,7 +25,7 @@ def _save_to_spectrum(saveFrame):
     return pmod.Spectrum(axes, peaks)
 
 def star2patch(sdata):
-    return pmod.Project(sdata.name, dict([(nm, _save_to_spectrum(save)) for (nm, save) in sdata.saves]))
+    return pmod.Project(sdata.name, fmap_dict(_save_to_spectrum, sdata.saves))
 
 
 def _spectrum_to_xeasy(pspec):
@@ -31,7 +35,7 @@ def _spectrum_to_xeasy(pspec):
     return xmod.PeakFile(pspec.axes, peaks)
 
 def patch2xez(pmodel):
-    return dict((nm, _spectrum_to_xeasy(sp)) for (nm, sp) in pmodel.spectra.iteritems())
+    return fmap_dict(_spectrum_to_xeasy, pmodel.spectra)
 
 
 def _xeasy_to_spectrum(xpkfl):
@@ -41,7 +45,7 @@ def _xeasy_to_spectrum(xpkfl):
     return pmod.Spectrum(xpkfl.dimnames, peaks)
     
 def xez2patch(projname, peakfiles):
-    return pmod.Project(projname, dict((nm, _xeasy_to_spectrum(xpkfl)) for (nm, xpkfl) in peakfiles.iteritems()))
+    return pmod.Project(projname, fmap_dict(_xeasy_to_spectrum, peakfiles))
 
 
 # my model (spectrum) -> star save frame
@@ -72,5 +76,5 @@ def _spectrum_to_save(spec):
     return nmod.Save(datums, loops, None)
 
 def patch2star(pmodel):
-    spectra = dict((nm, _spectrum_to_save(spec)) for (nm, spec) in pmodel.spectra.iteritems())
+    spectra = fmap_dict(_spectrum_to_save, pmodel.spectra)
     return nmod.Data(pmodel.name, spectra, None)

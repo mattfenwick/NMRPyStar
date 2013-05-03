@@ -14,65 +14,59 @@ import nmrstar.simple.unparser as unp
 import xeasy.unparser as xunp
 
 
+reload(pc)
+
 
 def xeasy_peakfile_parser(inp):
     return p.xeasy.parse(c.ConsList.fromIterable(ps.addLineCol(inp)), None)
 
-def star_projectfile_parser(inp):
-    return nsp.fullParse(inp)
 
-
-def xeasy_project_parser(paths):
+def xeasy_in(projname, paths):
     xpkfls = {}
-    for (name, path) in paths:
+    for (name, path) in paths.items():
         with open(path, 'r') as infile:
             r = xeasy_peakfile_parser(infile.read())
             if r.status != 'success':
                 raise ValueError((name + ' parsing failed', r))
-            xpkfls[name] = r
-    return pc.xez2patch('mattsnmrproject', xpkfls)
+            xpkfls[name] = r.value['result']
+    return pc.xez2patch(projname, xpkfls)
 
-def star_project_dumper(pmodel, starpath):
+def xeasy_out(pmodel, paths):
+    '''
+    Expects a spectrum for each path
+    '''
+    spectra = pc.patch2xez(pmodel)
+    for (name, path) in paths.iteritems():
+        spectrum = spectra[name]
+        with open(path, 'w') as outfile:
+            outfile.write(xunp.xeasy(spectrum))
+
+def star_in(starpath):
+    with open(starpath, 'r') as starfile:
+        star = nsp.fullParse(starfile.read())
+    if star.status != 'success':
+        raise ValueError(('unable to parse star project file', star))
+    return pc.star2patch(star.value['result'])
+
+def star_out(pmodel, starpath):
     text = unp.unparse(pc.patch2star(pmodel))
     with open(starpath, 'w') as outfile:
         outfile.write(text)
     return None
 
-def xez_2_star_test():
-    q = xeasy_project_parser({'hnco': 'hnco_peaks.xeasy', 'nhqc': 'peaks.xeasy'})
-    star_project_dumper(q, 'proj_star.txt')
-    
-def xez_to_star(hnco, nhsqc, star):
-    q = xeasy_project_parser({'hnco': hnco, 'nhsqc': nhsqc})
-    star_project_dumper(q, star)
+
+def xez_to_star(paths, star):
+    q = xeasy_in('mattsnmrproject', paths)
+    star_out(q, star)
+
+def star_to_xez(paths, star):
+    q = star_in(star)
+    xeasy_out(q, paths)
 
 
-
-def star_project_parser(starpath):
-    with open(starpath, 'r') as starfile:
-        star = star_projectfile_parser(starfile.read())
-    if star.status != 'success':
-        raise ValueError(('unable to parse star project file', star))
-    return pc.star2patch(star.value['result'])
-
-def xeasy_project_dumper(pmodel, paths):
-    spectra = pc.patch2xez(pmodel)
-    for (name, spectrum) in spectra:
-        path = paths[name]
-        with open(path, 'w') as outfile:
-            outfile.write(xunp.xeasy(spectrum))
-
-def star_2_xez_test():
-    q = star_project_parser('proj_star.txt')
-    xeasy_project_dumper(q, {'hnco': 'hnco_out.txt', 'nhsqc': 'nhsqc_out.txt'})
-
-def star_to_xez(hnco, nhsqc, star):
-    q = star_project_parser(star)
-    # <- here:  cut some peaks/spectra out
-    xeasy_project_dumper(q, {'hnco': hnco, 'nhsqc': nhsqc})
-
+# some more examples
 def star_hsqc_to_xez(nhsqc, star, tag):
-    q = star_project_parser(star)
+    q = star_in(star)
     new_nhsqc = ut.filterSpecPeaks(ut.peakHasTag(tag), q.spectra['nhsqc'])
     q.spectra['nhsqc'] = new_nhsqc
-    xeasy_project_dumper(q, {'hnco': 'dontcare.txt', 'nhsqc': nhsqc})
+    xeasy_out(q, {'nhsqc': nhsqc})
