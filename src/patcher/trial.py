@@ -65,7 +65,7 @@ def star_to_xez(paths, star):
 
 
 # some more examples
-def star_hsqc_to_xez(nhsqc, star, tag):
+def star_filter_hsqc_to_xez(nhsqc, star, tag):
     q = star_in(star)
     new_nhsqc = ut.filterSpecPeaks(ut.peakHasTag(tag), q.spectra['nhsqc'])
     q.spectra['nhsqc'] = new_nhsqc
