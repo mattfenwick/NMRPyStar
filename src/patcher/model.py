@@ -5,6 +5,11 @@ Created on Apr 29, 2013
 '''
 
 class Peak(object):
+    '''
+    A peak in an NMR spectrum.  Unfortunately, the implementation
+    is currently **WRONG** because it is individual peak dimensions
+    that can be assigned atomtypes, not the entire peaks themselves.
+    '''
     
     def __init__(self, shifts, tags, atomtypes):
         for s in shifts:
