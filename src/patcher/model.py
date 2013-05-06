@@ -4,26 +4,61 @@ Created on Apr 29, 2013
 @author: mattf
 '''
 
-class Peak(object):
+class MyBase(object):
     '''
-    A peak in an NMR spectrum.  Unfortunately, the implementation
-    is currently **WRONG** because it is individual peak dimensions
-    that can be assigned atomtypes, not the entire peaks themselves.
+    Provides:
+     - conversion to a JSON-compatible object as a dictionary, assuming all fields are JSON-compatible
+     - standard __repr__ serialization
+     - standard value-based equality
     '''
     
-    def __init__(self, shifts, tags, atomtypes):
-        for s in shifts:
-            if not isinstance(s, (float, int)):
-                raise TypeError('peak shifts must be integers or floats')
-        self.shifts = shifts
-        self.tags = tags
-        self.atomtypes = atomtypes
-        
+    def toJson(self):
+        return self.__dict__
+    
     def __repr__(self):
-        return repr(self.__dict__)
+        return repr(self.toJson())
+    
+    def __eq__(self, other):
+        return self.toJson() == other.toJson()
 
 
-class Spectrum(object):
+class PeakDim(MyBase):
+    
+    def __init__(self, shift, atomtypes):
+        self.shift = shift
+        self.atomtypes = atomtypes
+
+
+class Peak(MyBase):
+    
+    def __init__(self, dims, tags):
+        for d in dims:
+            if not isinstance(d, PeakDim):
+                raise TypeError(('peak dimension', d))
+        self.dims = dims
+        self.tags = tags
+    
+
+class Molecule(MyBase):
+    
+    def __init__(self, residues):
+        if not isinstance(residues, dict):
+            raise TypeError(('residues', residues))
+        self.residues = residues
+    
+    
+class SpinSystem(MyBase):
+    
+    def __init__(self, peaks, aatypes, residueids):
+        for p in peaks:
+            if not isinstance(p, Peak):
+                raise TypeError(('peak', p))
+        self.peaks = peaks
+        self.aatypes = aatypes
+        self.residueids = residueids
+
+
+class Spectrum(MyBase):
     '''
     Hmmm, guess this isn't so much a spectrum as
     it is a bunch of peaks from the same spectrum
@@ -44,11 +79,8 @@ class Spectrum(object):
         self.axes = axes
         self.peaks = peaks
         
-    def __repr__(self):
-        return repr(self.__dict__)
         
-        
-class Project(object):
+class Project(MyBase):
     
     def __init__(self, name, spectra):
         '''
@@ -59,6 +91,3 @@ class Project(object):
             raise ValueError('Project needs dict of spectral name - spectra')
         self.name = name
         self.spectra = spectra
-        
-    def __repr__(self):
-        return repr(self.__dict__)
