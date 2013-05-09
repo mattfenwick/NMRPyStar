@@ -1,15 +1,7 @@
-'''
-Created on May 2, 2013
-
-@author: matt
-'''
 import patcher.model as pmod
 import nmrstar.model as nmod
-import xeasy.model as xmod
+from patcher.util import fmap_dict
 
-
-def fmap_dict(f, dic):
-    return dict((key, f(value)) for (key, value) in dic.iteritems())
 
 
 def _save_to_spectrum(saveFrame):
@@ -26,26 +18,6 @@ def _save_to_spectrum(saveFrame):
 
 def star2patch(sdata):
     return pmod.Project(sdata.name, fmap_dict(_save_to_spectrum, sdata.saves))
-
-
-def _spectrum_to_xeasy(pspec):
-    peaks = {}
-    for (pkid, pk) in pspec.peaks.iteritems():
-        peaks[int(pkid)] = xmod.Peak(pk.shifts)
-    return xmod.PeakFile(pspec.axes, peaks)
-
-def patch2xez(pmodel):
-    return fmap_dict(_spectrum_to_xeasy, pmodel.spectra)
-
-
-def _xeasy_to_spectrum(xpkfl):
-    peaks = {}
-    for (pid, pk) in xpkfl.peaks.iteritems():
-        peaks[pid] = pmod.Peak(pk.shifts, [], [])
-    return pmod.Spectrum(xpkfl.dimnames, peaks)
-    
-def xez2patch(projname, peakfiles):
-    return pmod.Project(projname, fmap_dict(_xeasy_to_spectrum, peakfiles))
 
 
 # my model (spectrum) -> star save frame

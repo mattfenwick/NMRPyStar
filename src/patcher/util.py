@@ -31,9 +31,9 @@ def peakHasTag(tag):
     '''
     return lambda pk: tag in pk.tags
 
-def addAtomtypeAll(aa, spec):
+def fmap_dict(f, dic):
     '''
-    Add an atomtype to all peaks in a spectrum
+    Apply a function to every value in a dictionary, creating a new
+    dictionary with the same size and same keys.
     '''
-    for pk in spec.peaks:
-        pk.atometypes.append(aa)
+    return dict((key, f(value)) for (key, value) in dic.iteritems())

@@ -8,13 +8,12 @@ import parse.conslist as c
 import parse.position as ps
 
 import patcher.util as ut
-import patcher.converters as pc
+import patcher.xeasyconverter as xc
+import patcher.nmrstarconverter as nc
 import nmrstar.parser as nsp
 import nmrstar.simple.unparser as unp
 import xeasy.unparser as xunp
 
-
-reload(pc)
 
 
 def xeasy_peakfile_parser(inp):
@@ -29,13 +28,13 @@ def xeasy_in(projname, paths):
             if r.status != 'success':
                 raise ValueError((name + ' parsing failed', r))
             xpkfls[name] = r.value['result']
-    return pc.xez2patch(projname, xpkfls)
+    return xc.xez2patch(projname, xpkfls)
 
 def xeasy_out(pmodel, paths):
     '''
     Expects a spectrum for each path
     '''
-    spectra = pc.patch2xez(pmodel)
+    spectra = xc.patch2xez(pmodel)
     for (name, path) in paths.iteritems():
         spectrum = spectra[name]
         with open(path, 'w') as outfile:
@@ -46,10 +45,10 @@ def star_in(starpath):
         star = nsp.fullParse(starfile.read())
     if star.status != 'success':
         raise ValueError(('unable to parse star project file', star))
-    return pc.star2patch(star.value['result'])
+    return nc.star2patch(star.value['result'])
 
 def star_out(pmodel, starpath):
-    text = unp.unparse(pc.patch2star(pmodel))
+    text = unp.unparse(nc.patch2star(pmodel))
     with open(starpath, 'w') as outfile:
         outfile.write(text)
     return None
