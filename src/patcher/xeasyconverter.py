@@ -1,6 +1,8 @@
 import patcher.model as pmod
 import xeasy.model as xmod
-from patcher.util import fmap_dict
+
+
+fmap_dict = pmod.fmap_dict
 
 
 def _spectrum_to_xeasy(pspec):
@@ -16,8 +18,9 @@ def patch2xez(pmodel):
 def _xeasy_to_spectrum(xpkfl):
     peaks = {}
     for (pid, pk) in xpkfl.peaks.iteritems():
-        peaks[pid] = pmod.Peak(pk.shifts, tags = [])
+        dims = [pmod.PeakDim(s, []) for s in pk.shifts]
+        peaks[pid] = pmod.Peak(dims, tags = [])
     return pmod.Spectrum(xpkfl.dimnames, peaks)
     
 def xez2patch(projname, peakfiles):
-    return pmod.Project(projname, fmap_dict(_xeasy_to_spectrum, peakfiles))
+    return pmod.Project(projname, fmap_dict(_xeasy_to_spectrum, peakfiles), pmod.Molecule({}), {})

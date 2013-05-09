@@ -1,7 +1,8 @@
 import patcher.model as pmod
 import nmrstar.model as nmod
-from patcher.util import fmap_dict
 
+
+fmap_dict = pmod.fmap_dict
 
 
 def _save_to_spectrum(saveFrame):

@@ -4,7 +4,9 @@ Created on May 9, 2013
 @author: mattf
 '''
 import patcher.model as mod
-from patcher.util import fmap_dict
+
+
+fmap_dict = mod.fmap_dict
 
 
 def loadPeakDim(dim):

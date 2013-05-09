@@ -30,10 +30,3 @@ def peakHasTag(tag):
     A predicate for checking whether a peak has a tag.
     '''
     return lambda pk: tag in pk.tags
-
-def fmap_dict(f, dic):
-    '''
-    Apply a function to every value in a dictionary, creating a new
-    dictionary with the same size and same keys.
-    '''
-    return dict((key, f(value)) for (key, value) in dic.iteritems())

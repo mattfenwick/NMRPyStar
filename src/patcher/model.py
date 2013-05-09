@@ -3,7 +3,14 @@ Created on Apr 29, 2013
 
 @author: mattf
 '''
-from patcher.util import fmap_dict
+
+
+def fmap_dict(f, dic):
+    '''
+    Apply a function to every value in a dictionary, creating a new
+    dictionary with the same size and same keys.
+    '''
+    return dict((key, f(value)) for (key, value) in dic.iteritems())
 
 
 def toJson(obj):
