@@ -51,12 +51,13 @@ class PeakDim(MyBase):
 
 class Peak(MyBase):
     
-    def __init__(self, dims, tags):
+    def __init__(self, dims, tags, height):
         for d in dims:
             if not isinstance(d, PeakDim):
                 raise TypeError(('peak dimension', d))
         self.dims = dims
         self.tags = tags
+        self.height = height
 
 
 class Spectrum(MyBase):
@@ -69,6 +70,8 @@ class Spectrum(MyBase):
         for (pkid, pk) in peaks.iteritems():
             if not isinstance(pkid, int):
                 raise TypeError(('peak id', pkid))
+            if not isinstance(pk, Peak):
+                raise TypeError(('peak', pk))
             if len(pk.dims) != len(axes):
                 raise ValueError('peak dimensions must match spectral axes')
         self.axes = axes

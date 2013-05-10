@@ -14,7 +14,7 @@ def loadPeakDim(dim):
     
     
 def loadPeak(pk):
-    return mod.Peak(map(loadPeakDim, pk['dims']), pk['tags'])
+    return mod.Peak(map(loadPeakDim, pk['dims']), pk['tags'], float(pk['height']))
 
     
 def loadSpectrum(spec):
