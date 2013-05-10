@@ -26,8 +26,9 @@ class PeakFile(object):
 
 class Peak(object):
 
-    def __init__(self, shifts):
+    def __init__(self, shifts, height):
         self.shifts = shifts
+        self.height = height
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__

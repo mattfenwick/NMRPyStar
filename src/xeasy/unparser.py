@@ -5,7 +5,9 @@ def peak(pid, pk):
     for s in pk.shifts:
         chunks.extend([' ', str(s)])
     # not sure what '1' and 'T' mean
-    chunks.append(' 1 T          0.000e+00  0.00e+00 a   0    0    0 0\n')
+    chunks.append(' 1 T          ')
+    chunks.append(str(pk.height))
+    chunks.append('  0.00e+00 a   0    0    0 0\n')
     return chunks
     
 def dims(dimNames):

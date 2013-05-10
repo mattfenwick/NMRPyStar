@@ -42,20 +42,29 @@ def dims(n):
     return Parser.all([dim] * n)
 
 
-_ws_integer = _space.many1().seq2R(_integer)
+# what's the spec say about leading whitespace -- is it optional or required?
+_ws_integer = _space.many0().seq2R(_integer)
 _ws_float   = _space.many1().seq2R(_float)
 _ws_field   = _space.many1().seq2R(_newline.plus(_space).not1().many1())
 
 def peakline(n):
-    return Parser.app(lambda ident, shifts, _fields, _1: (ident, m.Peak(shifts)), 
-                      _ws_integer, 
-                      Parser.all([_ws_float] * n), 
+    return Parser.app(lambda ident, shifts, _fields1, height, _fields2, _newl: (ident, m.Peak(shifts, float(height))), 
+                      _ws_integer,
+                      Parser.all([_ws_float] * n).commit('a'),
+                      Parser.all([_ws_field] * 2),
+                      _ws_field.fmap(lambda x: ''.join([y.char for y in x])),
                       _ws_field.many0(), 
                       _newline)
-    # Parser.get.bind(lambda x: _newline.commit((x, 'fuck me'))))
 
 
 def xeasyAction(dims, peaks):
     return m.PeakFile.fromSimple(dims, peaks)
 
-xeasy = line1.bind(lambda n: Parser.app(xeasyAction, dims(n), peakline(n).many0()))
+def endCheck(p):
+    def action(rest):
+        if rest.isEmpty(): 
+            return Parser.pure(None)
+        return Parser.error({'message': 'unparsed input remaining', 'position': rest.first()})
+    return p.seq2L(Parser.get.bind(action))
+
+xeasy = endCheck(line1.bind(lambda n: Parser.app(xeasyAction, dims(n), peakline(n).many0())))

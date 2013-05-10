@@ -37,8 +37,13 @@ class TestXEasy(u.TestCase):
     def testPeakLine(self):
         inp = ' 12 1.2 3.4 a b 1123\noops'
         inp1 = np.addLineCol(inp)
-        self.assertEqual(good(l(inp1[-4:]), None, (12, mod.Peak([1.2, 3.4]))), runParser(p.peakline(2), inp1))
+        self.assertEqual(good(l(inp1[-4:]), None, (12, mod.Peak([1.2, 3.4], 1123))), runParser(p.peakline(2), inp1))
 #        self.assertEqual(me.MaybeError.zero, runParser(p.dims(2), inp1[:20]))
+
+    def testPeakLine3d(self):
+        inp = '4436   9.559 129.430 175.123 1 T          1.077e+02  0.00e+00 a   0    0    0    0 0\nhi'
+        inp1 = np.addLineCol(inp)
+        self.assertEqual(good(l(inp1[-2:]), None, (4436, mod.Peak([9.559, 129.430, 175.123], 107.7))), runParser(p.peakline(3), inp1))
 
     def testXEeasy(self):
         inp = '''
@@ -50,5 +55,5 @@ class TestXEasy(u.TestCase):
  4 7.781 1 T          0.000e+02  0.00e+00 a   0    0    0    0 0
 '''
         inp1 = np.addLineCol(inp[1:])
-        self.assertEqual(good(l([]), None, mod.PeakFile(['H'], {1: mod.Peak([8.795]), 2: mod.Peak([7.229]),
-                                                                3: mod.Peak([6.243]), 4: mod.Peak([7.781])})), runParser(p.xeasy, inp1))
+        self.assertEqual(good(l([]), None, mod.PeakFile(['H'], {1: mod.Peak([8.795], 0), 2: mod.Peak([7.229], 0),
+                                                                3: mod.Peak([6.243], 0), 4: mod.Peak([7.781], 0)})), runParser(p.xeasy, inp1))
