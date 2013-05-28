@@ -20,8 +20,12 @@ def toJson(obj):
         return map(toJson, obj)
     if isinstance(obj, dict):
         return fmap_dict(toJson, obj)
-    return obj.toJson()
-#    raise TypeError(('unable to convert to JSON value', obj))
+    if isinstance(obj, tuple):
+        return map(toJson, obj)
+    try:
+        return obj.toJson()
+    except:
+        raise TypeError(('unable to convert to JSON value', obj))
 
 
 class MyBase(object):
@@ -99,8 +103,14 @@ class SpinSystem(MyBase):
     
     def __init__(self, pkids, aatypes, residueids, ssnexts):
         for pkid in pkids:
-            if not isinstance(pkid, int):
+            if not isinstance(pkid, list):
                 raise TypeError(('peak id', pkid))
+            if len(pkid) != 2:
+                raise ValueError(('peak id', pkid))
+            if not isinstance(pkid[0], basestring):
+                raise TypeError(('peak id spectrum', pkid))
+            if not isinstance(pkid[1], int):
+                raise TypeError(('peak id id', pkid))
         self.pkids = pkids
         self.aatypes = aatypes
         for rid in residueids:

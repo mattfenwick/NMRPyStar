@@ -10,9 +10,11 @@ import parse.position as ps
 import patcher.util as ut
 import patcher.xeasyconverter as xc
 import patcher.nmrstarconverter as nc
+import patcher.loader as pl
 import nmrstar.parser as nsp
 import nmrstar.simple.unparser as unp
 import xeasy.unparser as xunp
+import json
 
 
 
@@ -52,6 +54,14 @@ def star_out(pmodel, starpath):
     with open(starpath, 'w') as outfile:
         outfile.write(text)
     return None
+
+def json_in(jsonpath):
+    with open(jsonpath, 'r') as infile:
+        return pl.loadProject(json.loads(infile.read()))
+
+def json_out(jsonpath, proj):
+    with open(jsonpath, 'w') as outfile:
+        outfile.write(json.dumps(proj.toJson()))
 
 
 def xez_to_star(paths, star):

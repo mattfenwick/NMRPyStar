@@ -30,6 +30,10 @@ def loadSpinSystem(ss):
 
 
 def loadProject(prj):
+    '''
+    Convert a primitive object graph -- composed dicts, lists, etc., 
+    which are presumably from JSON -- to patcher model.
+    '''
     return mod.Project(prj['name'], 
                        fmap_dict(loadSpectrum, prj['spectra']), 
                        loadMolecule(prj['molecule']),
