@@ -1,13 +1,12 @@
-import nmrstar.tokenizer as tfull
-import nmrstar.simple.tokenizer as tsimple
-import parse.position as p
-import parse.conslist as c
-import nmrstar.astparser as a
+from .tokenizer import scanner as tfull
+from .simple import scanner as tsimple
+from .parse import addLineCol, ConsList
+from .astparser import nmrstar
 
 
 
 def tokenize(scanner, string):
-    lcChars = c.ConsList.fromIterable(p.addLineCol(string))
+    lcChars = ConsList.fromIterable(addLineCol(string))
     return scanner.parse(lcChars, None)
 
 
@@ -19,7 +18,7 @@ def stripJunk(tokens):
 
 def astParse(tokenization):
     stripped = stripJunk(tokenization['result'])
-    return a.nmrstar.parse(c.ConsList.fromIterable(stripped), None)
+    return nmrstar.parse(ConsList.fromIterable(stripped), None)
 
 
 def parse(scanner, string):
@@ -32,7 +31,7 @@ def fullParse(string):
     Parse string according to full NMR-Star
     syntactic definition.
     '''
-    return parse(tfull.scanner, string)
+    return parse(tfull, string)
 
 
 def simpleParse(string):
@@ -40,4 +39,4 @@ def simpleParse(string):
     Parse string according to simplified NMR-Star
     syntactic definition.
     '''
-    return parse(tsimple.scanner, string)
+    return parse(tsimple, string)

@@ -1,5 +1,5 @@
-import nmrstar.model as m
-import nmrstar.simple.tokenizer as t
+from .. import model
+from . import tokenizer
 
 
 # see http://stackoverflow.com/questions/2158395/flatten-an-irregular-list-of-lists-in-python
@@ -22,7 +22,7 @@ def data(node):
 
 
 def checkName(key):
-    if set(key).intersection(t._WHITESPACE) != set([]):
+    if set(key).intersection(tokenizer._WHITESPACE) != set([]):
         raise ValueError("identifiers may not contain whitespace")
     return key
 
@@ -83,7 +83,7 @@ def loop(node):
 
 
 def unparse(node):
-    if type(node) != m.Data:
+    if type(node) != model.Data:
         raise TypeError(('unable to star-unparse value', node))
     chunks = data(node)
     return ''.join(chunks)

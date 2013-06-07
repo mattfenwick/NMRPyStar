@@ -1,5 +1,8 @@
-from parse.standard import Parser
-import nmrstar.model as m
+from .parse import Parser
+from . import model
+
+
+m = model
 
 
 # String -> Parser Token Token

@@ -1,10 +1,5 @@
-import parse.maybeerror as me
-import parse.combinators as pc
+from .maybeerror import MaybeError
+from .combinators import parserFactory
 
 
-# interpreter workaround
-reload(me)
-reload(pc)
-
-
-Parser = pc.parserFactory(me.MaybeError)
+Parser = parserFactory(MaybeError)
