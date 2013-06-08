@@ -1,5 +1,5 @@
-from .parse import Parser
-from . import model
+from parse import Parser
+import model
 
 
 m = model

@@ -2,10 +2,12 @@ from distutils.core import setup
 
 setup(
     name='NMRPyStar',
-    version='0.0.3',
-    packages=['nmrpystar'],
+    version='0.0.7',
+    packages=['nmrpystar', 'nmrpystar.parse', 'nmrpystar.simple'],
     license='MIT',
     author='Matt Fenwick',
     author_email='mfenwick100@gmail.com',
-    url='https://github.com/mattfenwick/NMRPyStar'
+    url='https://github.com/mattfenwick/NMRPyStar',
+    description='a parser for the NMR-Star data format',
+    long_description = open('README.md').read(),
 )

@@ -1,7 +1,8 @@
 ## NMRPyStar ##
 
-A tool for parsing and unparsing NMR-Star files, the format used by the BMRB
-for archival of NMR data.
+A library for parsing data in NMR-Star format, used
+by the BMRB for NMR (Nuclear Magnetic Resonance) data
+archival.
 
 Why is this project necessary?  After all, many people have already written
 working NMR-Star parsers.

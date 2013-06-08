@@ -1,7 +1,7 @@
-from .tokenizer import scanner as tfull
-from .simple import scanner as tsimple
-from .parse import addLineCol, ConsList
-from .astparser import nmrstar
+from tokenizer import scanner as tfull
+from simple import scanner as tsimple
+from parse import addLineCol, ConsList
+from astparser import nmrstar
 
 
 

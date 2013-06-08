@@ -1,5 +1,5 @@
-from .parse import Parser
-from .tokens import Token
+from parse import Parser
+from tokens import Token
 
 
 def _literal(c):
