@@ -29,13 +29,18 @@ class Loop(object):
         return Loop(keys, rows, meta)
     
     def __repr__(self):
-        return repr({'type': 'Loop', 'keys': self.keys, 
-                     'rows': self.rows, 'meta': self.meta})
+        return repr(self.toJSONObject())
         
     def __eq__(self, other):
         # should 'meta' be included in the equality check?
         # should row order matter?
         return self.__dict__ == other.__dict__
+    
+    def toJSONObject(self):
+        return {'type': 'Loop', 
+                'keys': self.keys,
+                'rows': self.rows,
+                'meta': self.meta}
     
 
 class Save(object):
@@ -72,7 +77,13 @@ class Save(object):
         return Save(datums, loops, meta)
         
     def __repr__(self):
-        return repr({'type': 'Save', 'datums': self.datums, 'loops': self.loops, 'meta': self.meta})
+        return repr(self.toJSONObject())
+    
+    def toJSONObject(self):
+        return {'type'  : 'Save', 
+                'datums': self.datums, 
+                'loops' : [l.toJSONObject() for l in self.loops], 
+                'meta'  : self.meta}
     
     def __eq__(self, other):
         # should 'meta' be included in the equality check?
@@ -101,11 +112,15 @@ class Data(object):
         return Data(dataName, mySaves, meta)
     
     def __repr__(self):
-        return repr({'type': 'Data', 'name': self.name, 'save frames': self.saves, 'meta': self.meta})
+        return repr(self.toJSONObject())
+    
+    def toJSONObject(self):
+        return {'type'       : 'Data', 
+                'name'       : self.name, 
+                'save frames': dict((k, s.toJSONObject()) for (k, s) in self.saves.items()),
+                'meta'       : self.meta}
         
     def __eq__(self, other):
         # should 'meta' be included in the equality check?
         # should save frame order matter?
         return self.__dict__ == other.__dict__
-
-

@@ -4,6 +4,8 @@
 import nmrpystar.parser as nmp
 import urllib2
 import sys
+import json
+
 
 
 def parseString():
@@ -59,4 +61,4 @@ def parseFromStdin():
 
 
 if __name__ == "__main__":
-    print parseFromStdin()
+    print json.dumps(parseFromStdin()[2].toJSONObject())
