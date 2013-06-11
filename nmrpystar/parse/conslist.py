@@ -42,11 +42,16 @@ class ConsList(object):
         return ConsList(seq, 0)
         
     def __eq__(self, other):
+        # the try/except prevents exceptions being thrown if a
+        #   ConsList is compared to an object of a different class
         try:
             return self.seq[self.start:] == other.seq[other.start:]
         except:
             return False
-        
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def __repr__(self):
         return repr({'type': 'cons list', 'sequence': self.getRest()})
             

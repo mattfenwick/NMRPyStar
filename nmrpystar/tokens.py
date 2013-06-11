@@ -25,3 +25,6 @@ class Token(object):
             return self.__dict__ == other.__dict__
         except:
             return False  # uhhh ... is this bad?
+    
+    def __ne__(self, other):
+        return self.__eq__(other)

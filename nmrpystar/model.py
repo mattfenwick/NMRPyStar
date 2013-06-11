@@ -36,6 +36,9 @@ class Loop(object):
         # should row order matter?
         return self.__dict__ == other.__dict__
     
+    def __ne__(self, other):
+        return self.__eq__(other)
+    
     def toJSONObject(self):
         return {'type': 'Loop', 
                 'keys': self.keys,
@@ -93,6 +96,9 @@ class Save(object):
         # should loop/datum order matter?
         return self.__dict__ == other.__dict__
 
+    def __ne__(self, other):
+        return self.__eq__(other)
+    
 
 class Data(object):
 
@@ -127,3 +133,6 @@ class Data(object):
         # should 'meta' be included in the equality check?
         # should save frame order matter?
         return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return self.__eq__(other)

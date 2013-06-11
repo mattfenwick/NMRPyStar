@@ -12,6 +12,9 @@ class Char(object):
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
+    def __ne__(self, other):
+        return self.__eq__(other)
+    
 
 def addLineCol(string):
     line, column, chars = 1, 1, []

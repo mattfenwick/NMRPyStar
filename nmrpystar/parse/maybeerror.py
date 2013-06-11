@@ -16,6 +16,9 @@ class MaybeError(object):
             return False
         return self.value == other.value
     
+    def __ne__(self, other):
+        return self.__eq__(other)
+    
     def fmap(self, f):
         if self.status == 'success':
             return MaybeError('success', f(self.value))
