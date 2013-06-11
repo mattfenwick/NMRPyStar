@@ -34,7 +34,7 @@ data_startthedata
 
 
 def parseFile():
-    path = 'example_in.txt'
+    path = 'nmrpystar/test/nmrstar/bmrb17661.txt'
     with open(path, 'r') as infile:
         inputStr = infile.read()
         parsed = nmp.fullParse(inputStr)
