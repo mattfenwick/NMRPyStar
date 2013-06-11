@@ -42,6 +42,9 @@ class Loop(object):
                 'rows': self.rows,
                 'meta': self.meta}
     
+    def getRowAsDict(self, rowIndex):
+        return dict(zip(self.keys, self.rows[rowIndex]))
+    
 
 class Save(object):
 
