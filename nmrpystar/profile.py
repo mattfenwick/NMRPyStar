@@ -1,9 +1,12 @@
-import nmrstar.tokenizer as t
+'''
+@author: mattf
+'''
+import tokenizer as t
 import parse.position as p
 import parse.conslist as c
 import cProfile
 import pstats
-import nmrstar.parser as nmp
+import parser as nmp
 
 
 def tokenizeFile(string):
