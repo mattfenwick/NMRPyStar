@@ -88,6 +88,13 @@ it is to use a parser:
  
  - unit tests
 
+
+### Reference ###
+
+Parser Combinators: a Practical Application for Generating Parsers for NMR Data 
+ by Matthew Fenwick, Gerard Weatherby, Heidi JC Ellis, Michael R. Gryk
+ Proceedings of the ITNG, 2013.
+
  
 
 ### Contact information ###
