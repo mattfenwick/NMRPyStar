@@ -44,5 +44,13 @@ def dataRest(open):
 # Parser Token Data
 data = tokentype('dataopen').bind(dataRest)
 
+
+def checkEmpty(tokens):
+    if tokens.isEmpty():
+        return Parser.pure(None)
+    else:
+        return Parser.error(('unparsed tokens remaining', tokens.getRest()))
+    
 # Parser Token Data
-nmrstar = data
+#   must consume all tokens
+nmrstar = data.seq2L(Parser.get.bind(checkEmpty))
