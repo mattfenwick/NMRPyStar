@@ -1,6 +1,6 @@
-import parse.standard as s
-import parse.conslist as c
-import parse.maybeerror as me
+import nmrpystar.parse.standard as s
+import nmrpystar.parse.conslist as c
+import nmrpystar.parse.maybeerror as me
 import unittest as u
 
 

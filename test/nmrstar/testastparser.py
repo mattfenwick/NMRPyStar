@@ -1,15 +1,15 @@
-import nmrstar.astparser as p
-import nmrstar.tokens
-import nmrstar.model as md
-import parse.position as np
-import parse.maybeerror as me
-import parse.conslist as c
+import nmrpystar.astparser as p
+import nmrpystar.tokens
+import nmrpystar.model as md
+import nmrpystar.parse.position as np
+import nmrpystar.parse.maybeerror as me
+import nmrpystar.parse.conslist as c
 import unittest as u
 
 
 
 m = me.MaybeError
-Token = nmrstar.tokens.Token
+Token = nmrpystar.tokens.Token
 l = c.ConsList.fromIterable
 
 m1, m2 = {'line': 3, 'column': 4}, {'line': 5, 'column': 10}

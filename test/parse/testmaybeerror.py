@@ -1,4 +1,4 @@
-from parse.maybeerror import MaybeError
+from nmrpystar.parse.maybeerror import MaybeError
 import unittest as u
 
 m = MaybeError

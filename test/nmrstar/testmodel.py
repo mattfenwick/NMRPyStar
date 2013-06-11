@@ -1,4 +1,4 @@
-import nmrstar.model as m
+import nmrpystar.model as m
 import unittest as u
 
 

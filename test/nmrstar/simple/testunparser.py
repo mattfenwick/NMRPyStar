@@ -1,5 +1,5 @@
-import nmrstar.model as m
-import nmrstar.simple.unparser as unp
+import nmrpystar.model as m
+import nmrpystar.simple.unparser as unp
 import unittest as u
 
 

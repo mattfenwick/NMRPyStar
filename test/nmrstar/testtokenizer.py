@@ -1,13 +1,13 @@
-import nmrstar.tokenizer as tok
-import nmrstar.tokens
-import parse.position as np
-import parse.maybeerror as me
-import parse.conslist as c
+import nmrpystar.tokenizer as tok
+import nmrpystar.tokens as tokens
+import nmrpystar.parse.position as np
+import nmrpystar.parse.maybeerror as me
+import nmrpystar.parse.conslist as c
 import unittest as u
 
 
 m = me.MaybeError
-Token = nmrstar.tokens.Token
+Token = tokens.Token
 tokenp = tok.token
 l = c.ConsList.fromIterable
 
