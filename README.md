@@ -59,34 +59,124 @@ it is to use a parser:
 
 
 
-### General project organization ###
+### Full NMR-Star Grammar ###
 
- - parser combinators.  General set of building blocks
-   for constructing parsers
- 
- - full NMR-Star:
- 
-   - grammar
-   
-   - tokenizer
- 
- - simplified NMR-Star:  reduces rule duplication and 
-   removes need for lookahead and backtracking.  Allows
-   better error reporting and easier unparsing
-   
-   - grammar 
-   
-   - tokenizer
-   
-   - unparser
+Derived from the Spaddaccini and Hall papers describing the Star format, 
+and with thanks to Dmitri Maziuk for his pointers:
 
- - NMR-Star data model 
+Hierarchical grammar.  Note that hierarchical rules' first letters are capitalized,
+while token names are all lowercase:
 
- - NMR-Star hierarchical parser
-   input:  tokens
-   output:  error or instance of NMR-Star data model
- 
- - unit tests
+    NMRStar  :=   Data 
+        
+    Data     :=   dataopen   Save(+)
+        
+    Save     :=   saveopen   ( Datum  |  Loop )(*)   saveclose
+        
+    Datum    :=   identifier  value
+        
+    Loop     :=   loop  identifier(*)  value(*)  stop
+
+
+Tokens:
+
+    newline    :=  '\n'   |  '\r'  |  '\f'
+
+    blank      :=  ' '    |  '\t'
+
+    space      :=  blank  |  newline
+
+    special    :=  '"'    |  '#'   |  '_'  |  space
+
+    stop       :=  "stop_"
+
+    saveclose  :=  "save_"
+
+    loop       :=  "loop_"
+
+    comment    :=  '#'  (not newline)(*)
+
+    dataopen   :=  "data_"  (not space)(+)
+
+    saveopen   :=  "save_"  (not space)(+)
+
+    identifier :=  '_'  (not space)(+)
+
+    unquoted   :=  (not special)  (not space)(*)
+
+    endsc      :=  newline  ';'
+
+    scstring   :=  ';'  (not endsc)(*)  endsc
+
+    sqstring   :=  '\''  (not '\'')(+)  '\''
+    
+    sqstring   :=  '\''  ( ('\'' (not space))  |  (not '\'') )(+)  '\''
+
+    dqstring   :=  '"'  (not '"')(+)  '"'
+
+    value      :=  sqstring  |  dqstring  |  scstring  |  unquoted
+
+    whitespace :=  blank(+)
+
+    newlines   :=  newline(+)
+
+    token      :=  dataopen   |  saveopen  |  saveclose  |  
+                   loop       |  stop      |  value      |  
+                   whitespace |  newlines  |  comment    |  
+                   identifier
+
+### Simple Grammar ###
+
+This grammar reduces rule duplication and removes need for lookahead and backtracking.
+It is *not* compatible with the NMR-Star format.
+This helps to eable better error reporting and easier unparsing.
+The expressiveness of the format is unchanged.
+
+Hierarchical grammar:
+
+    NMRStar  :=   Data 
+        
+    Data     :=   dataopen   Save(+)
+        
+    Save     :=   saveopen   ( Datum  |  Loop )(*)   saveclose
+        
+    Datum    :=   identifier  value
+        
+    Loop     :=   loop  identifier(*)  value(*)  stop
+
+
+Tokens:
+
+    newline    :=  '\n'  |  '\r'  |  '\f'
+    
+    space      :=  '\t'  |  ' '
+
+    whitespace :=  ( newline  |  space )(+)
+
+    stop       :=  "stop_"
+
+    saveclose  :=  "save_"
+
+    loop       :=  "loop_"
+
+    comment    :=  '#'  (not newline)(*)
+
+    dataopen   :=  "data_"  (not whitespace)(+)
+
+    saveopen   :=  "save_"  (not whitespace)(+)
+
+    identifier :=  '_'  (not whitespace)(+)
+    
+    simplechar :=  (not  ( '"'  |  '\\' ))
+    
+    escape     :=  '\\'  ( '"'  |  '\\' )
+
+    value      :=  '"'  ( simplechar  |  escape )(*)  '"'
+
+    token      :=  dataopen   |  saveopen  |  saveclose  |  
+                   loop       |  stop      |  value      |  
+                   whitespace |  comment   |  identifier
+
 
 
 ### Reference ###
