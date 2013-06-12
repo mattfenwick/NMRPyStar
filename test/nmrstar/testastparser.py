@@ -49,9 +49,19 @@ class TestParser(u.TestCase):
         output = bad('loop: repeated identifier', ident)
         self.assertEqual(p.loop.parse(toks, None), output)
         
+    def testLoopInvalidContent(self):
+        toks = l([loop, ident, val, saveopen, stop])
+        output = bad('loop: invalid content', m1)
+        self.assertEqual(p.loop.parse(toks, None), output)
+        
     def testDatum(self):
         toks = l([ident, val, stop])
         output = good(l([stop]), None, ('abc', '123'))
+        self.assertEqual(p.datum.parse(toks, None), output)
+    
+    def testDatumMissingValue(self):
+        toks = l([ident, stop])
+        output = bad('datum: missing value', ident)
         self.assertEqual(p.datum.parse(toks, None), output)
         
     def testSave(self):
@@ -66,14 +76,39 @@ class TestParser(u.TestCase):
         output = bad('repeated identifier in save frame', ident)
         self.assertEqual(p.save.parse(toks, None), output)
         
+    def testSaveUnclosed(self):
+        toks = l([saveopen, ident, val])
+        output = bad('unclosed save frame', m1)
+        self.assertEqual(p.save.parse(toks, None), output)
+        
+    def testSaveInvalidContent(self):
+        toks = l([saveopen, ident, val, dataopen, saveclose])
+        output = bad('unclosed save frame', m1)
+        self.assertEqual(p.save.parse(toks, None), output)
+        
     def testData(self):
         toks = l([dataopen, saveopen, ident, val, saveclose])
         output = good(l([]),
                       None,
                       md.Data.fromSimple('hello1', [('mysave', md.Save.fromSimple([('abc', '123')], m1))], m2))
         self.assertEqual(p.data.parse(toks, None), output)
+        
+    def testDataInvalidContent(self):
+        toks = l([dataopen, val, saveopen, ident, val, saveclose])
+        output = bad('data: invalid content', dataopen)
+        self.assertEqual(p.data.parse(toks, None), output)
+    
+    def testDataNoContent(self):
+        toks = l([dataopen])
+        output = bad("data: missing content", dataopen)
+        self.assertEqual(p.data.parse(toks, None), output)
     
     def testRepeatedSaveFrameNames(self):
         toks = l([dataopen, saveopen, ident, val, saveclose, saveopen, ident, val, saveclose])
         output = bad('repeated save frame name', saveopen)
         self.assertEqual(p.data.parse(toks, None), output)
+        
+    def testUnconsumedTokensRemaining(self):
+        toks = l([dataopen, saveopen, ident, val, saveclose, val, dataopen])
+        output = bad('unconsumed input remaining', dataopen)
+        self.assertEqual(p.nmrstar.parse(toks, None), output)
