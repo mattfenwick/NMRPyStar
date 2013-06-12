@@ -17,7 +17,7 @@ def loopRest(open):
     return Parser.app(action,
                       tokentype('identifier').many0(),
                       tokentype('value').many0(),
-                      tokentype('stop')).commit({'message': 'unable to parse loop', 'open': open})
+                      tokentype('stop')).commit({'message': 'unable to parse loop', 'position': open.meta})
 
 # Parser Token Loop                      
 loop = tokentype('loop').bind(loopRest)
