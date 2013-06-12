@@ -38,7 +38,7 @@ def parseFile():
     with open(path, 'r') as infile:
         inputStr = infile.read()
         parsed = nmp.fullParse(inputStr)
-        ast = parsed.value['result']
+        ast = parsed.value
         return (inputStr, parsed, ast)
 
 
