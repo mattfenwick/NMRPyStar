@@ -67,24 +67,10 @@ it is to use a parser:
 
 
 
-### Full NMR-Star Grammar ###
+## NMR-Star Grammar ##
 
 Derived from the Spaddaccini and Hall papers describing the Star format, 
-and with thanks to Dmitri Maziuk for his pointers:
-
-Hierarchical grammar.  Note that hierarchical rules' first letters are capitalized,
-while token names are all lowercase:
-
-    NMRStar  :=   Data 
-        
-    Data     :=   dataopen   Save(+)
-        
-    Save     :=   saveopen   ( Datum  |  Loop )(*)   saveclose
-        
-    Datum    :=   identifier  value
-        
-    Loop     :=   loop  identifier(*)  value(*)  stop
-
+and with thanks to Dmitri Maziuk for his pointers.
 
 Tokens:
 
@@ -116,8 +102,6 @@ Tokens:
 
     scstring   :=  ';'  (not endsc)(*)  endsc
 
-    sqstring   :=  '\''  (not '\'')(+)  '\''
-    
     sqstring   :=  '\''  ( ('\'' (not space))  |  (not '\'') )(+)  '\''
 
     dqstring   :=  '"'  (not '"')(+)  '"'
@@ -133,14 +117,9 @@ Tokens:
                    whitespace |  newlines  |  comment    |  
                    identifier
 
-### Simple Grammar ###
 
-This grammar reduces rule duplication and removes need for lookahead and backtracking.
-It is *not* compatible with the NMR-Star format.
-This helps to eable better error reporting and easier unparsing.
-The expressiveness of the format is unchanged.
-
-Hierarchical grammar:
+Context-free grammar.  Note that hierarchical rules' first letters 
+are capitalized, while token names are all lowercase:
 
     NMRStar  :=   Data 
         
@@ -153,37 +132,43 @@ Hierarchical grammar:
     Loop     :=   loop  identifier(*)  value(*)  stop
 
 
-Tokens:
+Context-sensitive rules:
 
-    newline    :=  '\n'  |  '\r'  |  '\f'
-    
-    space      :=  '\t'  |  ' '
+ - no repeated identifiers in loops
+ - no repeated identifiers in save frames
+ - no duplicate save frame names
+ - number of values in a loop must be an integer multiple
+   of the number of keys
 
-    whitespace :=  ( newline  |  space )(+)
 
-    stop       :=  "stop_"
 
-    saveclose  :=  "save_"
+### Error conditions ###
 
-    loop       :=  "loop_"
+ - tokenization:
+   - ???
+ 
+ - unconsumed input
+   - any characters left after tokenizatin
+   - any tokens left after ast parsing
+ 
+ - data block:
+   - invalid content:  loop or key/val
+   - doesn't have at least 1 save frame
 
-    comment    :=  '#'  (not newline)(*)
-
-    dataopen   :=  "data_"  (not whitespace)(+)
-
-    saveopen   :=  "save_"  (not whitespace)(+)
-
-    identifier :=  '_'  (not whitespace)(+)
-    
-    simplechar :=  (not  ( '"'  |  '\\' ))
-    
-    escape     :=  '\\'  ( '"'  |  '\\' )
-
-    value      :=  '"'  ( simplechar  |  escape )(*)  '"'
-
-    token      :=  dataopen   |  saveopen  |  saveclose  |  
-                   loop       |  stop      |  value      |  
-                   whitespace |  comment   |  identifier
+ - save frame:
+   - unclosed
+   - invalid content
+   - duplicate keys
+ 
+ - loop:
+   - unclosed
+   - invalid content
+   - number of values is not an integer multiple of number of keys
+   - 0 keys
+   - duplicate keys
+ 
+ - datum (key-val pair):
+   - missing value
 
 
 
