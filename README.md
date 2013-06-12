@@ -4,6 +4,14 @@ A library for parsing data in NMR-Star format, used
 by the BMRB for NMR (Nuclear Magnetic Resonance) data
 archival.
 
+This is an open source project under the MIT license; 
+feel free to use the code in any way that helps you get
+some awesome science done!
+ 
+
+
+### Motivation ###
+
 Why is this project necessary?  After all, many people have already written
 working NMR-Star parsers.
 
@@ -176,6 +184,17 @@ Tokens:
     token      :=  dataopen   |  saveopen  |  saveclose  |  
                    loop       |  stop      |  value      |  
                    whitespace |  comment   |  identifier
+
+
+
+### Installation ###
+
+The easiest way to install NMRPyStar is using pip:
+
+    $ pip install nmrpystar
+
+If you don't have pip or easy_install, you can download the package
+manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
 
 
 
