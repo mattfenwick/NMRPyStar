@@ -8,6 +8,9 @@ class Loop(X):
             raise TypeError('Loop needs list of keys')
         if not isinstance(rows, list):
             raise TypeError('Loop neews list of rows')
+        for r in rows:
+            if not isinstance(r, list):
+                raise TypeError('Loop rows must be lists')
         self.keys = keys
         self.rows = rows
 

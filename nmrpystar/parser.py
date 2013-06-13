@@ -1,9 +1,7 @@
 '''
 @author: matt
 '''
-from nmrpystar.parse.standard import Parser
-from nmrpystar.parse.conslist import ConsList
-from nmrpystar.parse.position import addLineCol
+from .parse.standard import Parser
 from . import concrete
 
 
@@ -143,10 +141,3 @@ def endCheck(xs):
     return Parser.error(('unparsed input remaining', xs.first().meta))
 
 nmrstar = data.seq2L(munch(Parser.get.bind(endCheck)))
-
-
-def run(p, ts, s=None):
-    '''
-    just a temporary hack
-    '''
-    return p.parse(ConsList.fromIterable(addLineCol(ts)), s)

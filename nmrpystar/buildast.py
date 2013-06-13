@@ -53,7 +53,7 @@ def buildSave(save):
         if isinstance(v, concrete.Datum):
             key, value = v.key.string, v.value.string
             if datums.has_key(key):
-                return bad(('save: duplicate key', key, v.key.start))
+                return bad(('save: duplicate key', key, save.start))
             datums[key] = value
         elif isinstance(v, concrete.Loop):
             l = buildLoop(v)
@@ -66,13 +66,14 @@ def buildSave(save):
     return good(ast.Save(datums, loops))
 
 
-def buildData(dataName, saves):
+def buildData(node):
+    dataName, saves = node.name, node.saves
     mySaves = {}
     for save in saves:
         if not isinstance(save, concrete.Save):
             raise TypeError(('Data expects Saves', save))
         if mySaves.has_key(save.name):
-            return bad(('data: duplicate save frame name', save.name, save.start))
+            return bad(('data: duplicate save frame name', save.name, node.start))
         s = buildSave(save)
         if s.status == 'success':
             mySaves[save.name] = s.value
@@ -84,4 +85,4 @@ def buildData(dataName, saves):
 def concreteToAST(node):
     if not isinstance(node, concrete.Data):
         raise TypeError(("expected concrete Data node", node))
-    return buildData(node.name, node.saves)
+    return buildData(node)
