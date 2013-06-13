@@ -49,13 +49,20 @@ def sqAction(op, body, _):
 
 sqstring = Parser.app(sqAction, sq, nonEndingSq.plus(sq.not1()).many1(), sq)
 
-dqstring = Parser.app(lambda o, b, _: concrete.Value(o.meta, extract(b)), dq, dq.not1().many1(), dq)
+def dqRest(o):
+    def action(b, _):
+        return concrete.Value(o.meta, extract(b))
+    return Parser.app(action, 
+                      dq.not1().many1(),
+                      dq).commit(('unable to parse double-quote delimited string', o.meta))
+
+dqstring = dq.bind(dqRest)
 
 _value = Parser.any([sqstring, dqstring, scstring]) # unquoted taken care of by uq_or_keyword rule
 
 
-comment = _literal('#').seq2R(newline.not1().many0())
-whitespace = blank.plus(newline).many1()
+comment = Parser.app(lambda o, b: concrete.Comment(o.meta, extract(b)), _literal('#'), newline.not1().many0())
+whitespace = blank.plus(newline).many1().fmap(lambda b: concrete.Whitespace(b[0].meta, extract(b)))
 
 
 def uqOrKey(c, cs):
@@ -72,7 +79,7 @@ def classify(v):
     err, pure, Reserved = Parser.error, Parser.pure, concrete.Reserved
     if string[:5] == "stop_":
         if len(string) != 5:
-            return err(('invalid keyword', string))
+            return err(('invalid keyword', meta))
         return pure(Reserved(meta, "stop", ''))
     elif string[:5] == "save_":
         if len(string) != 5:
@@ -80,11 +87,11 @@ def classify(v):
         return pure(Reserved(meta, "saveclose", ''))
     elif string[:5] == "loop_":
         if len(string) != 5:
-            return err(('invalid keyword', string))
+            return err(('invalid keyword', meta))
         return pure(Reserved(meta, "loop", ''))
     elif string[:5] == "data_":
         if len(string) == 5:
-            return err(('invalid keyword', string))
+            return err(('invalid keyword', meta))
         return pure(Reserved(meta, "dataopen", string[5:]))
     return pure(concrete.Value(meta, string))
         
@@ -104,11 +111,29 @@ def keyword(rtype):
     return uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Reserved) and val.rtype == rtype)
 
 
-loop = Parser.app(concrete.Loop, keyword('loop').fmap(lambda x: x.start), identifier.many0(), value.many0(), keyword('stop'))
+def loopRest(op):
+    def action(ids, vals, cls):
+        return concrete.Loop(op.start, ids, vals, cls.start)
+    return Parser.app(action, 
+                      identifier.many0(), 
+                      value.many0(), 
+                      keyword('stop')).commit(('loop: unable to parse', op.start))
+                      
+loop = keyword('loop').bind(loopRest) 
 
-datum = Parser.app(concrete.Datum, identifier, value)
+def datumRest(i):
+    return value.fmap(lambda v: concrete.Datum(i, v)).commit(('datum: missing value', i.start))
 
-save = Parser.app(lambda o, its, c: concrete.Save(o.start, o.string, its, c.start), keyword('saveopen'), loop.plus(datum).many0(), keyword('saveclose'))
+datum = identifier.bind(datumRest)
+
+def saveRest(op):
+    def action(its, c):
+        return concrete.Save(op.start, op.string, its, c.start)
+    return Parser.app(action,
+                      loop.plus(datum).many0(), 
+                      keyword('saveclose')).commit(('save: unable to parse', op.start))
+
+save = keyword('saveopen').bind(saveRest)
 
 data = Parser.app(lambda o, ss: concrete.Data(o.start, o.string, ss), keyword('dataopen'), save.many0())
 

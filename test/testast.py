@@ -1,7 +1,8 @@
-import nmrpystar.model as m
+import nmrpystar.ast as m
 import unittest as u
 
 
+bye = '''
 
 l, s, d = m.Loop.fromSimple, m.Save.fromSimple, m.Data.fromSimple
 
@@ -34,3 +35,4 @@ class TestModel(u.TestCase):
     def testDataExceptions(self):
         self.assertRaises(TypeError, d, 'abc', [3])
         self.assertRaises(ValueError, d, 'a', [('z', s([])), ('z', s([]))])
+'''

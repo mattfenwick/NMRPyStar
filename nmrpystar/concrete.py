@@ -115,3 +115,27 @@ class Reserved(X):
                 'start' : self.start,
                 'rtype' : self.rtype,
                 'string': self.string}
+
+
+class Comment(X):
+    
+    def __init__(self, start, string):
+        self.start = start
+        self.string = string
+    
+    def toJSONObject(self):
+        return {'type'  : 'comment',
+                'start' : self.start,
+                'string': self.string}
+
+
+class Whitespace(X):
+    
+    def __init__(self, start, string):
+        self.start = start
+        self.string = string
+    
+    def toJSONObject(self):
+        return {'type'  : 'whitespace',
+                'start' : self.start,
+                'string': self.string}
