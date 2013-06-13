@@ -104,7 +104,7 @@ def keyword(rtype):
     return uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Reserved) and val.rtype == rtype)
 
 
-loop = Parser.app(concrete.Loop, keyword('loop'), identifier.many0(), value.many0(), keyword('stop'))
+loop = Parser.app(concrete.Loop, keyword('loop').fmap(lambda x: x.start), identifier.many0(), value.many0(), keyword('stop'))
 
 datum = Parser.app(concrete.Datum, identifier, value)
 
