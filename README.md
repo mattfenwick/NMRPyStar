@@ -98,13 +98,19 @@ Tokens:
 
     unquoted   :=  (not special)  (not space)(*)
 
-    endsc      :=  newline  ';'
-
     scstring   :=  ';'  (not endsc)(*)  endsc
+      where
+        endsc  :=  newline  ';'
 
-    sqstring   :=  '\''  ( ('\'' (not space))  |  (not ( '\''  |  newline ) ) )(+)  '\''
+    sqstring   :=  '\''  ( nonEndingSq  |  bodyChar )(+)  '\''
+      where
+        nonEndingSq  :=  '\'' (not space)
+        bodyChar     :=  (not ( '\''  |  newline ) )
 
-    dqstring   :=  '"'  ( ('"' (not space))  |  (not ( '"'  |  newline ) ) )(+)  '"'
+    dqstring   :=  '"'  ( nonEndingDq  |  bodyChar )(+)  '"'
+      where
+        nonEndingDq  :=  '"' (not space)
+        bodyChar     :=  (not ( '"'  |  newline ) )
 
     value      :=  sqstring  |  dqstring  |  scstring  |  unquoted
 
