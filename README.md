@@ -80,8 +80,6 @@ Tokens:
 
     space      :=  blank  |  newline
 
-    special    :=  '"'    |  '#'   |  '_'  |  '\''  |  space
-
     stop       :=  "stop_"
 
     saveclose  :=  "save_"
@@ -97,6 +95,8 @@ Tokens:
     identifier :=  '_'  (not space)(+)
 
     unquoted   :=  (not special)  (not space)(*)
+      where
+        special    :=  '"'    |  '#'   |  '_'  |  '\''  |  space
 
     scstring   :=  ';'  (not endsc)(*)  endsc
       where
@@ -114,14 +114,11 @@ Tokens:
 
     value      :=  sqstring  |  dqstring  |  scstring  |  unquoted
 
-    whitespace :=  blank(+)
-
-    newlines   :=  newline(+)
+    whitespace :=  space(+)
 
     token      :=  dataopen   |  saveopen  |  saveclose  |  
                    loop       |  stop      |  value      |  
-                   whitespace |  newlines  |  comment    |  
-                   identifier
+                   whitespace |  comment   |  identifier
 
 
 Context-free grammar.  Note that hierarchical rules' first letters 
