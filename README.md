@@ -80,7 +80,7 @@ Tokens:
 
     space      :=  blank  |  newline
 
-    special    :=  '"'    |  '#'   |  '_'  |  space
+    special    :=  '"'    |  '#'   |  '_'  |  '\''  |  space
 
     stop       :=  "stop_"
 
@@ -102,9 +102,9 @@ Tokens:
 
     scstring   :=  ';'  (not endsc)(*)  endsc
 
-    sqstring   :=  '\''  ( ('\'' (not space))  |  (not '\'') )(+)  '\''
+    sqstring   :=  '\''  ( ('\'' (not space))  |  (not ( '\''  |  newline ) ) )(+)  '\''
 
-    dqstring   :=  '"'  (not '"')(+)  '"'
+    dqstring   :=  '"'  ( ('"' (not space))  |  (not ( '"'  |  newline ) ) )(+)  '"'
 
     value      :=  sqstring  |  dqstring  |  scstring  |  unquoted
 

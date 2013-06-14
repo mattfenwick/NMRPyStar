@@ -62,10 +62,17 @@ class TestTokenizer(u.TestCase):
             self.assertEqual(run(p.uqvalue_or_keyword, l(inp)), output)
 
     def testValue(self):
-        cases = [["'abc' 123",             5,          'abc',        'single-quoted string'],
-                 ["'ab, c'd e' oh",       11,    "ab, c'd e", 'tricky single-quoted string'],
-                 ['"abc" 123',             5,          'abc',        'double-quoted string'],
-                 [';abc\nqrs;xy\n;..???', 13,  'abc\nqrs;xy',            'semicolon string']]
+        cases = [["'abc' 123",             5,          'abc',                   'single-quoted string'],
+                 ["'ab, c'd e' oh",       11,    "ab, c'd e",    'ending sq must be followed by space'],
+                 ["'' qrs",                2,             '',             'empty single-quoted string'],
+                 ["'''",                   3,            "'",                        "sq in sq string"],
+                 ["'ab''\n abc",           5,          "ab'",  'ending sq can be followed by newlines'],
+                 ['"abc" 123',             5,          'abc',                   'double-quoted string'],
+                 ['"ab, c"d e" oh',       11,    'ab, c"d e',    'ending dq must be followed by space'],
+                 ['"" qrs',                2,             '',             'empty double-quoted string'],
+                 ['"""',                   3,            '"',                        "dq in dq string"],
+                 ['"ab""\n abc',           5,          'ab"',  'ending dq can be followed by newlines'],
+                 [';abc\nqrs;xy\n;..???', 13,  'abc\nqrs;xy',                       'semicolon string']]
         for (s, num, value, message) in cases:
             inp = a(s)
             output = good(l(inp[num:]), None, concrete.Value(pos(1, 1), value))
@@ -101,8 +108,10 @@ class TestTokenErrors(u.TestCase):
     
     def testDelimitedValueErrors(self):
         cases = [
-            ['"abc 123',    'unable to parse double-quote delimited string'],
-            ["'abc 123",    ''],
+            ['"abc 123',                'missing end double-quote'],
+            ["'abc 123",                'missing end single-quote'],
+            ["'abc \n ' de",'no newlines in single-quoted strings'],
+            ['"abc \n " de',"no newlines in double-quoted strings"]
 #            [";123\n hi\n", '']
         ]
         for (s, message) in cases:
@@ -178,44 +187,25 @@ class TestCombinations(u.TestCase):
         output = m.error(('save: unable to parse', pos(2, 2)))
         self.assertEqual(run(p.save, l(inp)), output)
         
-hi = '''
-    def testLoopBadNumValues(self):
-        inp = a('loop_ _a _b 1 2 3 stop_')
-        output = m.error('oops')
-        self.assertEqual(run(p.loop, l(inp)), output)
-        
-    def testLoopRepeatedIdentifiers(self):
-        inp = a('loop_ _a _a 1 2 3 4 stop_')
-        output = m.error('oops alor')
-        self.assertEqual(run(p.loop, l(inp)), output)
-        
-    def testSaveRepeatedIdentifiers(self):
-        toks = l([saveopen, ident, val, ident, val, saveclose])
-        output = bad('repeated identifier in save frame', ident)
-        self.assertEqual(p.save.parse(toks, None), output)
-        
     def testData(self):
-        toks = l([dataopen, saveopen, ident, val, saveclose])
-        output = good(l([]),
-                      None,
-                      md.Data.fromSimple('hello1', [('mysave', md.Save.fromSimple([('abc', '123')], m1))], m2))
-        self.assertEqual(p.data.parse(toks, None), output)
+        inp = a('data_toks save_us save_ ')
+        output = good(l(inp[-1:]), None, concrete.Data(pos(1, 1), 
+                                                       'toks',
+                                                       [concrete.Save(pos(1, 11), 'us', [], pos(1, 19))]))
+        self.assertEqual(run(p.data, l(inp)), output)
         
     def testDataInvalidContent(self):
-        toks = l([dataopen, val, saveopen, ident, val, saveclose])
-        output = bad('data: invalid content', dataopen)
-        self.assertEqual(p.data.parse(toks, None), output)
-    
-    def testDataNoContent(self):
-        toks = l([dataopen])
-        output = bad("data: missing content", dataopen)
-        self.assertEqual(p.data.parse(toks, None), output)
-    
-    def testRepeatedSaveFrameNames(self):
-        toks = l([dataopen, saveopen, ident, val, saveclose, saveopen, ident, val, saveclose])
-        output = bad('repeated save frame name', saveopen)
-        self.assertEqual(p.data.parse(toks, None), output)
+        inp = a('data_me loop_ save_them save_')
+        output = good(l(inp[7:]), None, concrete.Data(pos(1, 1), 'me', []))
+        self.assertEqual(run(p.data, l(inp)), output)
         
+    def testNMRStar(self):
+        pass
+    
+    def testNMRStarUnconsumedTokensRemaining(self):
+        pass
+    
+hi = '''
     def testUnconsumedTokensRemaining(self):
         toks = l([dataopen, saveopen, ident, val, saveclose, val, dataopen])
         output = bad('unconsumed input remaining', dataopen)

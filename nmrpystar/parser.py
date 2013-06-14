@@ -27,7 +27,7 @@ def oneOf(cs):
 
 NEWLINES, BLANKS = set('\n\r\f'), set(' \t')
 SPACES = NEWLINES.union(BLANKS)
-SPECIALS = SPACES.union(set('"#_'))
+SPECIALS = SPACES.union(set('"#\'_')) # double-quote, pound, single-quote, underscore
 
 newline, blank, space, special = map(oneOf, [NEWLINES, BLANKS, SPACES, SPECIALS])
 
@@ -41,18 +41,31 @@ def scAction(op, body, _):
 
 scstring = Parser.app(scAction, sc, endsc.not1().many0(), endsc)
 
-nonEndingSq = sq.seq2L(space.not0())
-def sqAction(op, body, _):
-    return concrete.Value(op.meta, extract(body))
+end = Parser.item.not0()
+nonEndingSq = sq.seq2L(space.plus(end).not0())
+nonEndingDq = dq.seq2L(space.plus(end).not0())
+#def sqAction(op, body, _):
+#    return concrete.Value(op.meta, extract(body))
+#
+#sqstring = Parser.app(sqAction, sq, nonEndingSq.plus(sq.not1()).many0(), sq)
 
-sqstring = Parser.app(sqAction, sq, nonEndingSq.plus(sq.not1()).many1(), sq)
+def sqRest(o):
+    def action(b, _):
+        return concrete.Value(o.meta, extract(b))
+    newlineErr = newline.seq2L(Parser.error(('no newlines in single-quoted strings', o.meta)))
+    return Parser.app(action,
+                      nonEndingSq.plus(sq.plus(newlineErr).not1()).many0(),
+                      sq).commit(('missing end single-quote', o.meta))
+
+sqstring = sq.bind(sqRest)
 
 def dqRest(o):
     def action(b, _):
         return concrete.Value(o.meta, extract(b))
+    newlineErr = newline.seq2L(Parser.error(('no newlines in double-quoted strings', o.meta)))
     return Parser.app(action, 
-                      dq.not1().many1(),
-                      dq).commit(('unable to parse double-quote delimited string', o.meta))
+                      nonEndingDq.plus(dq.plus(newlineErr).not1()).many0(),
+                      dq).commit(('missing end double-quote', o.meta))
 
 dqstring = dq.bind(dqRest)
 
