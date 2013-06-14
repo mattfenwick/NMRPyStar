@@ -1,7 +1,7 @@
-import nmrpystar.buildast as b
-import nmrpystar.concrete as c
-import nmrpystar.ast as a
-import nmrpystar.parse.maybeerror as me
+from .. import buildast as b
+from .. import concrete as c
+from .. import ast as a
+from ..parse import maybeerror as me
 import unittest as u
 
 

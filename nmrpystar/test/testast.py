@@ -1,4 +1,4 @@
-import nmrpystar.ast as m
+from .. import ast as m
 import unittest as u
 
 

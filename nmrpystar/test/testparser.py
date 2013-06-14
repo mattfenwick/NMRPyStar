@@ -1,14 +1,14 @@
-import nmrpystar.parser as p
-import nmrpystar.concrete as concrete
-import nmrpystar.ast as md
-import nmrpystar.parse.position as np
-import nmrpystar.parse.maybeerror as me
-import nmrpystar.parse.conslist as c
-from nmrpystar.parse.standard import Parser
+from .. import parser as p
+from .. import concrete
+from .. import ast as md
+from ..parse import position as np
+from ..parse import maybeerror as me
+from ..parse import conslist as c
+from ..parse import standard
 import unittest as u
 
 
-
+Parser = standard.Parser
 m = me.MaybeError
 l = c.ConsList.fromIterable
 a = np.addLineCol
