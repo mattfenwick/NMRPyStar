@@ -98,7 +98,7 @@ Tokens:
       where
         special    :=  '"'    |  '#'   |  '_'  |  '\''  |  space
 
-    scstring   :=  ';'  (not endsc)(*)  endsc
+    scstring   :=  newline  ';'  (not endsc)(*)  endsc
       where
         endsc  :=  newline  ';'
 

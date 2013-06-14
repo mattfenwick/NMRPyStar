@@ -71,11 +71,25 @@ class TestTokenizer(u.TestCase):
                  ['"ab, c"d e" oh',       11,    'ab, c"d e',    'ending dq must be followed by space'],
                  ['"" qrs',                2,             '',             'empty double-quoted string'],
                  ['"""',                   3,            '"',                        "dq in dq string"],
-                 ['"ab""\n abc',           5,          'ab"',  'ending dq can be followed by newlines'],
-                 [';abc\nqrs;xy\n;..???', 13,  'abc\nqrs;xy',                       'semicolon string']]
+                 ['"ab""\n abc',           5,          'ab"',  'ending dq can be followed by newlines']]
         for (s, num, value, message) in cases:
             inp = a(s)
             output = good(l(inp[num:]), None, concrete.Value(pos(1, 1), value))
+            print message
+            self.assertEqual(run(p.value, l(inp)), output)
+    
+    def testValueLeadingSemicolon(self):
+        cases = [
+            ['\n;b\nr;x\n;..??', 9, (2, 1), 'b\nr;x',                                        'semicolon string'],
+            [' ;abc def',        5, (1, 2), ';abc',      'semicolon not preceded by linebreak:  unquoted value'],
+            [' \n;abc\n; def',   8, (2, 1), 'abc',    'linebreak-; , later on linebreak-; -- ;-delimited value'],
+            ['\n;abc 123',       5, (2, 1), ';abc',    'linebreak-; , no linebreak-; later on:  unquoted value'],
+            ['\n;\na;\n\n;def',  8, (2, 1), '\na;\n',     ';-delimited value can contain ; but not linebreak-;'],
+            ['\n;\n;def',        4, (2, 1), '',      'empty ;-string'],
+            [' ;abc o\nnt\n; d', 5, (1, 2), ';abc',  'space-; -- unquoted value']]
+        for (s, num, myPosition, value, message) in cases:
+            inp = a(s)
+            output = good(l(inp[num:]), None, concrete.Value(pos(*myPosition), value))
             print message
             self.assertEqual(run(p.value, l(inp)), output)
     

@@ -35,19 +35,10 @@ _identifier  =  Parser.app(concrete.Key, _literal('_').fmap(lambda c: c.meta), s
 
 
 sc, sq, dq = map(_literal, ';\'"')
-endsc = newline.seq2R(sc)
-def scAction(op, body, _):
-    return concrete.Value(op.meta, extract(body))
-
-scstring = Parser.app(scAction, sc, endsc.not1().many0(), endsc)
 
 end = Parser.item.not0()
 nonEndingSq = sq.seq2L(space.plus(end).not0())
 nonEndingDq = dq.seq2L(space.plus(end).not0())
-#def sqAction(op, body, _):
-#    return concrete.Value(op.meta, extract(body))
-#
-#sqstring = Parser.app(sqAction, sq, nonEndingSq.plus(sq.not1()).many0(), sq)
 
 def sqRest(o):
     def action(b, _):
@@ -69,15 +60,30 @@ def dqRest(o):
 
 dqstring = dq.bind(dqRest)
 
-_value = Parser.any([sqstring, dqstring, scstring]) # unquoted taken care of by uq_or_keyword rule
+_quotedvalue = Parser.any([sqstring, dqstring]) # unquoted taken care of by uq_or_keyword rule
 
 
 comment = Parser.app(lambda o, b: concrete.Comment(o.meta, extract(b)), _literal('#'), newline.not1().many0())
 whitespace = blank.plus(newline).many1().fmap(lambda b: concrete.Whitespace(b[0].meta, extract(b)))
 
 
-def uqOrKey(c, cs):
-    return (c.meta, extract([c] + cs))
+endsc = newline.seq2R(sc)
+
+def scRest(ws):
+    def action(o, b, _):
+        return concrete.Value(o.meta, extract(b))
+    if len(ws) == 0:
+        return Parser.zero # could this even happen? no because we made sure it matched at least 1
+    elif isinstance(ws[-1], concrete.Whitespace) and ws[-1].string[-1] in NEWLINES:
+        return Parser.app(action,
+                          sc,
+                          endsc.not1().many0(),
+                          endsc) # can't commit because ; can be backtracked to an unquoted value
+    else:
+        return Parser.zero
+    
+scstring = whitespace.plus(comment).many1().bind(scRest)
+
 
 def classify(v):
     '''
@@ -106,6 +112,9 @@ def classify(v):
         return pure(Reserved(meta, "dataopen", string[5:]))
     return pure(concrete.Value(meta, string))
         
+def uqOrKey(c, cs):
+    return (c.meta, extract([c] + cs))
+
 _uqvalue_or_keyword = Parser.app(uqOrKey, special.not1(), space.not1().many0()).bind(classify)
 
 
@@ -115,7 +124,7 @@ def munch(p):
 uqvalue_or_keyword = munch(_uqvalue_or_keyword)
 
 identifier  =  munch(_identifier)
-value       =  munch(_value).plus(uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Value)))
+value       =  munch(_quotedvalue).plus(scstring).plus(uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Value)))
 
 
 def keyword(rtype):
