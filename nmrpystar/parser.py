@@ -88,28 +88,23 @@ scstring = whitespace.plus(comment).many1().bind(scRest)
 def classify(v):
     '''
     Classifications:
-     - reserved: /stop_/, /loop_/, /save_/, /save_.+/, /data_.+/
-     - illegal:  /stop_.+/, /loop_.+/, /data_/
+     - reserved: /stop_/, /loop_/, /save_.*/, /data_.+/, /global_/
      - value:  everything else
     '''
     meta, string = v
-    err, pure, Reserved = Parser.error, Parser.pure, concrete.Reserved
-    if string[:5] == "stop_":
-        if len(string) != 5:
-            return err(('invalid keyword', meta))
+    pure, Reserved = Parser.pure, concrete.Reserved
+    if string.lower() == "stop_":
         return pure(Reserved(meta, "stop", ''))
-    elif string[:5] == "save_":
+    elif string[:5].lower() == "save_":
         if len(string) != 5:
             return pure(Reserved(meta, "saveopen", string[5:]))
         return pure(Reserved(meta, "saveclose", ''))
-    elif string[:5] == "loop_":
-        if len(string) != 5:
-            return err(('invalid keyword', meta))
+    elif string.lower() == "loop_":
         return pure(Reserved(meta, "loop", ''))
-    elif string[:5] == "data_":
-        if len(string) == 5:
-            return err(('invalid keyword', meta))
+    elif string[:5].lower() == "data_" and len(string) > 5:
         return pure(Reserved(meta, "dataopen", string[5:]))
+    elif string.lower() == "global_":
+        return pure(Reserved(meta, "global", ''))
     return pure(concrete.Value(meta, string))
         
 def uqOrKey(c, cs):

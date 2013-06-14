@@ -99,7 +99,7 @@ class Value(X):
                 'string': self.string}
 
 
-_rtypes = set(['saveopen', 'dataopen', 'saveclose', 'stop', 'loop'])
+_rtypes = set(['saveopen', 'dataopen', 'saveclose', 'stop', 'loop', 'global'])
 
 class Reserved(X):
     

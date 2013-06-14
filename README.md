@@ -80,17 +80,19 @@ Tokens:
 
     space      :=  blank  |  newline
 
-    stop       :=  "stop_"
+    stop       :=  /stop_/i
 
-    saveclose  :=  "save_"
+    saveclose  :=  /save_/i
 
-    loop       :=  "loop_"
+    loop       :=  /loop_/i
 
     comment    :=  '#'  (not newline)(*)
 
-    dataopen   :=  "data_"  (not space)(+)
+    dataopen   :=  /data_/i  (not space)(+)
 
-    saveopen   :=  "save_"  (not space)(+)
+    saveopen   :=  /save_/i  (not space)(+)
+    
+    global     :=  /global_/i
 
     identifier :=  '_'  (not space)(+)
 
@@ -118,7 +120,8 @@ Tokens:
 
     token      :=  dataopen   |  saveopen  |  saveclose  |  
                    loop       |  stop      |  value      |  
-                   whitespace |  comment   |  identifier
+                   whitespace |  comment   |  identifier |
+                   global
 
 
 Context-free grammar.  Note that hierarchical rules' first letters 

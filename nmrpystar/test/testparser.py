@@ -30,9 +30,9 @@ def pos(line, column):
 class TestTokenizer(u.TestCase):
 
     def testComment(self):
-        input = a("# abc\n123")
-        output = good(l(input[5:]), None, concrete.Comment(pos(1, 1), " abc"))
-        self.assertEqual(run(p.comment, l(input)), output)
+        inp = a("# abc\n123")
+        output = good(l(inp[5:]), None, concrete.Comment(pos(1, 1), " abc"))
+        self.assertEqual(run(p.comment, l(inp)), output)
     
     def testNewlines(self):
         for x in "\n\r\f":
@@ -41,22 +41,29 @@ class TestTokenizer(u.TestCase):
             self.assertEqual(run(p.newline, l(inp)), output)
     
     def testWhitespace(self):
-        input = a(" \n \t \f\rabc")
-        output = good(l(input[7:]), None, concrete.Whitespace(pos(1, 1), " \n \t \f\r"))
-        self.assertEqual(run(p.whitespace, l(input)), output)
+        inp = a(" \n \t \f\rabc")
+        output = good(l(inp[7:]), None, concrete.Whitespace(pos(1, 1), " \n \t \f\r"))
+        self.assertEqual(run(p.whitespace, l(inp)), output)
 
     def testUQValuesAndKeywords(self):
         cases = [
-            ["data_hello 123abc", 10, concrete.Reserved(pos(1, 1), "dataopen", "hello")],
-            ["save_bye oops",      8, concrete.Reserved(pos(1, 1), "saveopen", "bye")  ],
-            ["save_ hi",           5, concrete.Reserved(pos(1, 1), "saveclose", '')    ],
-            ["stop_ matt",         5, concrete.Reserved(pos(1, 1), "stop", '')         ],
-            ["loop_ us",           5, concrete.Reserved(pos(1, 1), "loop", '')         ],
-            ["345 uh-oh",          3, concrete.Value(pos(1, 1), '345')                 ],
-            ["abc def",            3, concrete.Value(pos(1, 1), 'abc')                 ],
-            ['ab##_"123def\t???', 12, concrete.Value(pos(1, 1), 'ab##_"123def')        ]
+            ["dAta_hello 123abc", 10, concrete.Reserved(pos(1, 1), "dataopen", "hello"), 'data open'                      ],
+            ["Save_bye oops",      8, concrete.Reserved(pos(1, 1), "saveopen", "bye")  , 'save open'                      ],
+            ["saVE_ hi",           5, concrete.Reserved(pos(1, 1), "saveclose", '')    , 'save close'                     ],
+            ["STOP_ matt",         5, concrete.Reserved(pos(1, 1), "stop", '')         , 'stop'                           ],
+            ["loop_ us",           5, concrete.Reserved(pos(1, 1), "loop", '')         , 'loop open'                      ],
+            ["LoOp_ hmm",          5, concrete.Reserved(pos(1, 1), "loop", '')         , 'keywords are case insensitive'  ],
+            ["GLOBAl_ bye now",    7, concrete.Reserved(pos(1, 1), "global", '')       , 'global'                         ],
+            ["345 uh-oh",          3, concrete.Value(pos(1, 1), '345')                 , 'unquoted number'                ],
+            ["abc def",            3, concrete.Value(pos(1, 1), 'abc')                 , 'unquoted alphas'                ],
+            ['ab##_"123def\t???', 12, concrete.Value(pos(1, 1), 'ab##_"123def')        , 'unquoted with special chars'    ],
+            ["loop_uh-oh xx",     10, concrete.Value(pos(1, 1), 'loop_uh-oh')          , 'unquoted can start with loop_'  ],
+            ["stop_def 1",         8, concrete.Value(pos(1, 1), 'stop_def')            , 'unquoted can start with stop_'  ],
+            ['global_"1 23blar',   9, concrete.Value(pos(1, 1), 'global_"1')           , 'unquoted can start with global_'],
+            ['data_   not',        5, concrete.Value(pos(1, 1), 'data_')               , 'data_ is a valid unquoted value']
         ]
-        for (s, num, v) in cases:
+        for (s, num, v, message) in cases:
+            print message
             inp = a(s)
             output = good(l(inp[num:]), None, v)
             self.assertEqual(run(p.uqvalue_or_keyword, l(inp)), output)
@@ -110,15 +117,6 @@ class TestTokenizer(u.TestCase):
     
     
 class TestTokenErrors(u.TestCase):
-    
-    def testReservedErrors(self):
-        cases = [
-            "#\n data_ abc"      , # also tests the munching ... oops
-            "# \n stop_abc"      ,
-            "#hi  \n\tloop_oops"]
-        for s in cases:
-            output = m.error(('invalid keyword', pos(2, 2)))
-            self.assertEqual(run(p.uqvalue_or_keyword, l(a(s))), output)
     
     def testDelimitedValueErrors(self):
         cases = [
