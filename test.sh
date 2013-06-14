@@ -1,1 +1,1 @@
-nosetests
+nosetests -v
