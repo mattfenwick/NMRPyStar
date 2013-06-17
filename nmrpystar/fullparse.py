@@ -18,7 +18,7 @@ def concreteToAbstract(output):
     In:  concrete parse tree representing NMR-Star data
     Out:  abstract syntax tree representing NMR-Star data
     '''
-    if not output['rest'].isEmpty(): # sanity check
+    if not output['rest'].isEmpty(): # sanity check -- this should not happen
         raise ValueError('successful parse must consume all input')
     return concreteToAST(output['result'])
 
@@ -29,5 +29,10 @@ def parse(string):
     Result is an abstract syntax tree wrapped in a MaybeError container
     if successful, and an error message if not.
     '''
-    conc = run(nmrstar, string)
-    return conc.bind(concreteToAbstract)
+    concrete = run(nmrstar, string)
+    if concrete.status == 'failure': # sanity check -- this should not happen
+        raise ValueError('unexpected failure during parsing')
+    abstract = concrete.bind(concreteToAbstract)
+    if abstract.status == 'failure': # sanity check -- this should not happen
+        raise ValueError('unexpected failure during concrete to abstract syntax tree conversion')
+    return abstract

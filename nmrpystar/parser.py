@@ -161,4 +161,4 @@ def endCheck(xs):
         return Parser.pure(None)
     return Parser.error(('unparsed input remaining', xs.first().meta))
 
-nmrstar = data.seq2L(munch(Parser.get.bind(endCheck)))
+nmrstar = data.commit('unable to parse data block').seq2L(munch(Parser.get.bind(endCheck)))

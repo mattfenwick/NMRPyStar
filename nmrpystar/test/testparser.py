@@ -216,3 +216,8 @@ class TestCombinations(u.TestCase):
         inp = a('data_me loop_ save_them save_')
         output = m.error(('unparsed input remaining', pos(1, 9)))
         self.assertEqual(run(p.nmrstar, l(inp)), output)
+    
+    def testNMRStarNoOpenData(self):
+        inp = a(' # save_me loop_ stop_ save_')
+        output = m.error('unable to parse data block')
+        self.assertEqual(run(p.nmrstar, l(inp)), output)

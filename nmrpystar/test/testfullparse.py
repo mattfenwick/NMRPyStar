@@ -24,3 +24,6 @@ class TestFullParse(u.TestCase):
 
     def testParseUnconsumedInput(self):
         self.assertEqual(parse("data_hi _what?"), bad(('unparsed input remaining', {'line': 1, 'column': 9})))
+
+    def testJunk(self):
+        self.assertEqual(parse("what is this junk?  this isn't nmr-star"), bad("unable to parse data block"))
