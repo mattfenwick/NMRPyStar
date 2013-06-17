@@ -188,6 +188,21 @@ If you don't have pip or easy_install, you can download the package
 manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
 
 
+### Quick Start ###
+
+You've already got NMRPyStar installed and importable?  Great!
+It's easy to start parsing NMR-Star files:
+
+    import nmrpystar
+    
+    myString = ...read a file/url/stdin/string...
+    
+    parsed = nmrpystar.parse(myString)
+    if parsed.status == 'success':
+        print 'it worked!!  ', parsed.value
+    else:
+        print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+
 
 ### Reference ###
 
