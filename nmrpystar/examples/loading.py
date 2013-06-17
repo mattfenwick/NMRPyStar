@@ -39,10 +39,9 @@ def parseFile(path):
         return parsed.bind(lambda p: (inputStr, p))
 
 
-def parseFromUrl():
-    url3 = 'http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/248'
-    url2 = 'http://rest.bmrb.wisc.edu/bmrb/NMR-STAR2/248'
-    page = urllib2.urlopen(url3)
+def parseFromUrl(myUrl='http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/248'): # this is the url of an NMR-Star3 file
+    #url2 = 'http://rest.bmrb.wisc.edu/bmrb/NMR-STAR2/248'
+    page = urllib2.urlopen(myUrl)
     inputStr = page.read()
     page.close()
     parsed = fullparse.parse(inputStr)
