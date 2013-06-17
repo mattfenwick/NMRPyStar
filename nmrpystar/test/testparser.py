@@ -139,13 +139,16 @@ class TestCombinations(u.TestCase):
             _a
             _bab
             1 2
+            "wx" "yz"
           stop_''')
         output = good(l([]), None, concrete.Loop(pos(2, 11), 
                                                  [concrete.Key(pos(3, 13), 'a'),
                                                   concrete.Key(pos(4, 13), 'bab')],
                                                  [concrete.Value(pos(5, 13), '1'),
-                                                  concrete.Value(pos(5, 15), '2')],
-                                                 pos(6, 11)))
+                                                  concrete.Value(pos(5, 15), '2'),
+                                                  concrete.Value(pos(6, 13), 'wx'),
+                                                  concrete.Value(pos(6, 18), 'yz')],
+                                                 pos(7, 11)))
         self.assertEqual(run(p.loop, l(inp)), output)
         
     def testLoopMissingStop(self):
