@@ -208,18 +208,17 @@ class TestCombinations(u.TestCase):
         
     def testDataInvalidContent(self):
         inp = a('data_me loop_ save_them save_')
+        # it just hits the loop_, says, "I don't know how to deal with that",
+        #   and doesn't consume it
         output = good(l(inp[7:]), None, concrete.Data(pos(1, 1), 'me', []))
         self.assertEqual(run(p.data, l(inp)), output)
         
     def testNMRStar(self):
-        pass
+        inp = a('data_me save_you \nsave_ # uh-oh??  ')
+        output = good(l([]), None, concrete.Data(pos(1, 1), 'me', [concrete.Save(pos(1, 9), 'you', [], pos(2, 1))]))
+        self.assertEqual(run(p.nmrstar, l(inp)), output)
     
     def testNMRStarUnconsumedTokensRemaining(self):
-        pass
-    
-hi = '''
-    def testUnconsumedTokensRemaining(self):
-        toks = l([dataopen, saveopen, ident, val, saveclose, val, dataopen])
-        output = bad('unconsumed input remaining', dataopen)
-        self.assertEqual(p.nmrstar.parse(toks, None), output)
-'''
+        inp = a('data_me loop_ save_them save_')
+        output = m.error(('unparsed input remaining', pos(1, 9)))
+        self.assertEqual(run(p.nmrstar, l(inp)), output)

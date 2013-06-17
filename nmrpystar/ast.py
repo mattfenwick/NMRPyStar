@@ -18,10 +18,10 @@ class Loop(X):
         return {'type': 'Loop', 
                 'keys': self.keys,
                 'rows': self.rows}
-    
+
     def getRowAsDict(self, rowIndex):
         return dict(zip(self.keys, self.rows[rowIndex]))
-    
+
 
 class Save(X):
 
@@ -32,12 +32,12 @@ class Save(X):
             raise TypeError('saveframe loops must be a list')
         self.datums = datums
         self.loops = loops
-        
+
     def toJSONObject(self):
         return {'type'  : 'Save', 
                 'datums': self.datums, 
                 'loops' : [l.toJSONObject() for l in self.loops]}
-    
+
 
 class Data(X):
 
