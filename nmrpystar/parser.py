@@ -72,6 +72,7 @@ def scRest(ws):
         return concrete.Value(o.meta, extract(b))
     if len(ws) == 0:
         return Parser.zero # could this even happen? no because we made sure it matched at least 1
+    # a semicolon-delimited string must be preceded by a newline
     elif isinstance(ws[-1], concrete.Whitespace) and ws[-1].string[-1] in NEWLINES:
         return Parser.app(action,
                           sc,

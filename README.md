@@ -86,8 +86,6 @@ Tokens:
 
     loop       :=  /loop_/i
 
-    comment    :=  '#'  (not newline)(*)
-
     dataopen   :=  /data_/i  (not space)(+)
 
     saveopen   :=  /save_/i  (not space)(+)
@@ -116,13 +114,10 @@ Tokens:
 
     value      :=  sqstring  |  dqstring  |  scstring  |  unquoted
 
+    comment    :=  '#'  (not newline)(*)
+
     whitespace :=  space(+)
-
-    token      :=  dataopen   |  saveopen  |  saveclose  |  
-                   loop       |  stop      |  value      |  
-                   whitespace |  comment   |  identifier |
-                   global
-
+    
 
 Context-free grammar.  Note that hierarchical rules' first letters 
 are capitalized, while token names are all lowercase:
@@ -151,11 +146,12 @@ Context-sensitive rules:
 ### Error conditions ###
 
  - tokenization:
-   - ???
+   - unclosed single-/double-quote strings
+   - newline characters in single-/double-quote strings
  
- - unconsumed input
-   - any characters left after tokenizatin
-   - any tokens left after ast parsing
+ - nmrstar 
+   - entire string must be successfully parsed
+   - data block must be successfully parsed
  
  - data block:
    - invalid content:  loop or key/val
@@ -167,7 +163,6 @@ Context-sensitive rules:
    - duplicate keys
  
  - loop:
-   - unclosed
    - invalid content
    - number of values is not an integer multiple of number of keys
    - 0 keys
