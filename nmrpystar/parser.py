@@ -87,7 +87,7 @@ scstring = whitespace.plus(comment).many1().bind(scRest)
 def classify(v):
     '''
     Classifications:
-     - reserved: /stop_/, /loop_/, /save_.*/, /data_.+/, /global_/
+     - reserved: /stop_/, /loop_/, /save_.*/, /data_.+/
      - value:  everything else
     '''
     meta, string = v
@@ -102,8 +102,6 @@ def classify(v):
         return pure(Reserved(meta, "loop", ''))
     elif string[:5].lower() == "data_" and len(string) > 5:
         return pure(Reserved(meta, "dataopen", string[5:]))
-    elif string.lower() == "global_":
-        return pure(Reserved(meta, "global", ''))
     return pure(concrete.Value(meta, string))
         
 def uqOrKey(c, cs):

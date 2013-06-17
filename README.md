@@ -90,8 +90,6 @@ Tokens:
 
     saveopen   :=  /save_/i  (not space)(+)
     
-    global     :=  /global_/i
-
     identifier :=  '_'  (not space)(+)
 
     unquoted   :=  (not special)  (not space)(*)
@@ -163,6 +161,7 @@ Context-sensitive rules:
    - duplicate keys
  
  - loop:
+   - unclosed
    - invalid content
    - number of values is not an integer multiple of number of keys
    - 0 keys

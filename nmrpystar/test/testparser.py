@@ -53,7 +53,7 @@ class TestTokenizer(u.TestCase):
             ["STOP_ matt",         5, concrete.Reserved(pos(1, 1), "stop", '')         , 'stop'                           ],
             ["loop_ us",           5, concrete.Reserved(pos(1, 1), "loop", '')         , 'loop open'                      ],
             ["LoOp_ hmm",          5, concrete.Reserved(pos(1, 1), "loop", '')         , 'keywords are case insensitive'  ],
-            ["GLOBAl_ bye now",    7, concrete.Reserved(pos(1, 1), "global", '')       , 'global'                         ],
+            ["GLOBAl_ bye now",    7, concrete.Value(pos(1, 1), "GLOBAl_")             , 'global is not a keyword'        ],
             ["345 uh-oh",          3, concrete.Value(pos(1, 1), '345')                 , 'unquoted number'                ],
             ["abc def",            3, concrete.Value(pos(1, 1), 'abc')                 , 'unquoted alphas'                ],
             ['ab##_"123def\t???', 12, concrete.Value(pos(1, 1), 'ab##_"123def')        , 'unquoted with special chars'    ],
