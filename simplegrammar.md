@@ -20,7 +20,7 @@ Hierarchical grammar:
 
 Tokens:
 
-    newline    :=  '\n'  |  '\r'  |  '\f'
+    newline    :=  '\n'  |  '\r'
     
     space      :=  '\t'  |  ' '
 

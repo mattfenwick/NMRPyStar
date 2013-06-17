@@ -74,7 +74,7 @@ and with thanks to Dmitri Maziuk for his pointers.
 
 Tokens:
 
-    newline    :=  '\n'   |  '\r'  |  '\f'
+    newline    :=  '\n'   |  '\r'
 
     blank      :=  ' '    |  '\t'
 

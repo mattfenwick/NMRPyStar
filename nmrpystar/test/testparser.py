@@ -35,14 +35,14 @@ class TestTokenizer(u.TestCase):
         self.assertEqual(run(p.comment, l(inp)), output)
     
     def testNewlines(self):
-        for x in "\n\r\f":
+        for x in "\n\r":
             inp = a(x + "abc")
             output = good(l(inp[1:]), None, inp[0])
             self.assertEqual(run(p.newline, l(inp)), output)
     
     def testWhitespace(self):
-        inp = a(" \n \t \f\rabc")
-        output = good(l(inp[7:]), None, concrete.Whitespace(pos(1, 1), " \n \t \f\r"))
+        inp = a(" \n \t \rabc")
+        output = good(l(inp[6:]), None, concrete.Whitespace(pos(1, 1), " \n \t \r"))
         self.assertEqual(run(p.whitespace, l(inp)), output)
 
     def testUQValuesAndKeywords(self):

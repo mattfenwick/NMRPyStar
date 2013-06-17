@@ -21,7 +21,7 @@ def extract(cs):
 def oneOf(cs):
     return Parser.satisfy(lambda x: x.char in cs)
 
-NEWLINES, BLANKS = set('\n\r\f'), set(' \t')
+NEWLINES, BLANKS = set('\n\r'), set(' \t')
 SPACES = NEWLINES.union(BLANKS)
 SPECIALS = SPACES.union(set('"#\'_')) # double-quote, pound, single-quote, underscore
 
