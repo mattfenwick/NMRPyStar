@@ -3,7 +3,7 @@
 '''
 import cProfile
 import pstats
-from . import fullparse
+from .. import fullparse
 
 
 def readMe():

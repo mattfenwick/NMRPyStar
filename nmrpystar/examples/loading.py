@@ -1,7 +1,7 @@
 '''
 @author: mattf
 '''
-import nmrpystar.parser as nmp
+from .. import fullparse
 import urllib2
 import sys
 import json
@@ -28,18 +28,15 @@ data_startthedata
   
   save_ # this comment explains that the data's done
 '''
-    parsed = nmp.fullParse(eg)
-    ast = parsed.value['result']
-    return (eg, parsed, ast)
+    parsed = fullparse.parse(eg)
+    return parsed.bind(lambda p: (eg, p))
 
 
-def parseFile():
-    path = 'test/nmrstar/bmrb17661.txt'
+def parseFile(path):
     with open(path, 'r') as infile:
         inputStr = infile.read()
-        parsed = nmp.fullParse(inputStr)
-        ast = parsed.value
-        return (inputStr, parsed, ast)
+        parsed = fullparse.parse(inputStr)
+        return parsed.bind(lambda p: (inputStr, p))
 
 
 def parseFromUrl():
@@ -48,16 +45,14 @@ def parseFromUrl():
     page = urllib2.urlopen(url3)
     inputStr = page.read()
     page.close()
-    parsed = nmp.fullParse(inputStr)
-    ast = parsed.value['result']
-    return (inputStr, parsed, ast)
+    parsed = fullparse.parse(inputStr)
+    return parsed.bind(lambda p: (inputStr, p))
 
 
 def parseFromStdin():
     inputStr = sys.stdin.read()
-    parsed = nmp.fullParse(inputStr)
-    ast = parsed.value['result']
-    return (inputStr, parsed, ast)
+    parsed = fullparse.parse(inputStr)
+    return parsed.bind(lambda p: (inputStr, p))
 
 
 if __name__ == "__main__":
