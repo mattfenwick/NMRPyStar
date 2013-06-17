@@ -14,13 +14,9 @@ def _string(cs):
 
 def extract(cs):
     '''
-    Returns a string, containing all of the characters
-      (without their meta information)
+    Returns: string of the characters without their meta information
     '''
     return ''.join([x.char for x in cs])
-
-def posFirst(cs):
-    return cs[0].meta
 
 def oneOf(cs):
     return Parser.satisfy(lambda x: x.char in cs)
@@ -31,7 +27,9 @@ SPECIALS = SPACES.union(set('"#\'_')) # double-quote, pound, single-quote, under
 
 newline, blank, space, special = map(oneOf, [NEWLINES, BLANKS, SPACES, SPECIALS])
 
-_identifier  =  Parser.app(concrete.Key, _literal('_').fmap(lambda c: c.meta), space.not1().many1().fmap(extract))
+_identifier  =  Parser.app(concrete.Key, 
+                           _literal('_').fmap(lambda c: c.meta), 
+                           space.not1().many1().fmap(extract))
 
 
 sc, sq, dq = map(_literal, ';\'"')
@@ -43,24 +41,24 @@ nonEndingDq = dq.seq2L(space.plus(end).not0())
 def sqRest(o):
     def action(b, _):
         return concrete.Value(o.meta, extract(b))
-    newlineErr = newline.seq2L(Parser.error(('no newlines in single-quoted strings', o.meta)))
+    newlineErr = newline.seq2L(Parser.error(('illegal newline in single-quoted string', o.meta)))
     return Parser.app(action,
                       nonEndingSq.plus(sq.plus(newlineErr).not1()).many0(),
-                      sq).commit(('missing end single-quote', o.meta))
+                      sq).commit(('unclosed single-quoted string', o.meta))
 
 sqstring = sq.bind(sqRest)
 
 def dqRest(o):
     def action(b, _):
         return concrete.Value(o.meta, extract(b))
-    newlineErr = newline.seq2L(Parser.error(('no newlines in double-quoted strings', o.meta)))
+    newlineErr = newline.seq2L(Parser.error(('illegal newline in double-quoted string', o.meta)))
     return Parser.app(action, 
                       nonEndingDq.plus(dq.plus(newlineErr).not1()).many0(),
-                      dq).commit(('missing end double-quote', o.meta))
+                      dq).commit(('unclosed double-quoted string', o.meta))
 
 dqstring = dq.bind(dqRest)
 
-_quotedvalue = Parser.any([sqstring, dqstring]) # unquoted taken care of by uq_or_keyword rule
+_quotedvalue = Parser.any([sqstring, dqstring])
 
 
 comment = Parser.app(lambda o, b: concrete.Comment(o.meta, extract(b)), _literal('#'), newline.not1().many0())
@@ -110,7 +108,9 @@ def classify(v):
 def uqOrKey(c, cs):
     return (c.meta, extract([c] + cs))
 
-_uqvalue_or_keyword = Parser.app(uqOrKey, special.not1(), space.not1().many0()).bind(classify)
+_uqvalue_or_keyword = Parser.app(uqOrKey, 
+                                 special.not1(), 
+                                 space.not1().many0()).bind(classify)
 
 
 def munch(p):
@@ -122,9 +122,11 @@ identifier  =  munch(_identifier)
 value       =  munch(_quotedvalue).plus(scstring).plus(uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Value)))
 
 
+# syntactic combinations
+#   data blocks, save frames, loops, key/value pairs
+
 def keyword(rtype):
     return uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Reserved) and val.rtype == rtype)
-
 
 def loopRest(op):
     def action(ids, vals, cls):
@@ -150,7 +152,9 @@ def saveRest(op):
 
 save = keyword('saveopen').bind(saveRest)
 
-data = Parser.app(lambda o, ss: concrete.Data(o.start, o.string, ss), keyword('dataopen'), save.many0())
+data = Parser.app(lambda o, ss: concrete.Data(o.start, o.string, ss), 
+                  keyword('dataopen'), 
+                  save.many0())
 
 def endCheck(xs):
     if xs.isEmpty():

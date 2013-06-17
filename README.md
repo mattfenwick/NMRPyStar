@@ -204,6 +204,12 @@ It's easy to start parsing NMR-Star files:
         print 'uh-oh, there was a problem with the string I gave it ... ', parsed
 
 
+### Python version ###
+
+This library was created for use with Python2.7.  Although it may work
+with other Python versions, I haven't tried that.
+
+
 ### Reference ###
 
 Parser Combinators: a Practical Application for Generating Parsers for NMR Data 

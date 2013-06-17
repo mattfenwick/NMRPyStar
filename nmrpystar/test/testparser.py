@@ -120,22 +120,16 @@ class TestTokenErrors(u.TestCase):
     
     def testDelimitedValueErrors(self):
         cases = [
-            ['"abc 123',                'missing end double-quote'],
-            ["'abc 123",                'missing end single-quote'],
-            ["'abc \n ' de",'no newlines in single-quoted strings'],
-            ['"abc \n " de',"no newlines in double-quoted strings"]
-#            [";123\n hi\n", '']
+            ["'abc 123",                'unclosed single-quoted string'],
+            ['"abc 123',                'unclosed double-quoted string'],
+            ["'abc \n ' de",  'illegal newline in single-quoted string'],
+            ['"abc \n " de',  "illegal newline in double-quoted string"]
         ]
         for (s, message) in cases:
+            print message
             output = m.error((message, pos(1, 1)))
             self.assertEqual(run(p.value, l(a(s))), output)
-                 
-list_em = '''
-    - unclosed double-quote string
-    - unclosed single-quote string
-    - unclosed ;-string
-    - sq or dq string with newline in it
-'''
+
 
 class TestCombinations(u.TestCase):
 
