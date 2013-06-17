@@ -1,4 +1,4 @@
-from concrete import X
+from .concrete import X
 
 
 class Loop(X):

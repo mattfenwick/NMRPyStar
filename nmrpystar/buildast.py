@@ -3,9 +3,10 @@
 '''
 from . import ast
 from . import concrete
-from nmrpystar.parse.maybeerror import MaybeError
+from .parse import maybeerror
 
 
+MaybeError = maybeerror.MaybeError
 good, bad = MaybeError.pure, MaybeError.error
 
 
