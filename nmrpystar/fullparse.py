@@ -1,6 +1,6 @@
 from .buildast import concreteToAST
 from .parser import nmrstar
-from .parse.conslist import ConsList
+from .unparse.conslist import ConsList
 from .position import addLineCol
 
 

@@ -1,5 +1,5 @@
 from .. import fullparse
-from ..parse import maybeerror
+from ..unparse import maybeerror
 from .. import ast as a
 import unittest as u
 

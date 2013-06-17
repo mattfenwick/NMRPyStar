@@ -4,7 +4,7 @@ setup(
     name='NMRPyStar',
     version='0.0.12',
     packages=['nmrpystar', 
-              'nmrpystar.parse', 
+              'nmrpystar.unparse', 
               'nmrpystar.examples',
               'nmrpystar.test'],
     license='MIT',
