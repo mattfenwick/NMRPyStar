@@ -1,7 +1,7 @@
 from .buildast import concreteToAST
 from .parser import nmrstar
 from .parse.conslist import ConsList
-from .parse.position import addLineCol
+from .position import addLineCol
 
 
 def run(p, ts, s=None):

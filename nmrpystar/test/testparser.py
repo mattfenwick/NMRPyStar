@@ -1,7 +1,7 @@
 from .. import parser as p
 from .. import concrete
 from .. import ast as md
-from ..parse import position as np
+from .. import position as np
 from ..parse import maybeerror as me
 from ..parse import conslist as c
 from ..parse import standard

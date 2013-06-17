@@ -2,7 +2,7 @@
 @author: mattf
 '''
 import tokenizer as t
-import parse.position as p
+import position as p
 import parse.conslist as c
 import cProfile
 import pstats
