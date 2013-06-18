@@ -68,16 +68,15 @@ whitespace = blank.plus(newline).many1().fmap(lambda b: concrete.Whitespace(b[0]
 endsc = newline.seq2R(sc)
 
 def scRest(ws):
-    def action(o, b, _):
-        return concrete.Value(o.meta, extract(b))
     if len(ws) == 0:
         return Parser.zero # could this even happen? no because we made sure it matched at least 1
     # a semicolon-delimited string must be preceded by a newline
     elif isinstance(ws[-1], concrete.Whitespace) and ws[-1].string[-1] in NEWLINES:
-        return Parser.app(action,
-                          sc,
-                          endsc.not1().many0(),
-                          endsc) # can't commit because ; can be backtracked to an unquoted value
+        def scEnd(o):
+            return Parser.app(lambda b, _: concrete.Value(o.meta, extract(b)),
+                              endsc.not1().many0(),
+                              endsc).commit(('unclosed semicolon-delimited string', o.meta))
+        return sc.bind(scEnd)
     else:
         return Parser.zero
     

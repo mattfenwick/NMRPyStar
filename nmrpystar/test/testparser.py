@@ -68,7 +68,7 @@ class TestTokenizer(u.TestCase):
             output = good(l(inp[num:]), None, v)
             self.assertEqual(run(p.uqvalue_or_keyword, l(inp)), output)
 
-    def testValue(self):
+    def testQuoteDelimitedValues(self):
         cases = [["'abc' 123",             5,          'abc',                   'single-quoted string'],
                  ["'ab, c'd e' oh",       11,    "ab, c'd e",    'ending sq must be followed by space'],
                  ["'' qrs",                2,             '',             'empty single-quoted string'],
@@ -89,11 +89,10 @@ class TestTokenizer(u.TestCase):
         cases = [
             ['\n;b\nr;x\n;..??', 9, (2, 1), 'b\nr;x',                                        'semicolon string'],
             [' ;abc def',        5, (1, 2), ';abc',      'semicolon not preceded by linebreak:  unquoted value'],
-            [' \n;abc\n; def',   8, (2, 1), 'abc',    'linebreak-; , later on linebreak-; -- ;-delimited value'],
-            ['\n;abc 123',       5, (2, 1), ';abc',    'linebreak-; , no linebreak-; later on:  unquoted value'],
+            [' \n;abc\n; def',   8, (2, 1), 'abc',                                          ';-delimited value'],
             ['\n;\na;\n\n;def',  8, (2, 1), '\na;\n',     ';-delimited value can contain ; but not linebreak-;'],
-            ['\n;\n;def',        4, (2, 1), '',      'empty ;-string'],
-            [' ;abc o\nnt\n; d', 5, (1, 2), ';abc',  'space-; -- unquoted value']]
+            ['\n;\n;def',        4, (2, 1), '',                                                'empty ;-string'],
+            [' ;abc o\nnt\n; d', 5, (1, 2), ';abc',                                 'space-; -- unquoted value']]
         for (s, num, myPosition, value, message) in cases:
             inp = a(s)
             output = good(l(inp[num:]), None, concrete.Value(pos(*myPosition), value))
@@ -120,14 +119,15 @@ class TestTokenErrors(u.TestCase):
     
     def testDelimitedValueErrors(self):
         cases = [
-            ["'abc 123",                'unclosed single-quoted string'],
-            ['"abc 123',                'unclosed double-quoted string'],
-            ["'abc \n ' de",  'illegal newline in single-quoted string'],
-            ['"abc \n " de',  "illegal newline in double-quoted string"]
+            ["'abc 123"      , (1, 1),            'unclosed single-quoted string'],
+            ['"abc 123'      , (1, 1),            'unclosed double-quoted string'],
+            ["'abc \n ' de"  , (1, 1),  'illegal newline in single-quoted string'],
+            ['"abc \n " de'  , (1, 1),  "illegal newline in double-quoted string"],
+            ['\n;abc 123\na;', (2, 1),      'unclosed semicolon-delimited string']
         ]
-        for (s, message) in cases:
+        for (s, position, message) in cases:
             print message
-            output = m.error((message, pos(1, 1)))
+            output = m.error((message, pos(*position)))
             self.assertEqual(run(p.value, l(a(s))), output)
 
 
