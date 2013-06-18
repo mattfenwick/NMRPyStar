@@ -28,7 +28,7 @@ class TestASTBuilder(u.TestCase):
 #        self.assertTrue(False)
     
     def testSave(self):
-        s = c.Save(1, 'hi', [], 2)
+        s = c.Save(1, 'hi', [], [], 2)
         save = a.Save({}, [])
         self.assertEqual(b.buildSave(s), good(save))
     
@@ -36,9 +36,8 @@ class TestASTBuilder(u.TestCase):
         s = c.Save(1, 
                    'bye', 
                    [c.Datum(c.Key(3, 'k'), c.Value(4, 'v')),
-                    c.Loop(5, [], [], 6),
-                    c.Datum(c.Key(7, 'x'), c.Value(8, 'omg'))
-                   ], 
+                    c.Datum(c.Key(7, 'x'), c.Value(8, 'omg'))],
+                   [c.Loop(5, [], [], 6)],
                    2)
         save = a.Save({'k': 'v', 'x': 'omg'}, [a.Loop([], [])])
         self.assertEqual(b.buildSave(s), good(save))
@@ -60,25 +59,31 @@ class TestASTBuilder(u.TestCase):
         self.assertEqual(b.buildLoop(l), bad(('loop: number of values must be integer multiple of number of keys', 3, 2, 1)))
     
     def testSavePropagatesLoopError(self):
-        s = c.Save(1, 'oop', [c.Loop(2, [c.Key(3, 'a'), c.Key(4, 'a')], [], 5)], 6)
+        s = c.Save(1, 'oop', [], [c.Loop(2, [c.Key(3, 'a'), c.Key(4, 'a')], [], 5)], 6)
         self.assertEqual(b.buildSave(s), bad(('loop: duplicate key', 'a', 2)))
     
     def testSaveDuplicateKey(self):
-        s = c.Save(1, 'hi', [c.Datum(c.Key(2, 'x'), c.Value(3, 'y')),
-                             c.Datum(c.Key(4, 'x'), c.Value(5, 'z'))], 
+        s = c.Save(1, 
+                   'hi', 
+                   [c.Datum(c.Key(2, 'x'), c.Value(3, 'y')),
+                    c.Datum(c.Key(4, 'x'), c.Value(5, 'z'))],
+                   [],
                    6)
         self.assertEqual(b.buildSave(s), bad(('save: duplicate key', 'x', 1)))
     
     def testDataRepeatedSaveName(self):
-        d = c.Data(1, 'hi', [c.Save(2, 's1', [], 3), c.Save(4, 's2', [], 5), c.Save(6, 's1', [], 7)])
+        d = c.Data(1, 'hi', [c.Save(2, 's1', [], [], 3), c.Save(4, 's2', [], [], 5), c.Save(6, 's1', [], [], 7)])
         self.assertEqual(b.buildData(d), bad(('data: duplicate save frame name', 's1', 1)))
     
     def testDataPropagateLoopError(self):
-        d = c.Data(99, 'oo', [c.Save(1, 'oop', [c.Loop(2, [c.Key(3, 'a'), c.Key(4, 'a')], [], 5)], 6)])
+        d = c.Data(99, 'oo', [c.Save(1, 'oop', [], [c.Loop(2, [c.Key(3, 'a'), c.Key(4, 'a')], [], 5)], 6)])
         self.assertEqual(b.buildData(d), bad(('loop: duplicate key', 'a', 2)))
     
     def testDataPropagateSaveError(self):
-        d = c.Data(99, 'mydata', [c.Save(1, 'hi', [c.Datum(c.Key(2, 'x'), c.Value(3, 'y')),
-                                                  c.Datum(c.Key(4, 'x'), c.Value(5, 'z'))], 
+        d = c.Data(99, 'mydata', [c.Save(1, 
+                                         'hi', 
+                                         [c.Datum(c.Key(2, 'x'), c.Value(3, 'y')),
+                                          c.Datum(c.Key(4, 'x'), c.Value(5, 'z'))],
+                                         [],
                                          6)])
         self.assertEqual(b.buildData(d), bad(('save: duplicate key', 'x', 1)))

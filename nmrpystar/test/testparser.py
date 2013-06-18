@@ -173,7 +173,7 @@ class TestCombinations(u.TestCase):
         
     def testSave(self):
         inp = a('save_me save_')
-        output = good(l([]), None, concrete.Save(pos(1, 1), 'me', [], pos(1, 9)))
+        output = good(l([]), None, concrete.Save(pos(1, 1), 'me', [], [], pos(1, 9)))
         self.assertEqual(run(p.save, l(inp)), output)
     
     def testSaveComplex(self):
@@ -181,8 +181,8 @@ class TestCombinations(u.TestCase):
         output = good(l(inp[-1:]), None, concrete.Save(pos(1, 2), 
                                                  'thee',
                                                  [concrete.Datum(concrete.Key(pos(1, 12), 'ab'),
-                                                                 concrete.Value(pos(1, 16), 'cd')),
-                                                  concrete.Loop(pos(1, 19), [], [], pos(1, 25))],
+                                                                 concrete.Value(pos(1, 16), 'cd'))],
+                                                 [concrete.Loop(pos(1, 19), [], [], pos(1, 25))],
                                                  pos(2, 1)))
         self.assertEqual(run(p.save, l(inp)), output)
 
@@ -195,12 +195,17 @@ class TestCombinations(u.TestCase):
         inp = a('# hi\n save_me _ab 12 stop_ save_')
         output = m.error(('save: unable to parse', pos(2, 2)))
         self.assertEqual(run(p.save, l(inp)), output)
+    
+    def testSaveDatumAfterLoop(self):
+        inp = a("save_me _a b loop_ _x y stop_ \n _m n save_")
+        output = m.error(('save: unable to parse', pos(1, 1)))
+        self.assertEqual(run(p.save, l(inp)), output)
         
     def testData(self):
         inp = a('data_toks save_us save_ ')
         output = good(l(inp[-1:]), None, concrete.Data(pos(1, 1), 
                                                        'toks',
-                                                       [concrete.Save(pos(1, 11), 'us', [], pos(1, 19))]))
+                                                       [concrete.Save(pos(1, 11), 'us', [], [], pos(1, 19))]))
         self.assertEqual(run(p.data, l(inp)), output)
         
     def testDataInvalidContent(self):
@@ -212,7 +217,7 @@ class TestCombinations(u.TestCase):
         
     def testNMRStar(self):
         inp = a('data_me save_you \nsave_ # uh-oh??  ')
-        output = good(l([]), None, concrete.Data(pos(1, 1), 'me', [concrete.Save(pos(1, 9), 'you', [], pos(2, 1))]))
+        output = good(l([]), None, concrete.Data(pos(1, 1), 'me', [concrete.Save(pos(1, 9), 'you', [], [], pos(2, 1))]))
         self.assertEqual(run(p.nmrstar, l(inp)), output)
     
     def testNMRStarUnconsumedTokensRemaining(self):

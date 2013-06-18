@@ -126,9 +126,9 @@ are capitalized, while token names are all lowercase:
 
     NMRStar  :=   Data 
         
-    Data     :=   dataopen   Save(+)
+    Data     :=   dataopen  Save(+)
         
-    Save     :=   saveopen   ( Datum  |  Loop )(*)   saveclose
+    Save     :=   saveopen  Datum(*)  Loop(*)  saveclose
         
     Datum    :=   identifier  value
         

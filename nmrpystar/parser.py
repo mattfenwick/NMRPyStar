@@ -142,10 +142,11 @@ def datumRest(i):
 datum = identifier.bind(datumRest)
 
 def saveRest(op):
-    def action(its, c):
-        return concrete.Save(op.start, op.string, its, c.start)
+    def action(ds, ls, c):
+        return concrete.Save(op.start, op.string, ds, ls, c.start)
     return Parser.app(action,
-                      loop.plus(datum).many0(), 
+                      datum.many0(),
+                      loop.many0(),
                       keyword('saveclose')).commit(('save: unable to parse', op.start))
 
 save = keyword('saveopen').bind(saveRest)

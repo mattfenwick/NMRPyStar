@@ -41,29 +41,25 @@ def buildLoop(loop):
 
 def buildSave(save):
     ''' 
-    list of loop/datum -> SaveFrame
     error conditions:
-      - non-sequence (??? wtf does this mean ???)
       - non-loop/datum
       - duplicate datum keys
     '''
-    vals = save.items
     loops, datums = [], {}
 
-    for v in vals:
-        if isinstance(v, concrete.Datum):
-            key, value = v.key.string, v.value.string
-            if datums.has_key(key):
-                return bad(('save: duplicate key', key, save.start))
-            datums[key] = value
-        elif isinstance(v, concrete.Loop):
-            l = buildLoop(v)
-            if l.status == 'success':
-                loops.append(l.value)
-            else:
-                return l
+    for d in save.datums:
+        key, value = d.key.string, d.value.string
+        if datums.has_key(key):
+            return bad(('save: duplicate key', key, save.start))
+        datums[key] = value
+    
+    for loop in save.loops:
+        l = buildLoop(loop)
+        if l.status == 'success':
+            loops.append(l.value)
         else:
-            raise TypeError(('save: invalid type', v))
+            return l
+
     return good(ast.Save(datums, loops))
 
 

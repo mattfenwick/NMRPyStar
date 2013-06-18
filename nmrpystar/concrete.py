@@ -33,18 +33,22 @@ class Data(X):
 
 class Save(X):
     
-    def __init__(self, start, name, items, stop):
-        self.start = start
-        self.name = name
-        self.items = items
-        self.stop = stop
+    def __init__(self, start, name, datums, loops, stop):
+        self.start  =  start
+        self.name   =  name
+        self.datums =  datums
+        self.loops  =  loops
+        self.stop   =  stop
     
     def toJSONObject(self):
-        return {'type' : 'save',
-                'start': self.start,
-                'stop' : self.stop,
-                'name' : self.name,
-                'items': [i.toJSONObject() for i in self.items]}
+        return {
+            'type'  : 'save',
+            'start' : self.start,
+            'stop'  : self.stop,
+            'name'  : self.name,
+            'datums': [d.toJSONObject() for d in self.datums],
+            'loops' : [l.toJSONObject() for l in self.loops]
+        }
 
 
 class Loop(X):
