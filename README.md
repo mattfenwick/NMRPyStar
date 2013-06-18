@@ -94,20 +94,20 @@ Tokens:
 
     unquoted   :=  (not special)  (not space)(*)
       where
-        special    :=  '"'    |  '#'   |  '_'  |  '\''  |  space
+        special    :=  '"'  |  '#'  |  '_'  |  '\''  |  space
 
-    scstring   :=  newline  ';'  (not endsc)(*)  endsc
+    scstring   :=  ns  (not ns)(*)  ns
       where
-        endsc  :=  newline  ';'
+        ns     :=  newline  ';'
 
     sqstring   :=  '\''  ( nonEndingSq  |  bodyChar )(*)  '\''
       where
-        nonEndingSq  :=  '\'' (not space)
+        nonEndingSq  :=  '\''  (not space)
         bodyChar     :=  (not ( '\''  |  newline ) )
 
     dqstring   :=  '"'  ( nonEndingDq  |  bodyChar )(*)  '"'
       where
-        nonEndingDq  :=  '"' (not space)
+        nonEndingDq  :=  '"'  (not space)
         bodyChar     :=  (not ( '"'  |  newline ) )
 
     value      :=  sqstring  |  dqstring  |  scstring  |  unquoted
@@ -115,7 +115,11 @@ Tokens:
     comment    :=  '#'  (not newline)(*)
 
     whitespace :=  space(+)
-    
+
+In addition, any amount of whitespace and comments is allowed before
+all the tokens (the tokens are: `stop`, `saveopen`, `saveclose`,
+`loop`, `dataopen`, `identifier`, and `value`), except that unquoted
+values may not be preceded by newlines.
 
 Context-free grammar.  Note that hierarchical rules' first letters 
 are capitalized, while token names are all lowercase:
