@@ -126,7 +126,7 @@ are capitalized, while token names are all lowercase:
 
     NMRStar  :=   Data 
         
-    Data     :=   dataopen  Save(+)
+    Data     :=   dataopen  Save(*)
         
     Save     :=   saveopen  Datum(*)  Loop(*)  saveclose
         
@@ -148,27 +148,29 @@ Context-sensitive rules:
 ### Error conditions ###
 
  - tokenization:
-   - unclosed single-/double-quote strings
-   - newline characters in single-/double-quote strings
+   - unclosed single-quote string
+   - newline in single-quote strings
+   - unclosed double-quote string
+   - newline in double-quote strings
+   - unclosed semicolon-delimited string
  
  - nmrstar 
-   - entire string must be successfully parsed
    - data block must be successfully parsed
+   - entire string must be successfully parsed
  
  - data block:
    - invalid content:  loop or key/val
-   - doesn't have at least 1 save frame
 
  - save frame:
    - unclosed
    - invalid content
    - duplicate keys
+   - key/value pairs after loop
  
  - loop:
    - unclosed
    - invalid content
    - number of values is not an integer multiple of number of keys
-   - 0 keys
    - duplicate keys
  
  - datum (key-val pair):
