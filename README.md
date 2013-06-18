@@ -100,12 +100,12 @@ Tokens:
       where
         endsc  :=  newline  ';'
 
-    sqstring   :=  '\''  ( nonEndingSq  |  bodyChar )(+)  '\''
+    sqstring   :=  '\''  ( nonEndingSq  |  bodyChar )(*)  '\''
       where
         nonEndingSq  :=  '\'' (not space)
         bodyChar     :=  (not ( '\''  |  newline ) )
 
-    dqstring   :=  '"'  ( nonEndingDq  |  bodyChar )(+)  '"'
+    dqstring   :=  '"'  ( nonEndingDq  |  bodyChar )(*)  '"'
       where
         nonEndingDq  :=  '"' (not space)
         bodyChar     :=  (not ( '"'  |  newline ) )
