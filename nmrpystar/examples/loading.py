@@ -7,6 +7,10 @@ import sys
 import json
 
 
+def withInput(starString):
+    parsed = fullparse.parse(starString)
+    return parsed.fmap(lambda p: (starString, p))
+
 
 def parseString():
     eg = '''
@@ -28,31 +32,27 @@ data_startthedata
   
   save_ # this comment explains that the data's done
 '''
-    parsed = fullparse.parse(eg)
-    return parsed.bind(lambda p: (eg, p))
+    return withInput(eg)
 
 
 def parseFile(path):
     with open(path, 'r') as infile:
         inputStr = infile.read()
-        parsed = fullparse.parse(inputStr)
-        return parsed.bind(lambda p: (inputStr, p))
+        return withInput(inputStr)
 
 
-def parseFromUrl(myUrl='http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/248'): # this is the url of an NMR-Star3 file
+def parseUrl(myUrl='http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/248'): # this is the url of an NMR-Star3 file
     #url2 = 'http://rest.bmrb.wisc.edu/bmrb/NMR-STAR2/248'
     page = urllib2.urlopen(myUrl)
     inputStr = page.read()
     page.close()
-    parsed = fullparse.parse(inputStr)
-    return parsed.bind(lambda p: (inputStr, p))
+    return withInput(inputStr)
 
 
-def parseFromStdin():
+def parseStdin():
     inputStr = sys.stdin.read()
-    parsed = fullparse.parse(inputStr)
-    return parsed.bind(lambda p: (inputStr, p))
+    return withInput(inputStr)
 
 
 if __name__ == "__main__":
-    print json.dumps(parseFromStdin()[2].toJSONObject())
+    print json.dumps(parseStdin()[1].toJSONObject())

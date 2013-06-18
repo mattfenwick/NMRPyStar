@@ -3,20 +3,15 @@
 '''
 import cProfile
 import pstats
-from .. import fullparse
+from . import loading
 
 
-def readMe():
-    with open('nmrpystar/test/bmrb17661.txt', 'r') as f:
-        return f.read()
-
-
-def parseFile(string):
-    return fullparse.parse(string)
+def parseFile(path):
+    return loading.parseFile(path)
 
 
 def fullProfile():
-    cProfile.runctx('parseIt(str)', {}, {'parseIt': parseFile, 'str': readMe()}, 'fullprofile.txt')
+    cProfile.runctx('parseIt(path)', {}, {'parseIt': parseFile, 'path': 'bmrb17661.txt'}, 'fullprofile.txt')
     return pstats.Stats('fullprofile.txt')
 
 
