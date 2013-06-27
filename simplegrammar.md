@@ -50,6 +50,10 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
    - no unquoted values that match a reserved word
    - no unquoted values starting with a special character
    - no unquoted values containing whitespace
+ 
+ - case-insensitive keywords
+   - doesn't add any power to format
+   - treats things that look different (i.e. `stop_` vs `StoP_`) the same
 
 
 ### How does this grammar solve the above problems? ###
@@ -77,6 +81,9 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
    start with `_`, values with `"`, and keywords with `[a-zA-Z]`
    - allows token type prediction based on first character of token: no
      backtracking or lookahead is required to correctly tokenize
+ 
+ - keywords are all lowercase
+   - one single way to write each keyword
 
 
 ### Grammar ###
