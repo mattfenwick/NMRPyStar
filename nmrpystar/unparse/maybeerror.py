@@ -10,35 +10,33 @@ class MaybeError(object):
         self.status = status
         self.value = value
 
-    # must have same status and value to be equal
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__
-    
-    def __ne__(self, other):
-        return not self.__eq__(other)
-    
-    def fmap(self, f):
-        if self.status == 'success':
-            return MaybeError('success', f(self.value))
-        return self
-        
     @staticmethod
     def pure(x):
         return MaybeError('success', x)
     
-    def ap(self, y):
+    @staticmethod
+    def error(e):
+        return MaybeError('error', e)
+        
+    def fmap(self, f):
         if self.status == 'success':
-            return y.fmap(self.value)
+            return MaybeError.pure(f(self.value))
         return self
         
+    @staticmethod    
+    def app(f, *vals):
+        args = []
+        for v in vals:
+            if v.status == 'success':
+                args.append(v.value)
+            else:
+                return v
+        return MaybeError.pure(f(*args))
+    
     def bind(self, f):
         if self.status == 'success':
             return f(self.value)
         return self
-        
-    @staticmethod
-    def error(e):
-        return MaybeError('error', e)
         
     def mapError(self, f):
         if self.status == 'error':
@@ -51,8 +49,17 @@ class MaybeError(object):
         return self
 
     def __repr__(self):
-        return repr({'type': 'MaybeError', 
-                     'status': self.status, 'value': self.value})
+        return repr({
+            'type': 'MaybeError', 
+            'status': self.status, 
+            'value': self.value
+        })
 
-
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
+# defined outside the class b/c it's a constant
 MaybeError.zero = MaybeError('failure', None)

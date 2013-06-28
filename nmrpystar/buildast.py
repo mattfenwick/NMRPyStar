@@ -11,7 +11,7 @@ good, bad = MaybeError.pure, MaybeError.error
 
 
 def buildLoop(loop):
-    pos, keys_1, vals_1 = loop.start, loop.keys, loop.values
+    pos, keys_1, vals_1 = loop.start.position, loop.keys, loop.values
     
     keys = [k.string for k in keys_1]
     vals = [v.string for v in vals_1]
@@ -50,7 +50,7 @@ def buildSave(save):
     for d in save.datums:
         key, value = d.key.string, d.value.string
         if datums.has_key(key):
-            return bad(('save: duplicate key', key, save.start))
+            return bad(('save: duplicate key', key, save.start.position))
         datums[key] = value
     
     for loop in save.loops:
@@ -64,16 +64,16 @@ def buildSave(save):
 
 
 def buildData(node):
-    dataName, saves = node.name, node.saves
+    dataName, saves = node.start.string, node.saves
     mySaves = {}
     for save in saves:
         if not isinstance(save, concrete.Save):
             raise TypeError(('Data expects Saves', save))
-        if mySaves.has_key(save.name):
-            return bad(('data: duplicate save frame name', save.name, node.start))
+        if mySaves.has_key(save.start.string):
+            return bad(('data: duplicate save frame name', save.start.string, node.start.position))
         s = buildSave(save)
         if s.status == 'success':
-            mySaves[save.name] = s.value
+            mySaves[save.start.string] = s.value
         else:
             return s
     return good(ast.Data(dataName, mySaves))

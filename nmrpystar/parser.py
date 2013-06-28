@@ -1,25 +1,23 @@
 '''
 @author: matt
 '''
-from .unparse.standard import Parser
+from .unparse import combinators as c
 from . import concrete
 
 
+item = c.itemPosition
+(literal, satisfy, not1, _) = c.tokenPosition
 
-def _literal(c):
-    return Parser.satisfy(lambda t: t.char == c)
 
-def _string(cs):
-    return Parser.all(map(_literal, cs))
-
-def extract(cs):
-    '''
-    Returns: string of the characters without their meta information
-    '''
-    return ''.join([x.char for x in cs])
+extract = ''.join
 
 def oneOf(cs):
-    return Parser.satisfy(lambda x: x.char in cs)
+    return satisfy(lambda x: x in cs)
+
+def cut(message, parser):
+    return c.bind(c.getState, 
+                  lambda p: c.commit([(message, p)], parser))
+
 
 NEWLINES, BLANKS = set('\n\r'), set(' \t')
 SPACES = NEWLINES.union(BLANKS)
@@ -27,137 +25,140 @@ SPECIALS = SPACES.union(set('"#\'_')) # double-quote, pound, single-quote, under
 
 newline, blank, space, special = map(oneOf, [NEWLINES, BLANKS, SPACES, SPECIALS])
 
-_identifier  =  Parser.app(concrete.Key, 
-                           _literal('_').fmap(lambda c: c.meta), 
-                           space.not1().many1().fmap(extract))
+_identifier  =  c.app(lambda pos, _, bs: concrete.Key(pos, extract(bs)), 
+                      c.getState, 
+                      literal('_'), 
+                      c.many1(not1(space)))
 
 
-sc, sq, dq = map(_literal, ';\'"')
+sc, sq, dq = map(literal, ';\'"')
 
-end = Parser.item.not0()
-nonEndingSq = sq.seq2L(space.plus(end).not0())
-nonEndingDq = dq.seq2L(space.plus(end).not0())
+end = c.not0(item)
+_notSpaceOrEnd = c.not0(c.plus(space, end))
+nonEndingSq = c.seq2L(sq, _notSpaceOrEnd)
+nonEndingDq = c.seq2L(dq, _notSpaceOrEnd)
 
-def sqRest(o):
-    def action(b, _):
-        return concrete.Value(o.meta, extract(b))
-    newlineErr = newline.seq2L(Parser.error(('illegal newline in single-quoted string', o.meta)))
-    return Parser.app(action,
-                      nonEndingSq.plus(sq.plus(newlineErr).not1()).many0(),
-                      sq).commit(('unclosed single-quoted string', o.meta))
+# empty        ->  fail
+# not newline  ->  fail
+# newline      ->  error
+# (no success)
+_newlineErr = c.seq2L(newline, cut('illegal newline in quoted string', c.zero))
 
-sqstring = sq.bind(sqRest)
+sqstring = c.app(lambda pos, _1, cs, _2: concrete.Value(pos, extract(cs)),
+                 c.getState,
+                 sq, 
+                 c.many0(c.plus(nonEndingSq, not1(c.plus(sq, _newlineErr)))),
+                 cut('unclosed single-quoted string', sq))
 
-def dqRest(o):
-    def action(b, _):
-        return concrete.Value(o.meta, extract(b))
-    newlineErr = newline.seq2L(Parser.error(('illegal newline in double-quoted string', o.meta)))
-    return Parser.app(action, 
-                      nonEndingDq.plus(dq.plus(newlineErr).not1()).many0(),
-                      dq).commit(('unclosed double-quoted string', o.meta))
+dqstring = c.app(lambda pos, _1, cs, _2: concrete.Value(pos, extract(cs)),
+                 c.getState,
+                 dq, 
+                 c.many0(c.plus(nonEndingDq, not1(c.plus(dq, _newlineErr)))),
+                 cut('unclosed double-quoted string', dq))
 
-dqstring = dq.bind(dqRest)
-
-_quotedvalue = Parser.any([sqstring, dqstring])
-
-
-comment = Parser.app(lambda o, b: concrete.Comment(o.meta, extract(b)), _literal('#'), newline.not1().many0())
-whitespace = blank.plus(newline).many1().fmap(lambda b: concrete.Whitespace(b[0].meta, extract(b)))
+_quotedvalue = c.plus(sqstring, dqstring)
 
 
-endsc = newline.seq2R(sc)
+comment = c.app(lambda pos, _, b: concrete.Comment(pos, extract(b)), 
+                c.getState,
+                literal('#'),
+                c.many0(not1(newline))) 
+
+whitespace = c.app(concrete.Whitespace,
+                   c.getState,
+                   c.fmap(extract, c.many1(c.plus(blank, newline))))
+
+junk = c.many0(c.plus(whitespace, comment))
+
+def addError(e, parser):
+    return c.seq2R(junk,  # <-- HAAACK !!! this is just to throw away whitespace/comments in order to report a good position
+                   c.bind(c.getState,
+                          lambda pos: c.mapError(lambda es: [(e, pos)] + es, parser)))
+    
+endsc = c.seq2R(newline, sc)
 
 def scRest(ws):
     if len(ws) == 0:
-        return Parser.zero # could this even happen? no because we made sure it matched at least 1
+        return c.zero # could this even happen? no because we made sure it matched at least 1
     # a semicolon-delimited string must be preceded by a newline
     elif isinstance(ws[-1], concrete.Whitespace) and ws[-1].string[-1] in NEWLINES:
-        def scEnd(o):
-            return Parser.app(lambda b, _: concrete.Value(o.meta, extract(b)),
-                              endsc.not1().many0(),
-                              endsc).commit(('unclosed semicolon-delimited string', o.meta))
-        return sc.bind(scEnd)
+        return c.app(lambda pos, _1, b, _2: concrete.Value(pos, extract(b)),
+                     c.getState, # oh ... all other uses of getState might'nt work because we're pre-munching ... have to check
+                     sc,
+                     c.many0(not1(endsc)),
+                     cut('unclosed semicolon-delimited string', endsc))
     else:
-        return Parser.zero
+        return c.zero
     
-scstring = whitespace.plus(comment).many1().bind(scRest)
+scstring = c.bind(c.many1(c.plus(whitespace, comment)), scRest)
 
-
-def classify(v):
+def classify(meta, theString): # 'theString' in order to avoid shadowing
     '''
     Classifications:
      - reserved: /stop_/, /loop_/, /save_.*/, /data_.+/
      - value:  everything else
     '''
-    meta, string = v
-    pure, Reserved = Parser.pure, concrete.Reserved
-    if string.lower() == "stop_":
-        return pure(Reserved(meta, "stop", ''))
-    elif string[:5].lower() == "save_":
-        if len(string) != 5:
-            return pure(Reserved(meta, "saveopen", string[5:]))
-        return pure(Reserved(meta, "saveclose", ''))
-    elif string.lower() == "loop_":
-        return pure(Reserved(meta, "loop", ''))
-    elif string[:5].lower() == "data_" and len(string) > 5:
-        return pure(Reserved(meta, "dataopen", string[5:]))
-    return pure(concrete.Value(meta, string))
-        
-def uqOrKey(c, cs):
-    return (c.meta, extract([c] + cs))
+    Reserved = concrete.Reserved
+    if theString.lower() == "stop_":
+        return Reserved(meta, "stop", None)
+    elif theString[:5].lower() == "save_":
+        if len(theString) != 5:
+            return Reserved(meta, "saveopen", theString[5:])
+        return Reserved(meta, "saveclose", None)
+    elif theString.lower() == "loop_":
+        return Reserved(meta, "loop", None)
+    elif theString[:5].lower() == "data_" and len(theString) > 5:
+        return Reserved(meta, "dataopen", theString[5:])
+    return concrete.Value(meta, theString)
 
-_uqvalue_or_keyword = Parser.app(uqOrKey, 
-                                 special.not1(), 
-                                 space.not1().many0()).bind(classify)
+_uqvalue_or_keyword = c.app(lambda pos, c1, cs: classify(pos, extract([c1] + cs)),
+                            c.getState,
+                            not1(special),
+                            c.many0(not1(space)))
 
 
-def munch(p):
-    return whitespace.plus(comment).many0().seq2R(p)
+def munch(parser):
+    return c.seq2R(junk, parser)
 
 uqvalue_or_keyword = munch(_uqvalue_or_keyword)
 
 identifier  =  munch(_identifier)
-value       =  munch(_quotedvalue).plus(scstring).plus(uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Value)))
+value   =  c.check(lambda val: isinstance(val, concrete.Value), 
+                   c.any_([munch(_quotedvalue), scstring, uqvalue_or_keyword]))
 
 
 # syntactic combinations
 #   data blocks, save frames, loops, key/value pairs
 
 def keyword(rtype):
-    return uqvalue_or_keyword.check(lambda val: isinstance(val, concrete.Reserved) and val.rtype == rtype)
+    return c.check(lambda val: isinstance(val, concrete.Reserved) and val.rtype == rtype, 
+                   uqvalue_or_keyword)
 
-def loopRest(op):
-    def action(ids, vals, cls):
-        return concrete.Loop(op.start, ids, vals, cls.start)
-    return Parser.app(action, 
-                      identifier.many0(), 
-                      value.many0(), 
-                      keyword('stop')).commit(('loop: unable to parse', op.start))
-                      
-loop = keyword('loop').bind(loopRest) 
+loop = addError('loop', 
+                c.app(concrete.Loop,
+                      keyword('loop'),
+                      c.many0(identifier),
+                      c.many0(value),
+                      cut('loop: missing close', keyword('stop'))))
 
-def datumRest(i):
-    return value.fmap(lambda v: concrete.Datum(i, v)).commit(('datum: missing value', i.start))
+datum = addError('datum',
+                 c.app(concrete.Datum,
+                       identifier, 
+                       cut('datum: missing value', value)))
 
-datum = identifier.bind(datumRest)
+save = addError('save',
+                c.app(concrete.Save,
+                      keyword('saveopen'),
+                      c.many0(datum),
+                      c.many0(loop),
+                      cut('save: missing close', keyword('saveclose'))))
 
-def saveRest(op):
-    def action(ds, ls, c):
-        return concrete.Save(op.start, op.string, ds, ls, c.start)
-    return Parser.app(action,
-                      datum.many0(),
-                      loop.many0(),
-                      keyword('saveclose')).commit(('save: unable to parse', op.start))
+data = addError('data', 
+                c.app(concrete.Data,
+                      keyword('dataopen'),
+                      c.many0(save)))
 
-save = keyword('saveopen').bind(saveRest)
+end = c.not0(item)
 
-data = Parser.app(lambda o, ss: concrete.Data(o.start, o.string, ss), 
-                  keyword('dataopen'), 
-                  save.many0())
-
-def endCheck(xs):
-    if xs.isEmpty():
-        return Parser.pure(None)
-    return Parser.error(('unparsed input remaining', xs.first().meta))
-
-nmrstar = data.commit('unable to parse data block').seq2L(munch(Parser.get.bind(endCheck)))
+nmrstar = c.seq2L(cut('data: unable to parse', data), 
+                  munch(cut('unparsed input remaining', end)))

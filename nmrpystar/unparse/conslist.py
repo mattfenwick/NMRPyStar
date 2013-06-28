@@ -4,7 +4,7 @@ class ConsList(object):
     '''
     A data structure that supports constant-time first/rest slicing.
     The input sequence is never copied or modified -- all the slicing
-    has to do is increment a position counter and create a new wrapper.
+    does is increment a position counter and create a new wrapper.
     '''
 
     def __init__(self, seq, start):
@@ -25,33 +25,33 @@ class ConsList(object):
     def rest(self):
         '''
         Return ConsList of all but the first element.
-        Throws exception if ConsList is already empty.
+        Throws exception if empty.
         '''
         if not self.isEmpty():
             return ConsList(self.seq, self.start + 1)
         raise ValueError('cannot get rest of empty sequence')
     
-    def getRest(self):
+    def getAsList(self):
         '''
-        Return primitype sequence type of remaining elements.
+        Return list of remaining elements.
         '''
-        return self.seq[self.start:]
+        return list(self.seq[self.start:])
     
     @staticmethod
     def fromIterable(seq):
         return ConsList(seq, 0)
         
     def __eq__(self, other):
-        # the try/except prevents exceptions being thrown if a
-        #   ConsList is compared to an object of a different class
         try:
-            return self.seq[self.start:] == other.seq[other.start:]
+            return self.getAsList() == other.getAsList()
         except:
             return False
     
     def __ne__(self, other):
         return not self.__eq__(other)
-
+        
     def __repr__(self):
-        return repr({'type': 'cons list', 'sequence': self.getRest()})
-            
+        return repr({
+            'type': 'cons list', 
+            'sequence': self.getAsList()
+        })

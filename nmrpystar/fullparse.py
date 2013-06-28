@@ -1,16 +1,15 @@
 from .buildast import concreteToAST
 from .parser import nmrstar
 from .unparse.conslist import ConsList
-from .position import addLineCol
 
 
-def run(p, ts, s=None):
+def run(p, ts, s=(1, 1)):
     '''
     Parameters: parser, string-to-be-parsed, initial state
     Counts lines/columns of string, wraps in a ConsList,
     and runs parser over it, along with the supplied state.
     '''
-    return p.parse(ConsList.fromIterable(addLineCol(ts)), s)
+    return p.parse(ConsList.fromIterable(ts), s)
 
 
 def concreteToAbstract(output):

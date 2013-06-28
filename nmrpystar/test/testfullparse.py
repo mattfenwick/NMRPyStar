@@ -8,7 +8,7 @@ parse = fullparse.parse
 good = maybeerror.MaybeError.pure
 bad = maybeerror.MaybeError.error
 
-
+nope = '''
 class TestFullParse(u.TestCase):
     
     def testParseGood(self):
@@ -27,3 +27,4 @@ class TestFullParse(u.TestCase):
 
     def testJunk(self):
         self.assertEqual(parse("what is this junk?  this isn't nmr-star"), bad("unable to parse data block"))
+'''
