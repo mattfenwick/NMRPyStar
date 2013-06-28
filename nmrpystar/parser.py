@@ -18,6 +18,10 @@ def cut(message, parser):
     return c.bind(c.getState, 
                   lambda p: c.commit([(message, p)], parser))
 
+def addError(e, parser):
+    return c.bind(c.getState,
+                  lambda pos: c.mapError(lambda es: [(e, pos)] + es, parser))
+    
 
 NEWLINES, BLANKS = set('\n\r'), set(' \t')
 SPACES = NEWLINES.union(BLANKS)
@@ -42,19 +46,22 @@ nonEndingDq = c.seq2L(dq, _notSpaceOrEnd)
 # not newline  ->  fail
 # newline      ->  error
 # (no success)
-_newlineErr = c.seq2L(newline, cut('illegal newline in quoted string', c.zero))
+_newlineErr = addError('illegal newline', 
+                       c.seq2R(newline, c.error([])))
 
-sqstring = c.app(lambda pos, _1, cs, _2: concrete.Value(pos, extract(cs)),
-                 c.getState,
-                 sq, 
-                 c.many0(c.plus(nonEndingSq, not1(c.plus(sq, _newlineErr)))),
-                 cut('unclosed single-quoted string', sq))
+sqstring = addError('single-quoted string',
+                    c.app(lambda pos, _1, cs, _2: concrete.Value(pos, extract(cs)),
+                          c.getState,
+                          sq,
+                          c.many0(c.plus(nonEndingSq, not1(c.plus(sq, _newlineErr)))),
+                          cut("expected '", sq)))
 
-dqstring = c.app(lambda pos, _1, cs, _2: concrete.Value(pos, extract(cs)),
-                 c.getState,
-                 dq, 
-                 c.many0(c.plus(nonEndingDq, not1(c.plus(dq, _newlineErr)))),
-                 cut('unclosed double-quoted string', dq))
+dqstring = addError('double-quoted string',
+                    c.app(lambda pos, _1, cs, _2: concrete.Value(pos, extract(cs)),
+                          c.getState,
+                          dq, 
+                          c.many0(c.plus(nonEndingDq, not1(c.plus(dq, _newlineErr)))),
+                          cut('expected "', dq)))
 
 _quotedvalue = c.plus(sqstring, dqstring)
 
@@ -70,27 +77,22 @@ whitespace = c.app(concrete.Whitespace,
 
 junk = c.many0(c.plus(whitespace, comment))
 
-def addError(e, parser):
-    return c.seq2R(junk,  # <-- HAAACK !!! this is just to throw away whitespace/comments in order to report a good position
-                   c.bind(c.getState,
-                          lambda pos: c.mapError(lambda es: [(e, pos)] + es, parser)))
-    
 endsc = c.seq2R(newline, sc)
 
 def scRest(ws):
-    if len(ws) == 0:
-        return c.zero # could this even happen? no because we made sure it matched at least 1
-    # a semicolon-delimited string must be preceded by a newline
-    elif isinstance(ws[-1], concrete.Whitespace) and ws[-1].string[-1] in NEWLINES:
+    _, column = ws
+    # a semicolon-delimited string must be preceded by a newline -- thus, column must be 1
+    if column == 1:
         return c.app(lambda pos, _1, b, _2: concrete.Value(pos, extract(b)),
-                     c.getState, # oh ... all other uses of getState might'nt work because we're pre-munching ... have to check
+                     c.getState,
                      sc,
                      c.many0(not1(endsc)),
-                     cut('unclosed semicolon-delimited string', endsc))
+                     cut('expected newline-semicolon', endsc))
     else:
         return c.zero
     
-scstring = c.bind(c.many1(c.plus(whitespace, comment)), scRest)
+scstring = addError('semicolon string', 
+                    c.bind(c.getState, scRest))
 
 def classify(meta, theString): # 'theString' in order to avoid shadowing
     '''
@@ -118,7 +120,7 @@ _uqvalue_or_keyword = c.app(lambda pos, c1, cs: classify(pos, extract([c1] + cs)
 
 
 def munch(parser):
-    return c.seq2R(junk, parser)
+    return c.seq2L(parser, junk)
 
 uqvalue_or_keyword = munch(_uqvalue_or_keyword)
 
@@ -139,19 +141,19 @@ loop = addError('loop',
                       keyword('loop'),
                       c.many0(identifier),
                       c.many0(value),
-                      cut('loop: missing close', keyword('stop'))))
+                      cut('expected "stop_"', keyword('stop'))))
 
 datum = addError('datum',
                  c.app(concrete.Datum,
                        identifier, 
-                       cut('datum: missing value', value)))
+                       cut('expected value', value)))
 
 save = addError('save',
                 c.app(concrete.Save,
                       keyword('saveopen'),
                       c.many0(datum),
                       c.many0(loop),
-                      cut('save: missing close', keyword('saveclose'))))
+                      cut('expected "save_"', keyword('saveclose'))))
 
 data = addError('data', 
                 c.app(concrete.Data,
@@ -160,5 +162,7 @@ data = addError('data',
 
 end = c.not0(item)
 
-nmrstar = c.seq2L(cut('data: unable to parse', data), 
-                  munch(cut('unparsed input remaining', end)))
+nmrstar = c.app(lambda _1, d, _2: d,
+                junk,
+                cut('expected data block', data),
+                cut('unparsed input remaining', end))
