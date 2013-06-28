@@ -8,23 +8,26 @@ parse = fullparse.parse
 good = maybeerror.MaybeError.pure
 bad = maybeerror.MaybeError.error
 
-nope = '''
 class TestFullParse(u.TestCase):
     
     def testParseGood(self):
-        self.assertEqual(parse("data_hi save_me # oop \n   save_ "), good(a.Data('hi', {'me': a.Save({}, [])})))
+        self.assertEqual(parse("data_hi save_me # oop \n   save_ "), 
+                         good(a.Data('hi', {'me': a.Save({}, [])})))
     
     def testParseContextFreeProblem(self):
-        self.assertEqual(parse("data_hi save_me # oop \n "), bad(('save: unable to parse', {'line': 1, 'column': 9})))
+        self.assertEqual(parse("data_hi save_me # oop \n "), 
+                         bad([('data', (1,1)), ('save', (1,9)), ('expected "save_"', (2,2))]))
     
     def testParseContextSensitiveProblem(self):
-        self.assertEqual(parse("data_hi save_me _a 1 _a 2 save_ "), bad(('save: duplicate key', 
-                                                                         'a', 
-                                                                         {'line': 1, 'column': 9})))
+        self.assertEqual(parse("data_hi save_me _a 1 _a 2 save_ "), 
+                         bad(('save: duplicate key', 
+                              'a', 
+                              (1, 9))))
 
     def testParseUnconsumedInput(self):
-        self.assertEqual(parse("data_hi _what?"), bad(('unparsed input remaining', {'line': 1, 'column': 9})))
+        self.assertEqual(parse("data_hi _what?"), 
+                         bad([('unparsed input remaining', (1,9))]))
 
     def testJunk(self):
-        self.assertEqual(parse("what is this junk?  this isn't nmr-star"), bad("unable to parse data block"))
-'''
+        self.assertEqual(parse("what is this junk?  this isn't nmr-star"), 
+                         bad([('expected data block', (1,1))]))

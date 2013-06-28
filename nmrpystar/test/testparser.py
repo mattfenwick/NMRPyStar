@@ -83,7 +83,7 @@ class TestTokenizer(u.TestCase):
         cases = [
             [';b\nr;x\n;..??', 8, (1,1), (1, 1), (3,2), 'b\nr;x',                         'semicolon string'],
             [';abc def',       5, (1,2), (1, 2), (1,7), ';abc',      'not newline, then ; -- unquoted value'],
-            [';abc\n; def',    6, (1,1), (1, 1), (2,2), 'abc',                           ';-delimited value'],
+            [';abc\n; def',    7, (1,1), (1, 1), (2,3), 'abc',                           ';-delimited value'],
             [';\na;\n\n;def',  7, (1,1), (1, 1), (4,2), '\na;\n', ';-delimited can contain ; but not newline-;'],
             [';\n;def',        3, (1,1), (1, 1), (2,2), '',                                 'empty ;-string']]
         for (inp, num, pos0, pos1, pos2, value, message) in cases:

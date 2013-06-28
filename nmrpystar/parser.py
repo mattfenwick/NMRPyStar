@@ -126,7 +126,7 @@ uqvalue_or_keyword = munch(_uqvalue_or_keyword)
 
 identifier  =  munch(_identifier)
 value   =  c.check(lambda val: isinstance(val, concrete.Value), 
-                   c.any_([munch(_quotedvalue), scstring, uqvalue_or_keyword]))
+                   c.any_([munch(_quotedvalue), munch(scstring), uqvalue_or_keyword]))
 
 
 # syntactic combinations

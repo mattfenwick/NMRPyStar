@@ -5,11 +5,11 @@ from ...examples import loading
 import unittest
 
 
-nope = '''
 class TestLoading(unittest.TestCase):
     
     def testFromFile(self):
         z = loading.parseFile('bmrb17661.txt')
+        print z.value
         self.assertEqual(z.status, 'success')
         # no point in continuing with the tests if the parsing failed!
         data = z.value[1]
@@ -25,7 +25,7 @@ class TestLoading(unittest.TestCase):
         self.assertEqual(data.name, 'startthedata')
         self.assertEqual(len(data.saves), 1)
         self.assertEqual(data.saves['firstsave'].loops[0].keys, ['id1', 'id2'])
-    
+
     def testFromUrl(self):
         z = loading.parseUrl()
         self.assertEqual(z.status, 'success')
@@ -34,4 +34,3 @@ class TestLoading(unittest.TestCase):
         self.assertEqual(len(data.saves), 12)
         self.assertEqual(len(data.saves['chemical_shift_assignment_data_set_one'].loops[1].keys), 23)
         self.assertEqual(len(data.saves['chemical_shift_assignment_data_set_one'].loops[1].rows), 103)
-'''
