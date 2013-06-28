@@ -38,7 +38,7 @@ it is to use a parser:
    parse tree is composed of Python objects, against which queries can be easily
    written to extract the required data.
 
- - how, when, and with what debugging information errors are reported
+ - error reporting:  how, when, and with what context information
  
    Accurately reporting where and why input is malformed is a key aspect of a
    parser that's nice to use.  Arguably, error reporting should be part of a 
