@@ -116,6 +116,11 @@ class TestTokenErrors(u.TestCase):
             print stack
             output = m.error(stack)
             self.assertEqual(run(p.value, l(s)), output)
+    
+    def testEmptyIdentifier(self):
+        inp = '_ abc'
+        output = m.error([('identifier', (1,1)), ('expected non-whitespace', (1,2))])
+        self.assertEqual(run(p.identifier, l(inp)), output)
 
 
 class TestCombinations(u.TestCase):

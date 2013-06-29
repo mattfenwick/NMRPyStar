@@ -29,10 +29,11 @@ SPECIALS = SPACES.union(set('"#\'_')) # double-quote, pound, single-quote, under
 
 newline, blank, space, special = map(oneOf, [NEWLINES, BLANKS, SPACES, SPECIALS])
 
-_identifier  =  c.app(lambda pos, _, bs: concrete.Key(pos, extract(bs)), 
-                      c.getState, 
-                      literal('_'), 
-                      c.many1(not1(space)))
+_identifier  =  addError('identifier',
+                         c.app(lambda pos, _, bs: concrete.Key(pos, extract(bs)), 
+                               c.getState, 
+                               literal('_'), 
+                               cut('expected non-whitespace', c.many1(not1(space)))))
 
 
 sc, sq, dq = map(literal, ';\'"')
