@@ -160,8 +160,6 @@ data = addError('data',
                       keyword('dataopen'),
                       c.many0(save)))
 
-end = c.not0(item)
-
 nmrstar = c.app(lambda _1, d, _2: d,
                 junk,
                 cut('expected data block', data),
