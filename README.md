@@ -213,8 +213,7 @@ with other Python versions, I haven't tried that.
 ### Reference ###
 
 Parser Combinators: a Practical Application for Generating Parsers for NMR Data 
- by Matthew Fenwick, Gerard Weatherby, Heidi JC Ellis, Michael R. Gryk
- Proceedings of the ITNG, 2013.
+ by Fenwick et al, Proceedings of the ITNG, 2013.
 
  
 
