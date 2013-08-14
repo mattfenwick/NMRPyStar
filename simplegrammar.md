@@ -6,7 +6,7 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
 
  1. simplify the specification.  This helps implementors to:
    - implement the entire specification
-   - test the implementation
+   - test the entire implementation
  2. allow simple and accurate error reporting 
  3. simplify unparsing
  4. eliminate corner cases requiring special handling
@@ -16,11 +16,16 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
 
  - inconsistent whitespace/comment allowances:
    - space or tab is required before some types of values
-   - newline is required before semicolon-delimited values.  
+   - newline is required before semicolon-delimited values
+   - arbitrary whitespace/comments may appear before other tokens
  
  - ambiguities requiring lookahead to solve:
-   - keyword vs unquoted:  `stop_` vs `stop_123`
-   - semicolon-delimited vs. unquoted:  `;abc\n;` vs. `;abc`
+   - keyword vs unquoted:  
+     - keyword: `stop_`
+     - unquoted value: `stop_123`
+   - semicolon-delimited vs. unquoted:  
+     - semicolon-delimited: `;abc\n;`
+     - unquoted value: `;abc`
    - value-ending quote (see next issue)
  
  - complicated rules for when and how delimiters may appear inside 
@@ -31,7 +36,8 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
    - double-quote strings: end `"` must be followed by whitespace or EOF:
      - yes: `"a"b"`
      - no: `"a" b"`
-   - semicolon-delimited strings:  `;` can not appear at the beginning of a line:
+   - semicolon-delimited strings:  `;` can not appear at the beginning of a line
+     within the string:
      - yes: `\n;a\nb;\n;`
      - no: `\n;a\n;\n;`
  
@@ -51,9 +57,9 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
    - no unquoted values starting with a special character
    - no unquoted values containing whitespace
  
- - case-insensitive keywords
-   - doesn't add any power to format
-   - treats things that look different (i.e. `stop_` vs `StoP_`) the same
+ - case-insensitive keywords, but case-sensitive values
+   - `stop_` and `StoP_` are treated as the same token, although they are different
+   - `abc` and `ABC` are treated as different tokens
 
 
 ### How does this grammar solve the above problems? ###
@@ -82,8 +88,9 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
    - allows token type prediction based on first character of token: no
      backtracking or lookahead is required to correctly tokenize
  
- - keywords are all lowercase
-   - one single way to write each keyword
+ - case is always significant
+   - keywords are all lowercase -- one way to write each keyword
+   - no difference between keywords and values with respect to case treatment
 
 
 ### Grammar ###
