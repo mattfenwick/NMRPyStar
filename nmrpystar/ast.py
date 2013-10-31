@@ -1,4 +1,27 @@
-from .concrete import X
+'''
+@author: Matt
+'''
+
+
+class X(object):
+    '''
+    Provides default:
+     - equality
+     - inequality
+     - meaningful string representation 
+    '''
+    
+    def __eq__(self, other):
+        try:
+            return self.__dict__ == other.__dict__
+        except: # if the other object doesn't have a `__dict__` attribute, don't want to blow up 
+            return False
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+    
+    def __repr__(self):
+        return repr(self.toJSONObject())
 
 
 class Loop(X):

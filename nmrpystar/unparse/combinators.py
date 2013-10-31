@@ -2,6 +2,60 @@ from .maybeerror import MaybeError as M
 
 
 
+class ConsList(object):
+    '''
+    A data structure that supports constant-time first/rest slicing.
+    The input sequence is never copied or modified -- all the slicing
+    does is increment a position counter and create a new wrapper.
+    '''
+
+    def __init__(self, seq, start=0):
+        self.seq = seq
+        self.start = start
+        
+    def isEmpty(self):
+        return self.start >= len(self.seq)
+        
+    def first(self):
+        '''
+        Returns first element.  Throws exception if empty.
+        '''
+        if not self.isEmpty():
+            return self.seq[self.start]
+        raise ValueError('cannot get first element of empty sequence')
+        
+    def rest(self):
+        '''
+        Return ConsList of all but the first element.
+        Throws exception if empty.
+        '''
+        if not self.isEmpty():
+            return ConsList(self.seq, self.start + 1)
+        raise ValueError('cannot get rest of empty sequence')
+    
+    def getAsList(self):
+        '''
+        Return list of remaining elements.
+        '''
+        return list(self.seq[self.start:])
+        
+    def __eq__(self, other):
+        try:
+            return self.getAsList() == other.getAsList()
+        except:
+            return False
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+        
+    def __repr__(self):
+        return repr({
+            'type': 'cons list', 
+            'sequence': self.getAsList()
+        })
+
+
+
 class Parser(object):
     '''
     A wrapper around a callable of type `[t] -> s -> ME ([t], s, a)`.
@@ -51,14 +105,6 @@ def bind(parser, g):
             return g(val['result']).parse(val['rest'], val['state'])
         else:
             return r
-    return Parser(f)
-
-def plus(self, other):
-    '''
-    Parser e s (m t) a -> Parser e s (m t) a -> Parser e s (m t) a
-    '''
-    def f(xs, s):
-        return self.parse(xs, s).plus(other.parse(xs, s))
     return Parser(f)
 
 def error(e):
@@ -149,7 +195,7 @@ def many1(parser):
     '''
     return check(lambda x: len(x) > 0, many0(parser))
 
-def all_(parsers):
+def seq(*parsers):
     '''
     [Parser e s (m t) a] -> Parser e s (m t) [a]
     '''
@@ -171,29 +217,31 @@ def app(f, *parsers):
     '''
     (a -> ... y -> z) -> Parser e s (m t) a -> ... -> Parser e s (m t) y -> Parser e s (m t) z
     '''
-    return fmap(lambda rs: f(*rs), all_(parsers))
+    return fmap(lambda rs: f(*rs), seq(*parsers))
 
-def optional(x, parser):
+def optional(parser, default=None):
     '''
     Parser e s (m t) a -> a -> Parser e s (m t) a
     '''
-    return plus(parser, pure(x))
+    return alt(parser, pure(default))
+
+def _first(x, _):
+    return x
+
+def _second(_, y):
+    return y
 
 def seq2L(self, other):
     '''
     Parser e s (m t) a -> Parser e s (m t) b -> Parser e s (m t) a
     '''
-    def f(x):
-        return x[0]
-    return fmap(f, all_([self, other]))
+    return app(_first, self, other)
 
 def seq2R(self, other):
     '''
     Parser e s (m t) a -> Parser e s (m t) b -> Parser e s (m t) b
     '''
-    def g(x):
-        return x[1]
-    return fmap(g, all_([self, other]))
+    return app(_second, self, other)
 
 def lookahead(parser):
     '''
@@ -219,9 +267,9 @@ def commit(e, parser):
     '''
     Parser e s (m t) a -> e -> Parser e s (m t) a
     '''
-    return plus(parser, error(e))
+    return alt(parser, error(e))
 
-def any_(parsers):
+def alt(*parsers):
     '''
     [Parser e s (m t) a] -> Parser e s (m t) a
     '''
@@ -244,40 +292,45 @@ get = Parser(lambda xs, s: good(xs, xs, s))
 getState = Parser(lambda xs, s: good(s, xs, s))
 
 
-def tokenPrimitives(itemP):
-    '''
-    These parsers are built out of the most basic parser -- itemP -- that 
-    consumes one single token if available.
-    I couldn't figure out any better place to put them or thing to do with them --
-    they don't seem to belong in a class, as far as I can tell.
-    '''
+class Itemizer(object):
     
-    def literal(x):
+    def __init__(self, itemP):
+        '''
+        itemP :: [t] -> s -> MaybeError e (t, [t], s)
+        `itemP` is the most basic parser and should:
+         - succeed, consuming one single token if there are any tokens left
+         - fail if there are no tokens left
+        '''
+        self.item = Parser(itemP)
+
+    def literal(self, x):
         '''
         Eq t => t -> Parser e s (m t) t
         '''
-        return check(lambda y: x == y, itemP)
-
-    def satisfy(pred):
+        return check(lambda y: x == y, self.item)
+    
+    def satisfy(self, pred):
         '''
         (t -> Bool) -> Parser e s (m t) t
         '''
-        return check(pred, itemP)
-
-    def not1(self):
+        return check(pred, self.item)
+    
+    def not1(self, parser):
         '''
         Parser e s (m t) a -> Parser e s (m t) t
         '''
-        return seq2R(not0(self), itemP)
+        return seq2R(not0(parser), self.item)
 
-    def string(elems):
+    def string(self, elems):
         '''
         Eq t => [t] -> Parser e s (m t) [t] 
         '''
-        matcher = all_(map(literal, elems))
+        matcher = seq(*map(self.literal, elems))
         return seq2R(matcher, pure(elems))
     
-    return (literal, satisfy, not1, string)
+    def oneOf(self, elems):
+        c_set = set(elems)
+        return self.satisfy(lambda x: x in c_set)
 
 
 def _itemBasic(xs, s):
@@ -289,10 +342,6 @@ def _itemBasic(xs, s):
         return M.zero
     first, rest = xs.first(), xs.rest()
     return good(first, rest, s)
-
-itemBasic = Parser(_itemBasic)
-tokenBasic = tokenPrimitives(itemBasic)
-
 
 def _bump(c, p):
     line, col = p
@@ -313,5 +362,12 @@ def _itemPosition(xs, position):
     first, rest = xs.first(), xs.rest()
     return good(first, rest, _bump(first, position))
 
-itemPosition = Parser(_itemPosition)
-tokenPosition = tokenPrimitives(itemPosition)
+position = Itemizer(_itemPosition)
+basic = Itemizer(_itemBasic)
+
+
+def run(parser, input_string, state=(1,1)):
+    '''
+    Run a parser given the token input and state.
+    '''
+    return parser.parse(ConsList(input_string), state)
