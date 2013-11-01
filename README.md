@@ -117,9 +117,13 @@ Tokens:
     whitespace :=  space(+)
 
 In addition, any amount of whitespace and comments is allowed before
-all the tokens (the tokens are: `stop`, `saveopen`, `saveclose`,
+any token (the tokens are: `stop`, `saveopen`, `saveclose`,
 `loop`, `dataopen`, `identifier`, and `value`), except that unquoted
-values may not be preceded by newlines.
+values may not be preceded by newlines if they start with semicolons.
+
+Also, reserved words -- `stop_`, `save_`, `loop_`, `save_[^ \n\t\r]+`,
+`data_[^ \n\t\r]+` -- take precedence over unquoted values, meaning 
+that `stop_` cannot be an unquoted value.
 
 Context-free grammar.  Note that hierarchical rules' first letters 
 are capitalized, while token names are all lowercase:

@@ -75,7 +75,7 @@ unquoted = node('unquoted',
 token = alt(whitespace, 
             comment,
             sqstring,
-            scstring,
+            scstring, # I think it's important to put this before `unquoted` so that ; in column 1 will be an open-scstring
             dqstring,
             unquoted,
             identifier)
