@@ -1,8 +1,9 @@
 from .. import parser as p
+from ..cleantokens import token
 from ..unparse import maybeerror as me
 from ..unparse import combinators
 import unittest as u
-notnow = """
+
 
 m = me.MaybeError
 l = combinators.ConsList
@@ -13,80 +14,108 @@ def good(rest, state, result):
 def bad(message, position):
     return m.error({'message': message, 'position': position})
 
-def run(parser, i, position = (1, 1)):
-    return combinators.run(parser, i, position)
+def run(parser, i):
+    return combinators.run(parser, i, None)
 
-def token(ttype, pos, **kwargs):
-    kwargs['type'] = ttype
-    kwargs['pos'] = pos
+def node(name, **kwargs):
+    kwargs['_name'] = name
+    kwargs['_state'] = None
     return kwargs
 
 # some tokens
-loop = 
+loop = token('reserved', (1,1), keyword='loop')
+stop = token('reserved', (2,2), keyword='stop')
+save_c = token('reserved', (3,3), keyword='save close')
+save_o = token('reserved', (4,4), keyword='save open', value='hi')
+data_o = token('reserved', (5,5), keyword='data open', value='bye')
+id1 = token('identifier', (6,6), value='matt')
+id2 = token('identifier', (7,7), value='dog')
+val1 = token('value', (8,8), value='hihi')
+val2 = token('value', (9,9), value='blar')
 
 
 class TestCombinations(u.TestCase):
 
     def testLoop(self):
-        inp = '''loop_
+        inp = [loop, id1, id2, val1, val2, stop]
+        output = good(l([]), None,
+                      node('loop', open=loop, close=stop, keys=[id1, id2], values=[val1, val2]))
+        self.assertEqual(run(p.loop, inp), output)
 
-            _a
-            _bab
-            1 2
-            "wx" "yz"
-          stop_'''
-        output = good(l([]), (7, 16), concrete.Loop(concrete.Reserved(pos(1, 1), 'loop', None),
-                                                    [concrete.Key(pos(3, 13), 'a'),
-                                                     concrete.Key(pos(4, 13), 'bab')],
-                                                    [concrete.Value(pos(5, 13), '1'),
-                                                     concrete.Value(pos(5, 15), '2'),
-                                                     concrete.Value(pos(6, 13), 'wx'),
-                                                     concrete.Value(pos(6, 18), 'yz')],
-                                                    concrete.Reserved(pos(7, 11), 'stop', None)))
-        self.assertEqual(run(p.loop, l(inp)), output)
+    def testDatum(self):
+        inp = [id2, val1, save_c]
+        output = good(l([save_c]), None, 
+                      node('datum', 
+                           key=id2,
+                           value=val1))
+        self.assertEqual(run(p.datum, inp), output)
+    
+    def testSaveBasic(self):
+        inp = [save_o, save_c, stop]
+        output = good(l([stop]), None,
+                      node('save', 
+                           open=save_o,
+                           close=save_c,
+                           datums=[],
+                           loops=[]))
+        self.assertEqual(run(p.save, inp), output)
+    
+    def testSaveComplex(self):
+        inp = [save_o, id1, val2, loop, stop, save_c, save_o]
+        output = good(l([save_o]), None, 
+                      node('save',
+                           open=save_o,
+                           close=save_c,
+                           datums=[node('datum', key=id1, value=val2)],
+                           loops=[node('loop', open=loop, close=stop, keys=[], values=[])]))
+        self.assertEqual(run(p.save, inp), output)
+
+    def testDataBasic(self):
+        inp = [data_o, id1]
+        output = good(l([id1]), None,
+                      node('data',
+                           open=data_o,
+                           saves=[]))
+        self.assertEqual(run(p.data, inp), output)
         
-    def testLoopMissingStop(self):
-        inp = 'loop_ _a 1 2'
-        output = m.error([('loop', (1,1)), ('expected "stop_"', (1, 13))])
-        self.assertEqual(run(p.loop, l(inp)), output)
+    def testDataComplex(self):
+        inp = [data_o, save_o, id1, val1, save_c, save_c]
+        output = good(l([save_c]), None,
+                      node('data',
+                           open=data_o,
+                           saves=[node('save',
+                                       open=save_o,
+                                       close=save_c,
+                                       datums=[node('datum', key=id1, value=val1)],
+                                       loops=[])]))
+        self.assertEqual(run(p.data, inp), output)
         
+    def testNMRStar(self):
+        inp = [data_o, save_o, save_c]
+        output = good(l([]), None,
+                      node('data',
+                           open=data_o,
+                           saves=[node('save', open=save_o, close=save_c, datums=[], loops=[])]))
+        self.assertEqual(run(p.nmrstar, inp), output)
+    
+oops = """        
     def testLoopInvalidContent(self):
         inp = 'loop_ \n  _a _b \n 1 \n save_ stop_'
         output = m.error([('loop', (1,1)), ('expected "stop_"', (4,2))])
         self.assertEqual(run(p.loop, l(inp)), output)
         
-    def testDatum(self):
-        inp = '_abc 123  \nt'
-        output = good(l(inp[-1:]), (2,1), concrete.Datum(concrete.Key(pos(1, 1), 'abc'), 
-                                                   concrete.Value(pos(1, 6), '123')))
-        self.assertEqual(run(p.datum, l(inp)), output)
-    
     def testDatumMissingValue(self):
         inp = '_abc save_'
         output = m.error([('datum', (1,1)), ('expected value', (1,6))])
         self.assertEqual(run(p.datum, l(inp)), output)
         
-    def testSave(self):
-        inp = 'save_me save_'
-        output = good(l([]), (1,14), 
-                      concrete.Save(concrete.Reserved((1, 1), 'saveopen', 'me'),
-                                    [], 
-                                    [], 
-                                    concrete.Reserved((1, 9), 'saveclose', None)))
-        self.assertEqual(run(p.save, l(inp)), output)
-    
-    def testSaveComplex(self):
-        inp = 'save_thee  _ab cd loop_ stop_ \nsave_ t'
-        output = good(l(inp[-1:]), (2,7), 
-                      concrete.Save(concrete.Reserved((1, 1), 'saveopen', 'thee'), 
-                                    [concrete.Datum(concrete.Key(pos(1, 12), 'ab'),
-                                                    concrete.Value(pos(1, 16), 'cd'))],
-                                    [concrete.Loop(concrete.Reserved((1, 19), 'loop', None), 
-                                                   [], 
-                                                   [], 
-                                                   concrete.Reserved((1, 25), 'stop', None))],
-                                    concrete.Reserved((2, 1), 'saveclose', None)))
-        self.assertEqual(run(p.save, l(inp)), output)
+    def testLoopMissingStop(self):
+        inp = [loop, id1, id2, val1, val2]
+        # not sure what the positions should be:
+        #   first: the position of the loop open token?
+        #   second: the position of the last noticed token?
+        output = m.error([('loop', (1,1)), ('loop close', (9,9))])
+        self.assertEqual(run(p.loop, inp), output)
 
     def testSaveUnclosed(self):
         inp = 'save_me _ab 12 '
@@ -103,16 +132,6 @@ class TestCombinations(u.TestCase):
         output = m.error([('save', (1, 1)), ('expected "save_"', (4,2))])
         self.assertEqual(run(p.save, l(inp)), output)
         
-    def testData(self):
-        inp = 'data_toks save_us \nsave_ t'
-        output = good(l(inp[-1:]), (2,7), 
-                      concrete.Data(concrete.Reserved((1,1), 'dataopen', 'toks'),
-                                    [concrete.Save(concrete.Reserved((1,11), 'saveopen', 'us'),
-                                                   [], 
-                                                   [], 
-                                                   concrete.Reserved((2, 1), 'saveclose', None))]))
-        self.assertEqual(run(p.data, l(inp)), output)
-        
     def testDataInvalidContent(self):
         inp = 'data_me loop_ save_them save_'
         # it just hits the loop_, says, "I don't know how to deal with that",
@@ -122,16 +141,6 @@ class TestCombinations(u.TestCase):
                                     []))
         self.assertEqual(run(p.data, l(inp)), output)
         
-    def testNMRStar(self):
-        inp = ' data_me save_you \nsave_ # uh-oh?? \n '
-        output = good(l([]), (3,2), 
-                      concrete.Data(concrete.Reserved((1,2), 'dataopen', 'me'),
-                                    [concrete.Save(concrete.Reserved((1, 10), 'saveopen', 'you'), 
-                                                   [], 
-                                                   [], 
-                                                   concrete.Reserved((2, 1), 'saveclose', None))]))
-        self.assertEqual(run(p.nmrstar, l(inp)), output)
-    
     def testNMRStarUnconsumedTokensRemaining(self):
         inp = 'data_me loop_ save_them save_'
         output = m.error([('unparsed input remaining', pos(1, 9))])

@@ -17,10 +17,10 @@ def match(**kwargs):
     return satisfy(test)
 
 def reserved(my_type):
-    return match(_name='reserved', type=my_type)
+    return match(type='reserved', keyword=my_type)
 
-value = satisfy(lambda t: t['_name'] in ['scstring', 'sqstring', 'dqstring', 'unquoted value'])
-ident = match(_name='identifier')
+value = match(type='value')
+ident = match(type='identifier')
 
 loop = node('loop',
             ('open'  , reserved('loop')),
@@ -39,8 +39,8 @@ save = node('save',
             ('close' , cut("save close", reserved('save close'))))
 
 data = node('data',
-            ('open'      , reserved('data open')),
-            ('saveframes', many0(save)))
+            ('open' , reserved('data open')),
+            ('saves', many0(save)))
 
 nmrstar = seq2L(cut('data block', data),
                 cut('unparsed input remaining', not0(item))) # hmm, that error message is different from the others ....
