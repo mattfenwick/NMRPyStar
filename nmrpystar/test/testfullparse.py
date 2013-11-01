@@ -2,7 +2,7 @@ from .. import fullparse
 from ..unparse import maybeerror
 from .. import ast as a
 import unittest as u
-
+notnow = """
 
 parse = fullparse.parse
 good = maybeerror.MaybeError.pure
@@ -31,3 +31,4 @@ class TestFullParse(u.TestCase):
     def testJunk(self):
         self.assertEqual(parse("what is this junk?  this isn't nmr-star"), 
                          bad([('expected data block', (1,1))]))
+"""

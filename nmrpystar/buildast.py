@@ -2,7 +2,6 @@
 @author: matt
 '''
 from . import ast
-from . import concrete
 from .unparse import maybeerror
 
 
@@ -67,7 +66,7 @@ def buildData(node):
     dataName, saves = node.start.string, node.saves
     mySaves = {}
     for save in saves:
-        if not isinstance(save, concrete.Save):
+        if save['_name'] != 'save': 
             raise TypeError(('Data expects Saves', save))
         if mySaves.has_key(save.start.string):
             return bad(('data: duplicate save frame name', save.start.string, node.start.position))
@@ -80,6 +79,6 @@ def buildData(node):
     
 
 def concreteToAST(node):
-    if not isinstance(node, concrete.Data):
+    if node['_name'] != 'data':
         raise TypeError(("expected concrete Data node", node))
     return buildData(node)

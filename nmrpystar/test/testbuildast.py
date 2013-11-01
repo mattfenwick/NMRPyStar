@@ -1,10 +1,9 @@
 from .. import buildast as b
-from .. import concrete as c
 from .. import ast as a
 from ..unparse import maybeerror as me
 import unittest as u
 
-
+nope = '''
 good = me.MaybeError.pure
 bad = me.MaybeError.error
 
@@ -97,3 +96,4 @@ class TestASTBuilder(u.TestCase):
                            [],
                            6)])
         self.assertEqual(b.buildData(d), bad(('save: duplicate key', 'x', 79)))
+'''

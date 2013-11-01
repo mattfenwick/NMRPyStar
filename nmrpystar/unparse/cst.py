@@ -31,14 +31,14 @@ def node(name, *pairs):
     names = map(lambda x: x[0], pairs)
     if len(names) != len(set(names)):
         raise ValueError('duplicate names')
-    if '_type' in names:
-        raise ValueError('forbidden key: "_type"')
-    if '_pos' in names:
-        raise ValueError('forbidden key: "_pos"')
-    def action(pos, results):
+    if '_name' in names:
+        raise ValueError('forbidden key: "_name"')
+    if '_state' in names:
+        raise ValueError('forbidden key: "_state"')
+    def action(state, results):
         out = dict(results)
-        out['_pos'] = pos
-        out['_type'] = name
+        out['_state'] = state
+        out['_name'] = name
         return out
     def closure_workaround(s): # captures s
         return lambda y: (s, y)

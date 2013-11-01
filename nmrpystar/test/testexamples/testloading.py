@@ -3,7 +3,7 @@
 '''
 from ...examples import loading
 import unittest
-
+notnow = """
 
 class TestLoading(unittest.TestCase):
     
@@ -34,3 +34,4 @@ class TestLoading(unittest.TestCase):
         self.assertEqual(len(data.saves), 12)
         self.assertEqual(len(data.saves['chemical_shift_assignment_data_set_one'].loops[1].keys), 23)
         self.assertEqual(len(data.saves['chemical_shift_assignment_data_set_one'].loops[1].rows), 103)
+"""
