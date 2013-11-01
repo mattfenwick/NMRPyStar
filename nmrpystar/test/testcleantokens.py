@@ -1,14 +1,8 @@
 '''
 @author: matt
 '''
-from ..cleantokens import clean_token
+from ..cleantokens import clean_token, token
 import unittest as u
-
-
-def node(name, pos, **kwargs):
-    kwargs['type'] = name
-    kwargs['pos'] = pos
-    return kwargs
 
 
 
@@ -37,29 +31,29 @@ class TestCleanTokens(u.TestCase):
             print message, res
             if name == 'reserved':
                 if my_type in ['save open', 'data open']:
-                    self.assertEqual(node('reserved', None, keyword=my_type, value=value), res)
+                    self.assertEqual(token('reserved', None, keyword=my_type, value=value), res)
                 else:
-                    self.assertEqual(node('reserved', None, keyword=my_type), res)
+                    self.assertEqual(token('reserved', None, keyword=my_type), res)
             elif name == 'value':
-                self.assertEqual(node('value', None, value=value), res)
+                self.assertEqual(token('value', None, value=value), res)
             else:
                 raise ValueError('for completeness -- but should not happen')
     
     def testIdentifier(self):
-        self.assertEqual(node('identifier', None, value='abcd'),
+        self.assertEqual(token('identifier', None, value='abcd'),
                          clean_token(dict(_name='identifier', _state=None, open='_', value=list('abcd'))))
     
     def testScString(self):
-        self.assertEqual(node('value', None, value='123'),
+        self.assertEqual(token('value', None, value='123'),
                          clean_token(dict(_name='scstring', _state=None, 
                                           open=';', close=list('\n;'), value=list('123'))))
 
     def testSqString(self):
-        self.assertEqual(node('value', None, value='123'),
+        self.assertEqual(token('value', None, value='123'),
                          clean_token(dict(_name='sqstring', _state=None, 
                                           open="'", close="'", value=list('123'))))
 
     def testDqString(self):
-        self.assertEqual(node('value', None, value='123'),
+        self.assertEqual(token('value', None, value='123'),
                          clean_token(dict(_name='dqstring', _state=None, 
                                           open='"', close='"', value=list('123'))))
