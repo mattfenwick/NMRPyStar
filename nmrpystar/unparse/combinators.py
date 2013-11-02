@@ -294,14 +294,14 @@ getState = Parser(lambda xs, s: good(s, xs, s))
 
 class Itemizer(object):
     
-    def __init__(self, itemP):
+    def __init__(self, item):
         '''
-        itemP :: [t] -> s -> MaybeError e (t, [t], s)
-        `itemP` is the most basic parser and should:
+        item :: Parser e s (m t) t
+        `item` is the most basic parser and should:
          - succeed, consuming one single token if there are any tokens left
          - fail if there are no tokens left
         '''
-        self.item = Parser(itemP)
+        self.item = item
 
     def literal(self, x):
         '''
@@ -333,7 +333,7 @@ class Itemizer(object):
         return self.satisfy(lambda x: x in c_set)
 
 
-def _itemBasic(xs, s):
+def _f_item_basic(xs, s):
     '''
     Simply consumes a single token if one is available, presenting that token
     as the value.  Fails if token stream is empty.
@@ -343,27 +343,22 @@ def _itemBasic(xs, s):
     first, rest = xs.first(), xs.rest()
     return good(first, rest, s)
 
-def _bump(c, p):
-    line, col = p
-    if c == '\n':
+basic = Itemizer(Parser(_f_item_basic))
+
+def _bump(char, position):
+    line, col = position
+    if char == '\n':
         return (line + 1, 1)
     return (line, col + 1)
 
-def _itemPosition(xs, position):
-    '''
-    Does two things:
-     - consumes a single token if available, failing otherwise (see `itemBasic`)
-     - updates the position info in state -- `\n` is a newline
-     
-    This assumes that the state is a 2-tuple of integers, (line, column).
-    '''
-    if xs.isEmpty():
-        return M.zero
-    first, rest = xs.first(), xs.rest()
-    return good(first, rest, _bump(first, position))
+def _f_position(c):
+    return seq2R(updateState(lambda s: _bump(c, s)), pure(c))
 
-position = Itemizer(_itemPosition)
-basic = Itemizer(_itemBasic)
+_item_position = bind(basic.item, _f_position)
+position = Itemizer(_item_position)
+
+_item_count = seq2L(basic.item, updateState(lambda x: x + 1))
+count = Itemizer(_item_count)
 
 
 def run(parser, input_string, state=(1,1)):

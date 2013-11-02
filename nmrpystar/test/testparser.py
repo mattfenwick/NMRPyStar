@@ -15,11 +15,11 @@ def bad(message, position):
     return m.error({'message': message, 'position': position})
 
 def run(parser, i):
-    return combinators.run(parser, i, None)
+    return combinators.run(parser, i, 1)
 
-def node(name, **kwargs):
+def node(name, count, **kwargs):
     kwargs['_name'] = name
-    kwargs['_state'] = None
+    kwargs['_state'] = count
     return kwargs
 
 # some tokens
@@ -38,22 +38,21 @@ class TestCombinations(u.TestCase):
 
     def testLoop(self):
         inp = [loop, id1, id2, val1, val2, stop]
-        output = good(l([]), None,
-                      node('loop', open=loop, close=stop, keys=[id1, id2], values=[val1, val2]))
+        output = good(l([]), 7,
+                      node('loop', 1, open=loop, close=stop, keys=[id1, id2], values=[val1, val2]))
         self.assertEqual(run(p.loop, inp), output)
 
     def testDatum(self):
         inp = [id2, val1, save_c]
-        output = good(l([save_c]), None, 
-                      node('datum', 
-                           key=id2,
-                           value=val1))
+        output = good(l([save_c]), 3, 
+                      node('datum', 1, key=id2, value=val1))
         self.assertEqual(run(p.datum, inp), output)
     
     def testSaveBasic(self):
         inp = [save_o, save_c, stop]
-        output = good(l([stop]), None,
-                      node('save', 
+        output = good(l([stop]), 3,
+                      node('save',
+                           1, 
                            open=save_o,
                            close=save_c,
                            datums=[],
@@ -62,40 +61,45 @@ class TestCombinations(u.TestCase):
     
     def testSaveComplex(self):
         inp = [save_o, id1, val2, loop, stop, save_c, save_o]
-        output = good(l([save_o]), None, 
+        output = good(l([save_o]), 7, 
                       node('save',
+                           1,
                            open=save_o,
                            close=save_c,
-                           datums=[node('datum', key=id1, value=val2)],
-                           loops=[node('loop', open=loop, close=stop, keys=[], values=[])]))
+                           datums=[node('datum', 2, key=id1, value=val2)],
+                           loops=[node('loop', 4, open=loop, close=stop, keys=[], values=[])]))
         self.assertEqual(run(p.save, inp), output)
 
     def testDataBasic(self):
         inp = [data_o, id1]
-        output = good(l([id1]), None,
+        output = good(l([id1]), 2,
                       node('data',
+                           1,
                            open=data_o,
                            saves=[]))
         self.assertEqual(run(p.data, inp), output)
         
     def testDataComplex(self):
         inp = [data_o, save_o, id1, val1, save_c, save_c]
-        output = good(l([save_c]), None,
+        output = good(l([save_c]), 6,
                       node('data',
+                           1,
                            open=data_o,
                            saves=[node('save',
+                                       2, 
                                        open=save_o,
                                        close=save_c,
-                                       datums=[node('datum', key=id1, value=val1)],
+                                       datums=[node('datum', 3, key=id1, value=val1)],
                                        loops=[])]))
         self.assertEqual(run(p.data, inp), output)
         
     def testNMRStar(self):
         inp = [data_o, save_o, save_c]
-        output = good(l([]), None,
+        output = good(l([]), 4,
                       node('data',
+                           1,
                            open=data_o,
-                           saves=[node('save', open=save_o, close=save_c, datums=[], loops=[])]))
+                           saves=[node('save', 2, open=save_o, close=save_c, datums=[], loops=[])]))
         self.assertEqual(run(p.nmrstar, inp), output)
     
 oops = """        
