@@ -29,11 +29,15 @@ class Loop(X):
     def __init__(self, keys, rows):
         if not isinstance(keys, list):
             raise TypeError('Loop needs list of keys')
+        if len(keys) != len(set(keys)):
+            raise ValueError('Loop requires unique keys')
         if not isinstance(rows, list):
-            raise TypeError('Loop neews list of rows')
+            raise TypeError('Loop needs list of rows')
         for r in rows:
             if not isinstance(r, list):
                 raise TypeError('Loop rows must be lists')
+            if len(r) != len(keys):
+                raise ValueError('Loop row: %i keys, but %i values' % (len(keys), len(r)))
         self.keys = keys
         self.rows = rows
 
