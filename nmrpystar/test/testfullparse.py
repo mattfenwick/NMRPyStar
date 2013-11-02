@@ -2,11 +2,12 @@ from .. import fullparse
 from ..unparse import maybeerror
 from .. import ast as a
 import unittest as u
-notnow = """
+
 
 parse = fullparse.parse
 good = maybeerror.MaybeError.pure
 bad = maybeerror.MaybeError.error
+
 
 class TestFullParse(u.TestCase):
     
@@ -14,6 +15,7 @@ class TestFullParse(u.TestCase):
         self.assertEqual(parse("data_hi save_me # oop \n   save_ "), 
                          good(a.Data('hi', {'me': a.Save({}, [])})))
     
+notnow = """
     def testParseContextFreeProblem(self):
         self.assertEqual(parse("data_hi save_me # oop \n "), 
                          bad([('data', (1,1)), ('save', (1,9)), ('expected "save_"', (2,2))]))
