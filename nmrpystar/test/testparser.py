@@ -145,7 +145,7 @@ class TestErrors(u.TestCase):
         
     def testNMRStarUnconsumedTokensRemaining(self):
         inp = [data_o, loop, save_o, save_c]
-        output = m.error([('unparsed input remaining', 2)])
+        output = m.error([('unparsed tokens remaining', 2)])
         self.assertEqual(run(p.nmrstar, inp), output)
     
     def testNMRStarNoOpenData(self):
