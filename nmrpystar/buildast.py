@@ -2,18 +2,17 @@
 @author: matt
 '''
 from . import ast
-from .unparse import maybeerror
+from .unparse.maybeerror import MaybeError
 
 
-MaybeError = maybeerror.MaybeError
 good, bad = MaybeError.pure, MaybeError.error
 
 
 def buildLoop(loop):
-    pos, keys_1, vals_1 = loop.start.position, loop.keys, loop.values
+    pos, keys_1, vals_1 = loop['_state'], loop['keys'], loop['values']
     
-    keys = [k.string for k in keys_1]
-    vals = [v.string for v in vals_1]
+    keys = [k['value'] for k in keys_1]
+    vals = [v['value'] for v in vals_1]
 
     # duplicate keys
     key_check = set([])
@@ -27,8 +26,13 @@ def buildLoop(loop):
         return good(ast.Loop(keys, []))
 
     # values, but no keys -> throws ZeroDivisionError
+    if len(keys) == 0:
+        return bad(('loop: keys but no values', pos))
+    
+    # number of values okay?
     if len(vals) % len(keys) != 0:
-        return bad(('loop: number of values must be integer multiple of number of keys', len(vals), len(keys), pos))
+        return bad(('loop: number of values must be integer multiple of number of keys', 
+                    len(vals), len(keys), pos))
     
     rows, numKeys, valArr = [], len(keys), vals
     while len(valArr) > 0:
@@ -46,13 +50,13 @@ def buildSave(save):
     '''
     loops, datums = [], {}
 
-    for d in save.datums:
-        key, value = d.key.string, d.value.string
+    for d in save['datums']:
+        key, value = d['key']['value'], d['value']['value']
         if datums.has_key(key):
-            return bad(('save: duplicate key', key, save.start.position))
+            return bad(('save: duplicate key', key, save['_state']))
         datums[key] = value
     
-    for loop in save.loops:
+    for loop in save['loops'] :
         l = buildLoop(loop)
         if l.status == 'success':
             loops.append(l.value)
@@ -63,16 +67,16 @@ def buildSave(save):
 
 
 def buildData(node):
-    dataName, saves = node.start.string, node.saves
+    dataName, saves = node['open']['value'], node['saves']
     mySaves = {}
     for save in saves:
         if save['_name'] != 'save': 
             raise TypeError(('Data expects Saves', save))
-        if mySaves.has_key(save.start.string):
-            return bad(('data: duplicate save frame name', save.start.string, node.start.position))
+        if mySaves.has_key(save['open']['value']):
+            return bad(('data: duplicate save frame name', save['open']['value'], node['_state']))
         s = buildSave(save)
         if s.status == 'success':
-            mySaves[save.start.string] = s.value
+            mySaves[save['open']['value']] = s.value
         else:
             return s
     return good(ast.Data(dataName, mySaves))

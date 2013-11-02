@@ -1,99 +1,113 @@
 from .. import buildast as b
 from .. import ast as a
+from ..cleantokens import token
 from ..unparse import maybeerror as me
+from .testparser import loop, stop, id1, id2, val1, val2, data_o, save_o, save_c, node
 import unittest as u
 
-nope = '''
+
 good = me.MaybeError.pure
 bad = me.MaybeError.error
+val3 = token('value', (10,10), value='eel')
 
 
 class TestASTBuilder(u.TestCase):
     
     def testLoop(self):
-        l = c.Loop(c.Reserved((3,4), 'loop', None), [], [], 2)
-        loop = a.Loop([], [])
-        self.assertEqual(b.buildLoop(l), good(loop))
-    
+        cst = node('loop', 1, open=None, close=None, keys=[], values=[])
+        ast = a.Loop([], [])
+        self.assertEqual(b.buildLoop(cst), good(ast))
+
     def testLoopComplex(self):
-        l = c.Loop(c.Reserved((18, 2), 'loop', None), 
-                   [c.Key(5, 'abc'), c.Key(6, 'def')], 
-                   [c.Value(7, 'hello'), c.Value(8, 'hi'), c.Value(9, 'away'), c.Value(10, 'uh')], 
-                   4)
-        loop = a.Loop(['abc', 'def'], [['hello', 'hi'], ['away', 'uh']])
-        self.assertEqual(b.buildLoop(l), good(loop))
-    
-#    def testLoopExceptions(self):
-#        self.assertTrue(False)
+        cst = node('loop', 3, open=None, close=None, 
+                   keys=[id1, id2],
+                   values=[val1, val2])
+        ast = a.Loop(['matt', 'dog'], [['hihi', 'blar']])
+        self.assertEqual(b.buildLoop(cst), good(ast))
     
     def testSave(self):
-        s = c.Save('hi', [], [], 2)
+        cst = node('save', 77, open=save_o, close=None, 
+                   datums=[], loops=[])
         save = a.Save({}, [])
-        self.assertEqual(b.buildSave(s), good(save))
+        self.assertEqual(b.buildSave(cst), good(save))
     
     def testSaveComplex(self):
-        s = c.Save('bye', 
-                   [c.Datum(c.Key(3, 'k'), c.Value(4, 'v')),
-                    c.Datum(c.Key(7, 'x'), c.Value(8, 'omg'))],
-                   [c.Loop(c.Reserved((2, 8), 'loop', None), [], [], 6)],
-                   2)
-        save = a.Save({'k': 'v', 'x': 'omg'}, [a.Loop([], [])])
-        self.assertEqual(b.buildSave(s), good(save))
+        cst = node('save', 32, open=save_o, close=None, 
+                   datums=[node('datum', 36, key=id1, value=val3), 
+                           node('datum', 43, key=id2, value=val2)],
+                   loops=[node('loop', 50, keys=[], values=[])])
+        save = a.Save({'matt': 'eel', 'dog': 'blar'}, [a.Loop([], [])])
+        self.assertEqual(b.buildSave(cst), good(save))
         
     def testData(self):
-        d = c.Data(c.Reserved((1,1), 'dataopen', '24'), [])
-        data = a.Data('24', {})
-        self.assertEqual(b.buildData(d), good(data))
+        cst = node('data', 9, open=data_o, saves=[])
+        data = a.Data('bye', {})
+        self.assertEqual(b.buildData(cst), good(data))
     
+    def testDataComplex(self):
+        cst = node('data', 3, open=data_o, 
+                   saves=[node('save', 5, open=save_o, close=save_c, datums=[], loops=[])])
+        data = a.Data('bye', {'hi': a.Save({}, [])})
+        self.assertEqual(b.buildData(cst), good(data))
+    
+    def testFull(self):
+        cst = node('data', 8, open=data_o,
+                   saves=[node('save', 27, open=save_o, close=save_c, 
+                               datums=[node('datum', 36, key=id2, value=val1)],
+                               loops=[node('loop', 45, open=loop, close=stop,
+                                           keys=[id2, id1], values=[val2, val1, val3, val1])])])
+        ast = a.Data('bye', {'hi': a.Save({'dog': 'hihi'}, 
+                                          [a.Loop(['dog', 'matt'], [['blar', 'hihi'], ['eel', 'hihi']])])})
+        self.assertEqual(b.concreteToAST(cst), good(ast))
+
+
+    
+class TestErrors(u.TestCase):
+
     def testLoopDuplicateKeys(self):
-        l = c.Loop(c.Reserved((2,4), 'loop', None), 
-                   [c.Key(4, 'abc'), c.Key(2, 'def'), c.Key(3, 'abc')], [], 8)
-        self.assertEqual(b.buildLoop(l), bad(('loop: duplicate key', 'abc', (2,4))))
+        cst = node('loop', 4, open=None, close=None, keys=[id1, id1], values=[])
+        self.assertEqual(b.buildLoop(cst), bad(('loop: duplicate key', 'matt', 4)))
     
     def testLoopBadValueNumber(self):
-        l = c.Loop(c.Reserved((7,9), 'loop', None), 
-                   [c.Key(2, 'a'), c.Key(3, 'bc')], 
-                   [c.Value(4, 'hi'), c.Value(5, 'bye'), c.Value(6, 'lye')],
-                   7)
-        self.assertEqual(b.buildLoop(l), bad(('loop: number of values must be integer multiple of number of keys', 
-                                              3, 2, (7,9))))
+        cst = node('loop', 5, open=None, close=None,
+                   keys=[id1, id2],
+                   values=[val1, val2, val3])
+        self.assertEqual(b.buildLoop(cst), 
+                         bad(('loop: number of values must be integer multiple of number of keys', 3, 2, 5)))
+    
+    def testLoopNoKeys(self):
+        cst = node('loop', 6, open=None, close=None,
+                   keys=[], values=[val3, val2, val1])
+        self.assertEqual(bad(('loop: keys but no values', 6)), b.buildLoop(cst))
     
     def testSavePropagatesLoopError(self):
-        s = c.Save(1, [], [c.Loop(c.Reserved((1,1), 'loop', None), [c.Key(3, 'a'), c.Key(4, 'a')], [], 5)], 6)
-        self.assertEqual(b.buildSave(s), bad(('loop: duplicate key', 'a', (1,1))))
+        cst = node('save', 28, open=save_o, close=None,
+                   datums=[], loops=[node('loop', 36, keys=[id1, id1], values=[])])
+        self.assertEqual(b.buildSave(cst), bad(('loop: duplicate key', 'matt', 36)))
     
     def testSaveDuplicateKey(self):
-        s = c.Save(c.Reserved(1, 'saveopen', 'hi'), 
-                   [c.Datum(c.Key(2, 'x'), c.Value(3, 'y')),
-                    c.Datum(c.Key(4, 'x'), c.Value(5, 'z'))],
-                   [],
-                   6)
-        self.assertEqual(b.buildSave(s), bad(('save: duplicate key', 'x', 1)))
+        cst = node('save', 17, open=save_o, close=None,
+                   datums=[node('datum', 21, key=id2, value=val2),
+                           node('datum', 24, key=id2, value=val3)],
+                   loops=[])
+        self.assertEqual(b.buildSave(cst), bad(('save: duplicate key', 'dog', 17)))
     
     def testDataRepeatedSaveName(self):
-        d = c.Data(c.Reserved(18, 'dataopen', 'hi'), 
-                   [c.Save(c.Reserved(2, 'saveopen', 's1'), [], [], 3), 
-                    c.Save(c.Reserved(4, 'saveopen', 's2'), [], [], 5), 
-                    c.Save(c.Reserved(6, 'saveopen', 's1'), [], [], 7)])
-        self.assertEqual(b.buildData(d), bad(('data: duplicate save frame name', 's1', 18)))
+        cst = node('data', 3, open=data_o, 
+                   saves=[node('save', 5, open=save_o, close=save_c, datums=[], loops=[]),
+                          node('save', 7, open=save_o, close=save_c, datums=[], loops=[])])
+        self.assertEqual(b.buildData(cst), bad(('data: duplicate save frame name', 'hi', 3)))
     
     def testDataPropagateLoopError(self):
-        d = c.Data(c.Reserved(99, 'dataopen', 'oo'), 
-                   [c.Save(c.Reserved(1, 'saveopen', 'oop'), 
-                           [], 
-                           [c.Loop(c.Reserved(22, 'loop', None), 
-                                   [c.Key(3, 'a'), c.Key(4, 'a')], 
-                                   [], 
-                                   5)], 
-                           6)])
-        self.assertEqual(b.buildData(d), bad(('loop: duplicate key', 'a', 22)))
+        cst = node('data', 29, open=data_o,
+                   saves=[node('save', 32, open=save_o, close=save_c, datums=[],
+                               loops=[node('loop', 35, open=loop, close=stop, keys=[id2, id2], values=[])])])
+        self.assertEqual(b.buildData(cst), bad(('loop: duplicate key', 'dog', 35)))
     
     def testDataPropagateSaveError(self):
-        d = c.Data(c.Reserved(99, 'dataopen', 'mydata'), 
-                   [c.Save(c.Reserved(79, 'saveopen', 'hi'), 
-                           [c.Datum(c.Key(2, 'x'), c.Value(3, 'y')),
-                            c.Datum(c.Key(4, 'x'), c.Value(5, 'z'))],
-                           [],
-                           6)])
-        self.assertEqual(b.buildData(d), bad(('save: duplicate key', 'x', 79)))
-'''
+        cst = node('data', 17, open=data_o,
+                   saves=[node('save', 18, open=save_o, close=save_c, loops=[],
+                               datums=[node('datum', 23, key=id1, value=val3),
+                                       node('datum', 28, key=id1, value=val1)])])
+        self.assertEqual(b.buildData(cst), bad(('save: duplicate key', 'matt', 18)))
+    
