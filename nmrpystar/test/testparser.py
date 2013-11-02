@@ -102,56 +102,53 @@ class TestCombinations(u.TestCase):
                            saves=[node('save', 2, open=save_o, close=save_c, datums=[], loops=[])]))
         self.assertEqual(run(p.nmrstar, inp), output)
     
-oops = """        
+
+class TestErrors(u.TestCase):
+    
     def testLoopInvalidContent(self):
-        inp = 'loop_ \n  _a _b \n 1 \n save_ stop_'
-        output = m.error([('loop', (1,1)), ('expected "stop_"', (4,2))])
-        self.assertEqual(run(p.loop, l(inp)), output)
+        inp = [loop, id1, id1, val1, save_c, stop]
+        output = m.error([('loop', 1), ('loop close', 5)])
+        self.assertEqual(run(p.loop, inp), output)
         
     def testDatumMissingValue(self):
-        inp = '_abc save_'
-        output = m.error([('datum', (1,1)), ('expected value', (1,6))])
-        self.assertEqual(run(p.datum, l(inp)), output)
+        inp = [id2, save_c]
+        output = m.error([('datum', 1), ('value', 2)])
+        self.assertEqual(run(p.datum, inp), output)
         
     def testLoopMissingStop(self):
         inp = [loop, id1, id2, val1, val2]
-        # not sure what the positions should be:
-        #   first: the position of the loop open token?
-        #   second: the position of the last noticed token?
-        output = m.error([('loop', (1,1)), ('loop close', (9,9))])
+        output = m.error([('loop', 1), ('loop close', 6)])
         self.assertEqual(run(p.loop, inp), output)
 
     def testSaveUnclosed(self):
-        inp = 'save_me _ab 12 '
-        output = m.error([('save', (1, 1)), ('expected "save_"', (1, 16))])
-        self.assertEqual(run(p.save, l(inp)), output)
+        inp = [save_o, id1, val1]
+        output = m.error([('save', 1), ('save close', 4)])
+        self.assertEqual(run(p.save, inp), output)
         
     def testSaveInvalidContent(self):
-        inp = 'save_me _ab \n12 stop_ save_'
-        output = m.error([('save', (1,1)), ('expected "save_"', (2, 4))])
-        self.assertEqual(run(p.save, l(inp)), output)
+        inp = [save_o, id2, val2, stop, save_c]
+        output = m.error([('save', 1), ('save close', 4)])
+        self.assertEqual(run(p.save, inp), output)
     
     def testSaveDatumAfterLoop(self):
-        inp = "save_me \n_a b \nloop_ _x y stop_ \n _m n save_"
-        output = m.error([('save', (1, 1)), ('expected "save_"', (4,2))])
-        self.assertEqual(run(p.save, l(inp)), output)
+        inp = [save_o, id1, val1, loop, id2, val2, stop, id2, val2, save_c]
+        output = m.error([('save', 1), ('save close', 8)])
+        self.assertEqual(run(p.save, inp), output)
         
     def testDataInvalidContent(self):
-        inp = 'data_me loop_ save_them save_'
+        inp = [data_o, loop, save_o, save_c]
         # it just hits the loop_, says, "I don't know how to deal with that",
         #   and doesn't consume it
-        output = good(l(inp[8:]), (1,9), 
-                      concrete.Data(concrete.Reserved((1, 1), 'dataopen', 'me'), 
-                                    []))
-        self.assertEqual(run(p.data, l(inp)), output)
+        output = good(l(inp[1:]), 2,
+                      node('data', 1, open=data_o, saves=[]))
+        self.assertEqual(run(p.data, inp), output)
         
     def testNMRStarUnconsumedTokensRemaining(self):
-        inp = 'data_me loop_ save_them save_'
-        output = m.error([('unparsed input remaining', pos(1, 9))])
-        self.assertEqual(run(p.nmrstar, l(inp)), output)
+        inp = [data_o, loop, save_o, save_c]
+        output = m.error([('unparsed input remaining', 2)])
+        self.assertEqual(run(p.nmrstar, inp), output)
     
     def testNMRStarNoOpenData(self):
-        inp = '  save_me loop_ stop_ save_'
-        output = m.error([('expected data block', (1, 3))])
-        self.assertEqual(run(p.nmrstar, l(inp)), output)
-"""
+        inp = [save_o, loop, stop, save_c]
+        output = m.error([('data block', 1)])
+        self.assertEqual(run(p.nmrstar, inp), output)
