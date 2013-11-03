@@ -5,7 +5,33 @@ from .buildast import concreteToAST
 from .unparse.combinators import run
 
 
-def parse(string):
+def _error(**kwargs):
+    kwargs['_type'] = 'error'
+    return kwargs
+
+
+def token_handler(string, status, value):
+    if status == 'error':
+        return _error(phase='tokenization', message=value)
+    return _error(phase='tokenization', message='unexpected failure')
+
+
+def parser_handler(string, tokens, cleaned, status, value):
+    if status == 'error':
+        err = [(m, cleaned[p - 1]['pos']) for (m, p) in value]
+        return _error(phase='parsing', message=err)
+    return _error(phase='parsing', message='unexpected failure')
+
+
+def ast_handler(string, tokens, cleaned, cst, ast, status, value):
+    if status == 'error':
+        um, oops, p = value
+        err = (um, oops, cleaned[p - 1]['pos'])
+        return _error(phase='AST construction', message=err)
+    return _error(phase='AST construction', message='unexpected failure')
+
+
+def parse(string, f_token=token_handler, f_parser=parser_handler, f_ast=ast_handler):
     '''
     Parse a string according to the full NMR-Star syntax.
     Result is an abstract syntax tree wrapped in a MaybeError container
@@ -18,24 +44,24 @@ def parse(string):
     '''
     # part 1
     tokenized = run(tokenizer, string, (1, 1))
-    if tokenized.status == 'failure': # sanity check
-        raise ValueError('unexpected failure during tokenizing')
-    if tokenized.status == 'error':
-        return tokenized
-    if not tokenized.value['rest'].isEmpty(): # sanity check
+    if tokenized.status != 'success':
+        return f_token(string, tokenized.status, tokenized.value)
+    # sanity check
+    if not tokenized.value['rest'].isEmpty():
         raise ValueError('unconsumed characters remaining')
-    # parts 2 and 3
-    tokens = [clean_token(t) for t in tokenized.value['result'] if t['_name'] not in ['whitespace', 'comment']]
+    # part 2
+    tokens = [t for t in tokenized.value['result'] if t['_name'] not in ['whitespace', 'comment']]
+    # part 3
+    cleaned = map(clean_token, tokens)
     # part 4
-    cst = run(nmrstar, tokens, 1)
-    if cst.status == 'failure': # sanity check
-        raise ValueError('unexpected failure during parsing')
-    if cst.status == 'error':
-        return cst
-    if not cst.value['rest'].isEmpty(): # sanity check
+    cst = run(nmrstar, cleaned, 1)
+    if cst.status != 'success':
+        return f_parser(string, tokens, cleaned, cst.status, cst.value)
+    # sanity check
+    if not cst.value['rest'].isEmpty():
         raise ValueError('unconsumed tokens remaining')
     # part 5
     ast = concreteToAST(cst.value['result'])
-    if ast.status == 'failure': # sanity check
-        raise ValueError('unexpected failure during CST -> AST')
+    if ast.status != 'success':
+        return f_ast(string, tokens, cleaned, cst, ast, ast.status, ast.value)
     return ast
