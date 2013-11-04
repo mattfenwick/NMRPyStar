@@ -3,11 +3,14 @@ from .cleantokens import clean_token
 from .parser import nmrstar
 from .buildast import concreteToAST
 from .unparse.combinators import run
+from .unparse.maybeerror import MaybeError
 
 
 def _error(**kwargs):
-    kwargs['_type'] = 'error'
-    return kwargs
+    return MaybeError.error(kwargs)
+
+
+_FIRST_TOKEN_INDEX = 0
 
 
 def token_handler(string, status, value):
@@ -18,15 +21,21 @@ def token_handler(string, status, value):
 
 def parser_handler(string, tokens, cleaned, status, value):
     if status == 'error':
-        err = [(m, cleaned[p - 1]['pos']) for (m, p) in value]
-        return _error(phase='parsing', message=err)
-    return _error(phase='parsing', message='unexpected failure')
+        err = []
+        for (m, p) in value:
+            if p - _FIRST_TOKEN_INDEX >= len(cleaned):
+                err.append((m, 'EOF'))
+            else:
+                err.append((m, cleaned[p - _FIRST_TOKEN_INDEX]['pos']))
+#        err = [(m, cleaned[p - 1]['pos']) for (m, p) in value]
+        return _error(phase='CST construction', message=err)
+    return _error(phase='CST construction', message='unexpected failure')
 
 
 def ast_handler(string, tokens, cleaned, cst, ast, status, value):
     if status == 'error':
         um, oops, p = value
-        err = (um, oops, cleaned[p - 1]['pos'])
+        err = (um, oops, cleaned[p - _FIRST_TOKEN_INDEX]['pos']) # eek! what if `p` is too big? is that possible?
         return _error(phase='AST construction', message=err)
     return _error(phase='AST construction', message='unexpected failure')
 
@@ -54,7 +63,7 @@ def parse(string, f_token=token_handler, f_parser=parser_handler, f_ast=ast_hand
     # part 3
     cleaned = map(clean_token, tokens)
     # part 4
-    cst = run(nmrstar, cleaned, 1)
+    cst = run(nmrstar, cleaned, _FIRST_TOKEN_INDEX)
     if cst.status != 'success':
         return f_parser(string, tokens, cleaned, cst.status, cst.value)
     # sanity check
