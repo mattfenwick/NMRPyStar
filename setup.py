@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='NMRPyStar',
-    version='0.0.13',
+    version='0.0.14',
     packages=['nmrpystar', 
               'nmrpystar.unparse', 
               'nmrpystar.examples',
