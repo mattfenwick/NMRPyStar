@@ -7,6 +7,14 @@ import unittest
 
 class TestLoading(unittest.TestCase):
     
+    def testFromString(self):
+        z = loading.parseString()
+        self.assertEqual(z.status, 'success')
+        data = z.value[1]
+        self.assertEqual(data.name, 'startthedata')
+        self.assertEqual(len(data.saves), 1)
+        self.assertEqual(data.saves['firstsave'].loops[0].keys, ['id1', 'id2'])
+
     def testFromFile(self):
         z = loading.parseFile('bmrb17661.txt')
         print z.value
@@ -18,14 +26,6 @@ class TestLoading(unittest.TestCase):
         self.assertEqual(len(data.saves['entry_information'].datums), 16)
         self.assertEqual(len(data.saves['NMRView'].loops), 2)
     
-    def testFromString(self):
-        z = loading.parseString()
-        self.assertEqual(z.status, 'success')
-        data = z.value[1]
-        self.assertEqual(data.name, 'startthedata')
-        self.assertEqual(len(data.saves), 1)
-        self.assertEqual(data.saves['firstsave'].loops[0].keys, ['id1', 'id2'])
-
     def testFromUrl(self):
         z = loading.parseUrl()
         self.assertEqual(z.status, 'success')
