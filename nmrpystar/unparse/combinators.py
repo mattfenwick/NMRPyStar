@@ -219,29 +219,23 @@ def app(f, *parsers):
     '''
     return fmap(lambda rs: f(*rs), seq(*parsers))
 
-def optional(parser, default=None):
-    '''
-    Parser e s (m t) a -> a -> Parser e s (m t) a
-    '''
-    return alt(parser, pure(default))
-
 def _first(x, _):
     return x
 
 def _second(_, y):
     return y
 
-def seq2L(self, other):
+def seq2L(p1, p2):
     '''
     Parser e s (m t) a -> Parser e s (m t) b -> Parser e s (m t) a
     '''
-    return app(_first, self, other)
+    return app(_first, p1, p2)
 
-def seq2R(self, other):
+def seq2R(p1, p2):
     '''
     Parser e s (m t) a -> Parser e s (m t) b -> Parser e s (m t) b
     '''
-    return app(_second, self, other)
+    return app(_second, p1, p2)
 
 def lookahead(parser):
     '''
@@ -263,12 +257,6 @@ def not0(parser):
             return good(None, xs, s)
     return Parser(f)
 
-def commit(e, parser):
-    '''
-    Parser e s (m t) a -> e -> Parser e s (m t) a
-    '''
-    return alt(parser, error(e))
-
 def alt(*parsers):
     '''
     [Parser e s (m t) a] -> Parser e s (m t) a
@@ -281,6 +269,18 @@ def alt(*parsers):
                 return r
         return r
     return Parser(f)
+
+def optional(parser, default=None):
+    '''
+    Parser e s (m t) a -> a -> Parser e s (m t) a
+    '''
+    return alt(parser, pure(default))
+
+def commit(e, parser):
+    '''
+    Parser e s (m t) a -> e -> Parser e s (m t) a
+    '''
+    return alt(parser, error(e))
 
 # Parser e s (m t) a
 zero = Parser(lambda xs, s: M.zero)
@@ -333,7 +333,7 @@ class Itemizer(object):
         return self.satisfy(lambda x: x in c_set)
 
 
-def _f_item_basic(xs, s):
+def _item_basic(xs, s):
     '''
     Simply consumes a single token if one is available, presenting that token
     as the value.  Fails if token stream is empty.
@@ -343,22 +343,44 @@ def _f_item_basic(xs, s):
     first, rest = xs.first(), xs.rest()
     return good(first, rest, s)
 
-basic = Itemizer(Parser(_f_item_basic))
 
 def _bump(char, position):
+    """
+    only treats `\n` as newline
+    """
     line, col = position
     if char == '\n':
         return (line + 1, 1)
     return (line, col + 1)
 
-def _f_position(c):
-    return seq2R(updateState(lambda s: _bump(c, s)), pure(c))
+def _item_position(xs, position):
+    '''
+    Assumes that the state is a 2-tuple of integers, (line, column).
+    Does two things:
+      1. see `_item_basic`
+      2. updates the line/col position in the parsing state
+    '''
+    if xs.isEmpty():
+        return M.zero
+    first, rest = xs.first(), xs.rest()
+    return good(first, rest, _bump(first, position))
 
-_item_position = bind(basic.item, _f_position)
-position = Itemizer(_item_position)
 
-_item_count = seq2L(basic.item, updateState(lambda x: x + 1))
-count = Itemizer(_item_count)
+def _item_count(xs, ct):
+    '''
+    Does two things:
+      1. see `_item_basic`
+      2. increments a counter -- which tells how many tokens have been consumed
+    '''
+    if xs.isEmpty():
+        return M.zero
+    first, rest = xs.first(), xs.rest()
+    return good(first, rest, ct + 1)
+
+
+basic    = Itemizer(Parser(_item_basic))
+position = Itemizer(Parser(_item_position))
+count    = Itemizer(Parser(_item_count))
 
 
 def run(parser, input_string, state=(1,1)):
