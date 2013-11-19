@@ -32,11 +32,9 @@ def parser_handler(string, tokens, cleaned, status, value):
     return _error(phase='CST construction', message='unexpected failure')
 
 
-def ast_handler(string, tokens, cleaned, cst, ast, status, value):
+def ast_handler(string, tokens, cleaned, cst, status, value):
     if status == 'error':
-        um, oops, p = value
-        err = (um, oops, cleaned[p - _FIRST_TOKEN_INDEX]['pos']) # eek! what if `p` is too big? is that possible?
-        return _error(phase='AST construction', message=err)
+        return _error(phase='AST construction', message=value)
     return _error(phase='AST construction', message='unexpected failure')
 
 
@@ -72,5 +70,5 @@ def parse(string, f_token=token_handler, f_parser=parser_handler, f_ast=ast_hand
     # part 5
     ast = concreteToAST(cst.value['result'])
     if ast.status != 'success':
-        return f_ast(string, tokens, cleaned, cst, ast, ast.status, ast.value)
+        return f_ast(string, tokens, cleaned, cst, ast.status, ast.value)
     return ast

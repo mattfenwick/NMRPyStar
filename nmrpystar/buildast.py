@@ -31,11 +31,11 @@ def buildLoop(loop):
 
     # values, but no keys -> throws ZeroDivisionError
     if len(keys) == 0:
-        return bad(nodetype='loop', message='values but no keys', position=loop['_state'])
+        return bad(nodetype='loop', message='values but no keys', position=loop['open']['pos'])
     
     # number of values okay?
     if len(vals) % len(keys) != 0:
-        return bad(nodetype='loop', numkeys=len(keys), numvals=len(vals), position=loop['_state'],
+        return bad(nodetype='loop', numkeys=len(keys), numvals=len(vals), position=loop['open']['pos'],
                    message='number of values must be integer multiple of number of keys')
     
     rows, numKeys, valArr = [], len(keys), vals

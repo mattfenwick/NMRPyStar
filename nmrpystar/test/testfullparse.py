@@ -44,9 +44,8 @@ class TestFullParse(u.TestCase):
     def testParseContextSensitiveProblem(self):
         self.assertEqual(parse("data_hi save_me _a 1 _a 2 save_ "), 
                          bad({'phase': 'AST construction',
-                              'message': ('save: duplicate key', 'a', (1, 9))}))
-                              # how about this instead:
-                              # 'message': [('save', (1, 9)), ('duplicate key', (1, 17)), ('a', (1, 22))]
+                              'message': {'message': 'duplicate key', 'nodetype': 'save',
+                                          'key': 'a', 'first': (1,17), 'second': (1,22)}}))
 
     def testParseUnconsumedInput(self):
         self.assertEqual(parse("data_hi _what?"), 

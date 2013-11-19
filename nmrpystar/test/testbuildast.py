@@ -72,18 +72,18 @@ class TestErrors(u.TestCase):
                                                key='matt', first=(81,3), second=(6,6)))
     
     def testLoopBadValueNumber(self):
-        cst = node('loop', 5, open=None, close=None,
+        cst = node('loop', 5, open=loop, close=None,
                    keys=[id1, id2],
                    values=[val1, val2, val3])
         self.assertEqual(b.buildLoop(cst),
                          bad(message='number of values must be integer multiple of number of keys', 
-                             nodetype='loop', position=5, numkeys=2, numvals=3))
+                             nodetype='loop', position=(1,1), numkeys=2, numvals=3))
     
     def testLoopNoKeys(self):
-        cst = node('loop', 6, open=None, close=None,
+        cst = node('loop', 6, open=loop, close=None,
                    keys=[], values=[val3, val2, val1])
         self.assertEqual(b.buildLoop(cst),
-                         bad(message='values but no keys', nodetype='loop', position=6))
+                         bad(message='values but no keys', nodetype='loop', position=(1,1)))
     
     def testSavePropagatesLoopError(self):
         cst = node('save', 28, open=save_o, close=None,
