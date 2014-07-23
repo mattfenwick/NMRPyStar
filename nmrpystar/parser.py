@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 from .unparse.combinators  import (many0,  seq2L,  count,  not0)
 from .unparse.cst          import (node, cut)
 

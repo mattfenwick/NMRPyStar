@@ -1,6 +1,3 @@
-'''
-@author: mattf
-'''
 from .. import fullparse
 import urllib2
 import sys

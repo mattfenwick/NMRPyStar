@@ -1,6 +1,3 @@
-'''
-@author: Matt
-'''
 
 
 class X(object):

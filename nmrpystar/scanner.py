@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 from .unparse.combinators import (many0,  optional,  app,   pure,  check,
                                   seq2R,  seq,       alt,   error,
                                   seq2L,  position,  not0,  many1, bind,

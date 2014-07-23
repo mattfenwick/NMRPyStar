@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 
 
 def token(my_type, position, **kwargs):

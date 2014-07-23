@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 from ...examples import loading
 import unittest
 

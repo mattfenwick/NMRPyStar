@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 from .. import scanner
 from .. import ast as md
 from ..unparse import maybeerror as me

@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 from ..cleantokens import clean_token, token
 import unittest as u
 

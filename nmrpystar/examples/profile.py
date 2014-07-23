@@ -1,6 +1,3 @@
-'''
-@author: mattf
-'''
 import cProfile
 import pstats
 from . import loading

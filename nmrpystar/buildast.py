@@ -1,6 +1,3 @@
-'''
-@author: matt
-'''
 from . import ast
 from .unparse.maybeerror import MaybeError
 
