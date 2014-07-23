@@ -2,6 +2,7 @@ from .. import fullparse as parser
 import json
 import urllib2
 import numpy
+import sys
 
 
 def parseUrl(url):
@@ -9,6 +10,10 @@ def parseUrl(url):
     inputStr = page.read()
     page.close()
     return parser.parse(inputStr)
+
+def parseFile(path):
+    with open(path, 'r') as my_file:
+        return parser.parse(my_file.read())
     
 def getChemicalShifts(dataBlock, saveName='assigned_chem_shift_list_1'):
     saveShifts = dataBlock.saves[saveName]
@@ -23,13 +28,36 @@ def getChemicalShifts(dataBlock, saveName='assigned_chem_shift_list_1'):
         shifts[key].append(float(row['Atom_chem_shift.Val']))
     return shifts
 
-def run():
-    model = parseUrl('http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/18504')
-    if model.status == 'success':
-        shifts = getChemicalShifts(model.value)
-        many = [(k, (len(v), numpy.std(v))) for (k, v) in shifts.items()]
-        devs = filter(lambda x: x[1][0] > 1, sorted(many, key=lambda x: x[0]))
-        for result in sorted(devs, key=lambda x: (x[0][1], x[1][1])):
-            print result
-        return result
+def query(model):
+    shifts = getChemicalShifts(model)
+    many = [(k, (len(v), numpy.std(v))) for (k, v) in shifts.items()]
+    devs = filter(lambda x: x[1][0] > 1, sorted(many, key=lambda x: x[0]))
+    for result in sorted(devs, key=lambda x: (x[0][1], x[1][1])):
+        print result
+    return None
+
+def from_url():
+    result = parseUrl('http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/18504')
+    if result.status == 'success':
+        return query(result.value)
+
+def from_file():
+    result = parseFile('star18504.txt')
+    if result.status == 'success':
+        return query(result.value)
+
+def from_stdin():
+    result = parser.parse(sys.stdin.read())
+    if result.status == 'success':
+        return query(result.value)
+
+mode = sys.argv[1]
+if mode == 'url':
+    from_url()
+elif mode == 'file':
+    from_file()
+elif mode == 'stdin':
+    from_stdin()
+else:
+    raise ValueError('invalid mode -- %s' % mode)
 
