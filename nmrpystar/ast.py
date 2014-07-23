@@ -1,6 +1,6 @@
 
 
-class X(object):
+class StarBase(object):
     '''
     Provides default:
      - equality
@@ -21,7 +21,7 @@ class X(object):
         return repr(self.toJSONObject())
 
 
-class Loop(X):
+class Loop(StarBase):
 
     def __init__(self, keys, rows):
         if not isinstance(keys, list):
@@ -47,7 +47,7 @@ class Loop(X):
         return dict(zip(self.keys, self.rows[rowIndex]))
 
 
-class Save(X):
+class Save(StarBase):
 
     def __init__(self, datums, loops):
         if not isinstance(datums, dict):
@@ -63,7 +63,7 @@ class Save(X):
                 'loops' : [l.toJSONObject() for l in self.loops]}
 
 
-class Data(X):
+class Data(StarBase):
 
     def __init__(self, name, saves):
         self.name = name
