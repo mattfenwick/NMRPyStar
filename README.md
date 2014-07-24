@@ -177,11 +177,12 @@ are capitalized, while token names are all lowercase:
 Context-sensitive rules:
 
  - Loops
-   - prefix of all keys must be identical
    - no duplicate keys
+   - prefix of all keys must be identical
    - number of values must be integer multiple of the number of keys
  - Save frames
    - no duplicate keys
+   - prefix of all keys must be identical
    - have an `_<prefix>.Sf_framecode` key, value matches the save frame name
    - have an `_<prefix>.Sf_category` key, value is a link to the NMR-STAR data dictionary
    - no duplicate loops, based on the loop prefixes
