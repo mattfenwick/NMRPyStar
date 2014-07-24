@@ -1,0 +1,33 @@
+data_17661
+
+#######################
+#  Entry information  #
+#######################
+
+save_entry_information
+   _Entry.Sf_category                    spectral_peaklist
+   _Entry.Sf_framecode                   entry_information
+   _Entry.ID                             17661
+   _Entry.Version_type                   original
+   _Entry.Submission_date                2011-05-24
+   _Entry.Accession_date                 2011-05-24
+#   _Entrz.blar                           yes_please
+   _Entry.Last_release_date              .
+   _Entry.Original_release_date          .
+
+   loop_
+      _Entry_author.Ordinal
+      _Entry_author.Given_name
+      _Entry_author.Family_name
+      
+      1 2 3
+      x y z
+   stop_
+   
+save_
+
+save_abc
+    _yes.Sf_framecode abc
+    _yes.Sf_category  2
+save_
+
