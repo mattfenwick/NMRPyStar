@@ -174,20 +174,25 @@ are capitalized, while token names are all lowercase:
     Loop     :=   loop  identifier(*)  value(*)  stop
 
 
-Context-sensitive rules:
+Additional constraints for STAR AST:
 
  - Loops
    - no duplicate keys
-   - prefix of all keys must be identical
    - number of values must be integer multiple of the number of keys
  - Save frames
    - no duplicate keys
+ - Data
+   - no duplicate save frame names
+
+Additional constraints for NMRSTAR AST:
+
+ - Loops: 
+   - prefix of all keys must be identical
+ - Save frames
    - prefix of all keys must be identical
    - have an `_<prefix>.Sf_framecode` key, value matches the save frame name
    - have an `_<prefix>.Sf_category` key, value is a link to the NMR-STAR data dictionary
    - no duplicate loops, based on the loop prefixes
- - Data
-   - no duplicate save frame names
 
 Questionable (as in not sure if these are actually enforced) rules:
  - Save frames
@@ -195,39 +200,6 @@ Questionable (as in not sure if these are actually enforced) rules:
      save frame, under the key `_<loop-prefix>.<prefix>_ID` and the same value
  - General
    - `_<prefix>.Entry_ID` must appear in every Save frame and every loop, with the same value
-
-
-
-### Error conditions ###
-
- - tokenization:
-   - unclosed single-quote string
-   - newline in single-quote strings
-   - unclosed double-quote string
-   - newline in double-quote strings
-   - unclosed semicolon-delimited string
- 
- - nmrstar 
-   - data block must be successfully parsed
-   - entire string must be successfully parsed
- 
- - data block:
-   - invalid content:  loop or key/val
-
- - save frame:
-   - unclosed
-   - invalid content
-   - duplicate keys
-   - key/value pairs after loop
- 
- - loop:
-   - unclosed
-   - invalid content
-   - number of values is not an integer multiple of number of keys
-   - duplicate keys
- 
- - datum (key-val pair):
-   - missing value
 
 
 
