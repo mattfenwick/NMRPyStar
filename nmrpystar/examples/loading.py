@@ -5,7 +5,7 @@ import json
 
 
 def withInput(starString):
-    parsed = fullparse.parse(starString)
+    parsed = fullparse.parse_star_ast(starString)
     return parsed.fmap(lambda p: (starString, p))
 
 

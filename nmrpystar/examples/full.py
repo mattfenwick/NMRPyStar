@@ -9,23 +9,23 @@ def parseUrl(url):
     page = urllib2.urlopen(url)
     inputStr = page.read()
     page.close()
-    return parser.parse(inputStr)
+    return parser.parse_nmrstar_ast(inputStr)
 
 def parseFile(path):
     with open(path, 'r') as my_file:
-        return parser.parse(my_file.read())
+        return parser.parse_nmrstar_ast(my_file.read())
     
 def getChemicalShifts(dataBlock, saveName='assigned_chem_shift_list_1'):
     saveShifts = dataBlock.saves[saveName]
-    loopShifts = saveShifts.loops[1]
+    loopShifts = saveShifts.loops['Atom_chem_shift']
     
     shifts = {}
     for ix in range(len(loopShifts.rows)):
         row = loopShifts.getRowAsDict(ix)
-        key = (row['Atom_chem_shift.Comp_ID'], row['Atom_chem_shift.Atom_ID'])
+        key = (row['Comp_ID'], row['Atom_ID'])
         if not key in shifts:
             shifts[key] = []
-        shifts[key].append(float(row['Atom_chem_shift.Val']))
+        shifts[key].append(float(row['Val']))
     return shifts
 
 def query(model):
@@ -47,7 +47,7 @@ def from_file():
         return query(result.value)
 
 def from_stdin():
-    result = parser.parse(sys.stdin.read())
+    result = parser.parse_nmrstar_ast(sys.stdin.read())
     if result.status == 'success':
         return query(result.value)
 

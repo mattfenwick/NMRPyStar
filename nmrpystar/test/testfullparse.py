@@ -1,11 +1,10 @@
-from .. import fullparse
+from ..fullparse import parse_cst, parse_star_ast, parse_nmrstar_ast
 from ..unparse import maybeerror
 from .. import ast as a
 from ..ast import Data, Save, Loop
 import unittest as u
 
 
-parse = fullparse.parse
 good = maybeerror.MaybeError.pure
 bad = maybeerror.MaybeError.error
 
@@ -13,7 +12,7 @@ bad = maybeerror.MaybeError.error
 class TestFullParse(u.TestCase):
     
     def testParseGood(self):
-        self.assertEqual(parse("data_hi save_me # oop \n   save_ "), 
+        self.assertEqual(parse_star_ast("data_hi save_me # oop \n   save_ "), 
                          good(Data('hi', {'me': Save({}, [])})))
     
     def testParseGoodComplex(self):
@@ -34,25 +33,33 @@ class TestFullParse(u.TestCase):
         ast = Data('start',
                    {'st1': Save({'a': '1', 'b': '2'}, []),
                     'st2': Save({'c': '3'}, [Loop(['d', 'e'], [['w', 'x'], ['y', 'z'], ['m', 'n']])])})
-        self.assertEqual(parse(inp), good(ast))
-    
-    def testParseContextFreeProblem(self):
-        self.assertEqual(parse("data_hi save_me # oop \n "), 
+        self.assertEqual(parse_star_ast(inp), good(ast))
+
+
+class TestFullParseErrors(u.TestCase):
+
+    def test_cst_problem(self):
+        self.assertEqual(parse_nmrstar_ast("data_hi save_me # oop \n "), 
                          bad({'phase': 'CST construction', 
                               'message': [('data', (1,1)), ('save', (1,9)), ('save close', 'EOF')]}))
     
-    def testParseContextSensitiveProblem(self):
-        self.assertEqual(parse("data_hi save_me _a 1 _a 2 save_ "), 
+    def test_star_ast_problem(self):
+        self.assertEqual(parse_nmrstar_ast("data_hi save_me _a 1 _a 2 save_ "), 
                          bad({'phase': 'AST construction',
                               'message': {'message': 'duplicate key', 'nodetype': 'save',
                                           'key': 'a', 'first': (1,17), 'second': (1,22)}}))
 
-    def testParseUnconsumedInput(self):
-        self.assertEqual(parse("data_hi _what?"), 
+    def test_nmrstar_ast_problem(self):
+        self.assertEqual(parse_nmrstar_ast("data_hi save_me _A.a 1 _A.Sf_category 2 save_"),
+                         bad({'phase': 'NMRSTAR AST construction', 
+                              'message': {'message': 'missing key "Sf_framecode"', 'nodetype': 'save'}}))
+
+    def test_unconsumed_input(self):
+        self.assertEqual(parse_nmrstar_ast("data_hi _what?"), 
                          bad({'phase': 'CST construction',
                               'message': [('unparsed tokens remaining', (1,9))]}))
 
-    def testJunk(self):
-        self.assertEqual(parse("what is this junk?  this isn't nmr-star"), 
+    def test_junk(self):
+        self.assertEqual(parse_nmrstar_ast("what is this junk?  this isn't nmr-star"), 
                          bad({'phase': 'CST construction',
                               'message': [('data block', (1,1))]}))
