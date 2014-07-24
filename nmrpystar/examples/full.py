@@ -42,7 +42,7 @@ def from_url():
         return query(result.value)
 
 def from_file():
-    result = parseFile('star18504.txt')
+    result = parseFile('examples/star18504.txt')
     if result.status == 'success':
         return query(result.value)
 

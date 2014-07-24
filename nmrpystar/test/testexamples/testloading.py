@@ -13,7 +13,7 @@ class TestLoading(unittest.TestCase):
         self.assertEqual(data.saves['firstsave'].loops[0].keys, ['id1', 'id2'])
 
     def testFromFile(self):
-        z = loading.parseFile('bmrb17661.txt')
+        z = loading.parseFile('examples/bmrb17661.txt')
         print z.value
         self.assertEqual(z.status, 'success')
         # no point in continuing with the tests if the parsing failed!
