@@ -1,11 +1,11 @@
-from .. import fullparse
+from .. import parser
 import urllib2
 import sys
 import json
 
 
 def withInput(starString):
-    parsed = fullparse.parse_star_ast(starString)
+    parsed = parser.parse_star_ast(starString)
     return parsed.fmap(lambda p: (starString, p))
 
 

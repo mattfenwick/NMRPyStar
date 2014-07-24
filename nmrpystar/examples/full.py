@@ -1,4 +1,4 @@
-from .. import fullparse as parser
+from .. import parser
 import json
 import urllib2
 import numpy

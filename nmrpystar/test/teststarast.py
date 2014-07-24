@@ -2,7 +2,7 @@ import unittest as u
 from ..starast import Loop, Save, Data, buildLoop, buildSave, buildData, concreteToAST
 from ..cleantokens import token
 from ..unparse import maybeerror as me
-from .testparser import loop, stop, id1, id2, val1, val2, data_o, save_o, save_c, node
+from .testhierarchical import loop, stop, id1, id2, val1, val2, data_o, save_o, save_c, node
 
 
 
