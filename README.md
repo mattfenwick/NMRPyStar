@@ -10,6 +10,41 @@ some awesome science done!
  
 
 
+### Installation ###
+
+The easiest way to install NMRPyStar is using pip:
+
+    $ pip install nmrpystar
+
+If you don't have pip or easy_install, you can download the package
+manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
+
+
+
+### Quick Start ###
+
+You've already got NMRPyStar installed and importable?  Great!
+It's easy to start parsing NMR-Star files:
+
+    import nmrpystar
+    
+    myString = ...read a file/url/stdin/string...
+    
+    parsed = nmrpystar.parse(myString)
+    if parsed.status == 'success':
+        print 'it worked!!  ', parsed.value
+    else:
+        print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+
+
+
+### Python version ###
+
+This library was created for use with Python2.7.  Although it may work
+with other Python versions, I haven't tried that.
+
+
+
 ### Motivation ###
 
 Why is this project necessary?  After all, many people have already written
@@ -180,38 +215,6 @@ Context-sensitive rules:
  - datum (key-val pair):
    - missing value
 
-
-
-### Installation ###
-
-The easiest way to install NMRPyStar is using pip:
-
-    $ pip install nmrpystar
-
-If you don't have pip or easy_install, you can download the package
-manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
-
-
-### Quick Start ###
-
-You've already got NMRPyStar installed and importable?  Great!
-It's easy to start parsing NMR-Star files:
-
-    import nmrpystar
-    
-    myString = ...read a file/url/stdin/string...
-    
-    parsed = nmrpystar.parse(myString)
-    if parsed.status == 'success':
-        print 'it worked!!  ', parsed.value
-    else:
-        print 'uh-oh, there was a problem with the string I gave it ... ', parsed
-
-
-### Python version ###
-
-This library was created for use with Python2.7.  Although it may work
-with other Python versions, I haven't tried that.
 
 
 ### Reference ###
