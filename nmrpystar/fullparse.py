@@ -1,7 +1,7 @@
 from .scanner import tokenizer
 from .cleantokens import clean_token
 from .parser import nmrstar
-from .buildast import concreteToAST
+from .starast import concreteToAST
 from .unparse.combinators import run
 from .unparse.maybeerror import MaybeError
 
