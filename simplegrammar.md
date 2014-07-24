@@ -2,7 +2,7 @@
 
 This grammar reduces rule duplication and removes need for lookahead and backtracking.
 The semantic expressiveness of the format is unchanged.
-It is *not* compatible with the NMR-Star format.  Its goals are to:
+It is *not* compatible with the NMR-STAR format.  Its goals are to:
 
  1. simplify the specification.  This helps implementors to:
    - implement the entire specification
@@ -12,7 +12,7 @@ It is *not* compatible with the NMR-Star format.  Its goals are to:
  4. eliminate corner cases requiring special handling
 
 
-### Specific NMR-Star syntax issues addressed ###
+### Specific NMR-STAR syntax issues addressed ###
 
  - inconsistent whitespace/comment allowances:
    - space or tab is required before some types of values
@@ -136,10 +136,3 @@ Context-free grammar:
     Datum    :=   identifier  value
         
     Loop     :=   loop  identifier(*)  value(*)  stop
-
-Context-sensitive rules:
-
- - no duplicate identifiers in loops
- - number of values in a loop must be an integer multiple of the number of identifiers
- - no duplicate identifiers in save frames
- - no duplicate save frame names in data blocks

@@ -1,6 +1,6 @@
 ## NMRPyStar ##
 
-A library for parsing data in NMR-Star format, used
+A library for parsing data in NMR-STAR format, used
 by the BMRB for NMR (Nuclear Magnetic Resonance) data
 archival.
 
@@ -24,7 +24,7 @@ manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
 ### Quick Start ###
 
 You've already got NMRPyStar installed and importable?  Great!
-It's easy to start parsing NMR-Star files:
+It's easy to start parsing NMR-STAR files:
 
     import nmrpystar
     
@@ -48,17 +48,17 @@ with other Python versions, I haven't tried that.
 ### Motivation ###
 
 Why is this project necessary?  After all, many people have already written
-working NMR-Star parsers.
+working NMR-STAR parsers.
 
 However, not all parsers -- even of the same format -- are identical.  Here
 are some of the important characteristics that determine how nice, easy, etc.
 it is to use a parser:
 
- - what language the parser actually accepts.  Some NMR-Star parsers accept
-   malformed files, or fail on perfectly acceptable NMR-Star files.  
+ - what language the parser actually accepts.  Some NMR-STAR parsers accept
+   malformed files, or fail on perfectly acceptable NMR-STAR files.  
    
-   This project aims to: 1) accurately parse all valid NMR-Star input, 
-   and 2) accurately recognize and report all invalid NMR-Star input.
+   This project aims to: 1) accurately parse all valid NMR-STAR input, 
+   and 2) accurately recognize and report all invalid NMR-STAR input.
    
    This is done using a grammar to define the syntax, from which a parser is
    generated.  Although the grammar is believed to be correct, it's always
@@ -84,7 +84,7 @@ it is to use a parser:
    as a library?
    
    This parser is designed to be used as a library -- simply import it, hand it
-   your NMR-Star input, and set it loose!
+   your NMR-STAR input, and set it loose!
  
  - modularity and flexibility -- can the parser operate on stdin and stdout? Can
    it parse content pulled from a web page?  Can it parse multiple files at once?
@@ -102,7 +102,7 @@ it is to use a parser:
 
 
 
-## NMR-Star Grammar ##
+## NMR-STAR Grammar ##
 
 Derived from the Spaddaccini and Hall papers describing the Star format, 
 and with thanks to Dmitri Maziuk for his pointers.
@@ -176,11 +176,24 @@ are capitalized, while token names are all lowercase:
 
 Context-sensitive rules:
 
- - no repeated identifiers in loops
- - no repeated identifiers in save frames
- - no duplicate save frame names
- - number of values in a loop must be an integer multiple
-   of the number of keys
+ - Loops
+   - prefix of all keys must be identical
+   - no duplicate keys
+   - number of values must be integer multiple of the number of keys
+ - Save frames
+   - no duplicate keys
+   - have an `_<prefix>.Sf_framecode` key, value matches the save frame name
+   - have an `_<prefix>.Sf_category` key, value is a link to the NMR-STAR data dictionary
+   - no duplicate loops, based on the loop prefixes
+ - Data
+   - no duplicate save frame names
+
+Questionable (as in not sure if these are actually enforced) rules:
+ - Save frames
+   - if there's a `_<prefix>.ID` key, it must appear in each loop table within the
+     save frame, under the key `_<loop-prefix>.<prefix>_ID` and the same value
+ - General
+   - `_<prefix>.Entry_ID` must appear in every Save frame and every loop, with the same value
 
 
 
