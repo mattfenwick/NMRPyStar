@@ -50,23 +50,17 @@ with other Python versions, I haven't tried that.
 Why is this project necessary?  After all, many people have already written
 working NMR-STAR parsers.
 
-However, not all parsers -- even of the same format -- are identical.  Here
-are some of the important characteristics that determine how nice, easy, etc.
-it is to use a parser:
+However, not all parsers of the same format are identical.  Here are some
+important characteristics, which vary from parser to parser:
 
- - what language the parser actually accepts.  Some NMR-STAR parsers accept
-   malformed files, or fail on perfectly acceptable NMR-STAR files.  
+ - what language the parser actually accepts.  Some parsers are more lenient,
+   accepting some malformed input; others may reject perfectly valid input.  
    
    This project aims to: 1) accurately parse all valid NMR-STAR input, 
    and 2) accurately recognize and report all invalid NMR-STAR input.
    
-   This is done using a grammar to define the syntax, from which a parser is
-   generated.  Although the grammar is believed to be correct, it's always
-   possible that there are mistakes -- feel free to contact me if you find one, 
-   I will be happy to make any corrections.
-
  - what the parse result is.  What access does the user have to the parsed result?
-   What, if any, information is missing from the result?
+   What information is included in the result?
    
    The output of this parser is a parse tree representing the structure of the
    input, including data blocks, save frames, loops, and key-value pairs.  The
@@ -75,8 +69,9 @@ it is to use a parser:
 
  - error reporting:  how, when, and with what context information
  
-   Accurately reporting where and why input is malformed is a key aspect of a
-   parser that's nice to use.  Arguably, error reporting should be part of a 
+   Accurately reporting where and why makes it easier to locate and fix errors.
+
+   Arguably, error reporting should be part of a 
    format specification -- this parser does its best to report errors, but it's
    not always clear how an error should be reported.  Suggestions welcome!
 
@@ -104,8 +99,13 @@ it is to use a parser:
 
 ## NMR-STAR Grammar ##
 
+
 Derived from the Spaddaccini and Hall papers describing the Star format, 
 and with thanks to Dmitri Maziuk for his pointers.
+
+The following grammar is used to generate a parser.  Although I believe that 
+it is correct, if you find a mistake please contact me, I am always happy to 
+make corrections.
 
 Tokens:
 
