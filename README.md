@@ -59,7 +59,7 @@ Why is this project necessary?  After all, many people have already written
 working NMR-STAR parsers.
 
 However, not all parsers of the same format are identical.  Here are some
-important characteristics, which vary from parser to parser:
+important characteristics of parsers:
 
  - what language the parser actually accepts.  Some parsers are more lenient,
    accepting some malformed input; others may reject perfectly valid input.  
