@@ -21,6 +21,14 @@ manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
 
 
 
+### Uninstallation ###
+
+If it was installed with `pip`, it can be easily uninstalled:
+
+    $ pip uninstall nmrpystar
+
+
+
 ### Quick Start ###
 
 You've already got NMRPyStar installed and importable?  Great!
