@@ -232,3 +232,11 @@ Parser Combinators: a Practical Application for Generating Parsers for NMR Data
 Found a bug?  Need help figuring something out?  Want a new feature?  Feel free
 to report anything using the github issue tracker, or email me directly at
 mfenwick100 at gmail dot com
+
+### How to cut a release
+
+ - update version strings
+ - `python3 -m pip install --user --upgrade setuptools wheel`
+ - `python3 setup.py sdist bdist_wheel`
+ - `pip3 install twine`
+ - `twine upload dist/*`
