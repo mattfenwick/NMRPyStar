@@ -235,6 +235,8 @@ mfenwick100 at gmail dot com
 
 ### How to cut a release
 
+See [here](https://towardsdatascience.com/publishing-your-own-python-package-3762f0d268ec) for instructions:
+
  - update version strings
  - `python3 -m pip install --user --upgrade setuptools wheel`
  - `python3 setup.py sdist bdist_wheel`
