@@ -13,7 +13,9 @@ some awesome science done!
 
 The easiest way to install NMRPyStar is using pip:
 
-    $ pip install nmrpystar
+```bash
+pip3 install nmrpystar
+```
 
 If you don't have pip or easy_install, you can download the package
 manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
@@ -24,8 +26,9 @@ manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
 
 If it was installed with `pip`, it can be easily uninstalled:
 
-    $ pip uninstall nmrpystar
-
+```bash
+$ pip3 uninstall nmrpystar
+```
 
 
 ### Quick Start ###
@@ -33,20 +36,23 @@ If it was installed with `pip`, it can be easily uninstalled:
 
 It's easy to start parsing NMR-STAR files:
 
-    import nmrpystar
-    
-    myString = ...read a file/url/stdin/string...
-    
-    parsed = nmrpystar.parse(myString)
-    if parsed.status == 'success':
-        print 'it worked!!  ', parsed.value
-    else:
-        print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+```python
+import nmrpystar
+
+myString = ...read a file/url/stdin/string...
+
+parsed = nmrpystar.parse(myString)
+if parsed.status == 'success':
+    print 'it worked!!  ', parsed.value
+else:
+    print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+```
 
 Or try out one of the examples:
 
-    ./integration-tests.sh
-
+```bash
+./integration-tests.sh
+```
 
 ### Running the tests
 
@@ -59,7 +65,6 @@ python3 -m unittest
 
 This library was created for use with Python3.  I'm working on making it compatible
 with Python2 as well.
-
 
 
 ### Motivation ###
