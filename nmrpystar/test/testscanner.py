@@ -131,3 +131,7 @@ class TestErrors(u.TestCase):
         inp = '_ abc'
         output = m.error([('identifier', (1,1)), ('expected non-whitespace', (1,2))])
         self.assertEqual(run(token, inp), output)
+
+
+if __name__ == "__main__":
+    u.main()

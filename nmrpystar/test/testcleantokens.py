@@ -54,3 +54,6 @@ class TestCleanTokens(u.TestCase):
         self.assertEqual(token('value', None, value='123'),
                          clean_token(dict(_name='dqstring', _state=None, 
                                           open='"', close='"', value=list('123'))))
+
+if __name__ == "__main__":
+    u.main()

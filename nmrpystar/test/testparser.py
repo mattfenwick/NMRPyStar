@@ -62,3 +62,7 @@ class TestParserErrors(u.TestCase):
         self.assertEqual(parse_nmrstar_ast("what is this junk?  this isn't nmr-star"), 
                          bad({'phase': 'CST construction',
                               'message': [('data block', (1,1))]}))
+
+
+if __name__ == "__main__":
+    u.main()

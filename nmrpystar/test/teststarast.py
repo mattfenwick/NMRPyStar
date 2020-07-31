@@ -161,3 +161,7 @@ class TestErrors(u.TestCase):
                                        node('datum', 28, key=id1, value=val1)])])
         self.assertEqual(buildData(cst), bad(message='duplicate key', nodetype='save',
                                                key='matt', first=(81,3), second=(6,6)))
+
+
+if __name__ == "__main__":
+    u.main()

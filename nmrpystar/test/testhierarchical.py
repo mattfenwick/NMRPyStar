@@ -152,3 +152,7 @@ class TestErrors(u.TestCase):
         inp = [save_o, loop, stop, save_c]
         output = m.error([('data block', 1)])
         self.assertEqual(run(p.nmrstar, inp), output)
+
+
+if __name__ == "__main__":
+    u.main()
