@@ -1,4 +1,4 @@
-from ...examples import loading
+from nmrpystar.examples import loading
 import unittest
 
 
@@ -14,7 +14,7 @@ class TestLoading(unittest.TestCase):
 
     def testFromFile(self):
         z = loading.parseFile('examples/bmrb17661.txt')
-        print z.value
+        print(z.value)
         self.assertEqual(z.status, 'success')
         # no point in continuing with the tests if the parsing failed!
         data = z.value[1]

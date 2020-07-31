@@ -1,2 +1,2 @@
-from .loading import *
-from .queries import *
+from nmrpystar.examples.loading import *
+from nmrpystar.examples.queries import *

@@ -1,6 +1,6 @@
 import cProfile
 import pstats
-from . import loading
+from nmrpystar.examples import loading
 
 
 def parseFile(path):

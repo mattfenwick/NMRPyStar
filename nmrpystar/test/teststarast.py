@@ -1,8 +1,8 @@
+from nmrpystar.starast import Loop, Save, Data, buildLoop, buildSave, buildData, concreteToAST
+from nmrpystar.cleantokens import token
+from nmrpystar.unparse import maybeerror as me
+from nmrpystar.test.testhierarchical import loop, stop, id1, id2, val1, val2, data_o, save_o, save_c, node
 import unittest as u
-from ..starast import Loop, Save, Data, buildLoop, buildSave, buildData, concreteToAST
-from ..cleantokens import token
-from ..unparse import maybeerror as me
-from .testhierarchical import loop, stop, id1, id2, val1, val2, data_o, save_o, save_c, node
 
 
 
@@ -39,7 +39,7 @@ class TestAST(u.TestCase):
     def testData(self):
         myData = Data('abc', {'s1': Save({'x': 'y'}, [])})
         self.assertEqual(myData.name, 'abc')
-        self.assertEqual(myData.saves['s1'].datums.keys(), ['x'])
+        self.assertEqual(list(myData.saves['s1'].datums.keys()), ['x'])
         
     def testDataExceptions(self):
         self.assertRaises(TypeError, Data, 'abc', [])

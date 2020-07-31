@@ -1,4 +1,4 @@
-from .unparse.maybeerror import MaybeError
+from nmrpystar.unparse.maybeerror import MaybeError
 
 
 class StarBase(object):
@@ -131,7 +131,7 @@ def buildSave(save):
 
     for d in save['datums']:
         key, value = d['key']['value'], d['value']['value']
-        if datums.has_key(key):
+        if key in datums:
             return bad(nodetype='save', message='duplicate key',
                        key=key, first=key_check[key], second=d['key']['pos'])
         datums[key] = value

@@ -1,6 +1,6 @@
-from ..parser import parse_cst, parse_star_ast, parse_nmrstar_ast
-from ..unparse import maybeerror
-from ..starast import Data, Save, Loop
+from nmrpystar.parser import parse_star_ast, parse_nmrstar_ast
+from nmrpystar.unparse import maybeerror
+from nmrpystar.starast import Data, Save, Loop
 import unittest as u
 
 

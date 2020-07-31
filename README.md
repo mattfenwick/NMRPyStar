@@ -9,7 +9,6 @@ feel free to use the code in any way that helps you get
 some awesome science done!
  
 
-
 ### Installation ###
 
 The easiest way to install NMRPyStar is using pip:
@@ -31,7 +30,7 @@ If it was installed with `pip`, it can be easily uninstalled:
 
 ### Quick Start ###
 
-You've already got NMRPyStar installed and importable?  Great!
+
 It's easy to start parsing NMR-STAR files:
 
     import nmrpystar
@@ -44,12 +43,22 @@ It's easy to start parsing NMR-STAR files:
     else:
         print 'uh-oh, there was a problem with the string I gave it ... ', parsed
 
+Or try out one of the examples:
+
+    ./integration-tests.sh
+
+
+### Running the tests
+
+```bash
+python3 -m unittest
+```
 
 
 ### Python version ###
 
-This library was created for use with Python2.7.  Although it may work
-with other Python versions, I haven't tried that.
+This library was created for use with Python3.  I'm working on making it compatible
+with Python2 as well.
 
 
 

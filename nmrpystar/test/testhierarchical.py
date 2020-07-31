@@ -1,7 +1,7 @@
-from .. import hierarchical as p
-from ..cleantokens import token
-from ..unparse import maybeerror as me
-from ..unparse import combinators
+from nmrpystar import hierarchical as p
+from nmrpystar.cleantokens import token
+from nmrpystar.unparse import maybeerror as me
+from nmrpystar.unparse import combinators
 import unittest as u
 
 

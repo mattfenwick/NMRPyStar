@@ -1,6 +1,6 @@
-from .. import scanner
-from ..unparse import maybeerror as me
-from ..unparse import combinators
+from nmrpystar import scanner
+from nmrpystar.unparse import maybeerror as me
+from nmrpystar.unparse import combinators
 import unittest as u
 
 
@@ -58,7 +58,7 @@ class TestScanner(u.TestCase):
             ['data_   not',        5, 'uq: data_'                 ]
         ]
         for (inp, num, message) in cases:
-            print message
+            print(message)
             self.assertEqual(run(token, inp),
                              good(l(inp[num:]), (1, 1+num),
                                   node('unquoted', (1, 1), first=inp[0], rest=list(inp[1:num]))))
@@ -72,7 +72,7 @@ class TestScanner(u.TestCase):
         for (inp, num, pos2, value, message) in cases:
             output = good(l(inp[num:]), pos2, 
                           node('sqstring', (1,1), open="'", close="'", value=list(value)))
-            print message
+            print(message)
             self.assertEqual(run(token, inp), output)
     
     def testDqString(self):
@@ -84,7 +84,7 @@ class TestScanner(u.TestCase):
         for (inp, num, pos2, value, message) in cases:
             output = good(l(inp[num:]), pos2, 
                           node('dqstring', (1,1), open='"', close='"', value=list(value)))
-            print message
+            print(message)
             self.assertEqual(run(token, inp), output)
     
     def testScString(self):
@@ -96,7 +96,7 @@ class TestScanner(u.TestCase):
         for (inp, num, pos0, pos1, pos2, value, message) in cases:
             output = good(l(inp[num:]), pos2, 
                           node('scstring', pos1, value=list(value), open=';', close=list('\n;')))
-            print message
+            print(message)
             self.assertEqual(run(token, inp, pos0), output)
     
     def testUnquotedLeadingSemicolon(self):
@@ -123,7 +123,7 @@ class TestErrors(u.TestCase):
             [';abc 123\na;'  , [('scstring', (1, 1)), ('newline-semicolon', (2, 3))]]
         ]
         for (s, stack) in cases:
-            print stack
+            print(stack)
             output = m.error(stack)
             self.assertEqual(run(token, s), output)
     
