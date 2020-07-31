@@ -49,13 +49,13 @@ def from_stdin():
     if result.status == 'success':
         return query(result.value)
 
-mode = sys.argv[1]
-if mode == 'url':
-    from_url()
-elif mode == 'file':
-    from_file()
-elif mode == 'stdin':
-    from_stdin()
-else:
-    raise ValueError('invalid mode -- %s' % mode)
-
+if __name__ == "__main__":
+    mode = sys.argv[1]
+    if mode == 'url':
+        from_url()
+    elif mode == 'file':
+        from_file()
+    elif mode == 'stdin':
+        from_stdin()
+    else:
+        raise ValueError('invalid mode -- %s' % mode)
