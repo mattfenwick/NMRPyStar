@@ -1,4 +1,4 @@
-from ..cleantokens import clean_token, token
+from nmrpystar.cleantokens import clean_token, token
 import unittest as u
 
 
@@ -25,7 +25,7 @@ class TestCleanTokens(u.TestCase):
         ]
         for (inp, name, my_type, value, message) in cases:
             res = clean_token({'_name': 'unquoted', '_state': None, 'first': inp[0], 'rest': list(inp[1:])})
-            print message, res
+            print(message, res)
             if name == 'reserved':
                 if my_type in ['save open', 'data open']:
                     self.assertEqual(token('reserved', None, keyword=my_type, value=value), res)
@@ -54,3 +54,6 @@ class TestCleanTokens(u.TestCase):
         self.assertEqual(token('value', None, value='123'),
                          clean_token(dict(_name='dqstring', _state=None, 
                                           open='"', close='"', value=list('123'))))
+
+if __name__ == "__main__":
+    u.main()

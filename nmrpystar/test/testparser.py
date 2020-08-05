@@ -1,6 +1,6 @@
-from ..parser import parse_cst, parse_star_ast, parse_nmrstar_ast
-from ..unparse import maybeerror
-from ..starast import Data, Save, Loop
+from nmrpystar.parser import parse_star_ast, parse_nmrstar_ast
+from nmrpystar.unparse import maybeerror
+from nmrpystar.starast import Data, Save, Loop
 import unittest as u
 
 
@@ -62,3 +62,7 @@ class TestParserErrors(u.TestCase):
         self.assertEqual(parse_nmrstar_ast("what is this junk?  this isn't nmr-star"), 
                          bad({'phase': 'CST construction',
                               'message': [('data block', (1,1))]}))
+
+
+if __name__ == "__main__":
+    u.main()

@@ -1,9 +1,16 @@
 '''
 @author: matt
 '''
-from .combinators import (bind, getState, commit, mapError,
-                          app,  many0,    seq2R,  optional, 
-                          seq, fmap)
+from nmrpystar.unparse.combinators import (
+    bind,
+    getState,
+    commit,
+    mapError,
+    app,
+    many0,
+    optional,
+    seq,
+    fmap)
 
 
 def cut(message, parser):
@@ -28,7 +35,7 @@ def node(name, *pairs):
     3. grabs state at which parsers started
     4. adds an error frame
     """
-    names = map(lambda x: x[0], pairs)
+    names = [x[0] for x in pairs]
     if len(names) != len(set(names)):
         raise ValueError('duplicate names')
     if '_name' in names:

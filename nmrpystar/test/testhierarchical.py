@@ -1,7 +1,7 @@
-from .. import hierarchical as p
-from ..cleantokens import token
-from ..unparse import maybeerror as me
-from ..unparse import combinators
+from nmrpystar import hierarchical as p
+from nmrpystar.cleantokens import token
+from nmrpystar.unparse import maybeerror as me
+from nmrpystar.unparse import combinators
 import unittest as u
 
 
@@ -152,3 +152,7 @@ class TestErrors(u.TestCase):
         inp = [save_o, loop, stop, save_c]
         output = m.error([('data block', 1)])
         self.assertEqual(run(p.nmrstar, inp), output)
+
+
+if __name__ == "__main__":
+    u.main()

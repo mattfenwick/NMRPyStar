@@ -9,12 +9,13 @@ feel free to use the code in any way that helps you get
 some awesome science done!
  
 
-
 ### Installation ###
 
 The easiest way to install NMRPyStar is using pip:
 
-    $ pip install nmrpystar
+```bash
+pip3 install nmrpystar
+```
 
 If you don't have pip or easy_install, you can download the package
 manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
@@ -25,32 +26,45 @@ manually from [the pypi page](https://pypi.python.org/pypi/NMRPyStar).
 
 If it was installed with `pip`, it can be easily uninstalled:
 
-    $ pip uninstall nmrpystar
-
+```bash
+$ pip3 uninstall nmrpystar
+```
 
 
 ### Quick Start ###
 
-You've already got NMRPyStar installed and importable?  Great!
+
 It's easy to start parsing NMR-STAR files:
 
-    import nmrpystar
-    
-    myString = ...read a file/url/stdin/string...
-    
-    parsed = nmrpystar.parse(myString)
-    if parsed.status == 'success':
-        print 'it worked!!  ', parsed.value
-    else:
-        print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+```python
+import nmrpystar
 
+myString = ...read a file/url/stdin/string...
+
+parsed = nmrpystar.parse(myString)
+if parsed.status == 'success':
+    print 'it worked!!  ', parsed.value
+else:
+    print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+```
+
+Or try out one of the examples:
+
+```bash
+./integration-tests.sh
+```
+
+### Running the tests
+
+```bash
+python3 -m unittest
+```
 
 
 ### Python version ###
 
-This library was created for use with Python2.7.  Although it may work
-with other Python versions, I haven't tried that.
-
+This library was created for use with Python3.  I'm working on making it compatible
+with Python2 as well.
 
 
 ### Motivation ###
@@ -223,3 +237,13 @@ Parser Combinators: a Practical Application for Generating Parsers for NMR Data
 Found a bug?  Need help figuring something out?  Want a new feature?  Feel free
 to report anything using the github issue tracker, or email me directly at
 mfenwick100 at gmail dot com
+
+### How to cut a release
+
+See [here](https://towardsdatascience.com/publishing-your-own-python-package-3762f0d268ec) for instructions:
+
+ - update version strings
+ - `python3 -m pip install --user --upgrade setuptools wheel`
+ - `python3 setup.py sdist bdist_wheel`
+ - `pip3 install twine`
+ - `twine upload dist/*`

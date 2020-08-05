@@ -1,4 +1,4 @@
-from .maybeerror import MaybeError as M
+from nmrpystar.unparse.maybeerror import MaybeError as M
 
 
 

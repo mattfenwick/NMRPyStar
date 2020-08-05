@@ -1,5 +1,5 @@
-from .unparse.combinators  import (many0,  seq2L,  count,  not0)
-from .unparse.cst          import (node, cut)
+from nmrpystar.unparse.combinators  import (many0,  seq2L,  count,  not0)
+from nmrpystar.unparse.cst          import (node, cut)
 
 
 (item, satisfy) = (count.item, count.satisfy)

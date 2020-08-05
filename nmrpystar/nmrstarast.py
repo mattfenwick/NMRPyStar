@@ -1,6 +1,5 @@
-from . import starast
-from .unparse.maybeerror import MaybeError
-from collections import Counter
+from nmrpystar import starast
+from nmrpystar.unparse.maybeerror import MaybeError
 
 
 class Loop(starast.StarBase):
@@ -191,5 +190,5 @@ def build_nmrstar_ast(data):
         raise TypeError(("expected starast.Data node", data))
     try:
         return MaybeError.pure(build_data(data))
-    except ASTError, e:
+    except ASTError as e:
         return MaybeError.error(e.error)

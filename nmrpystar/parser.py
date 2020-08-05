@@ -1,10 +1,10 @@
-from .scanner import tokenizer
-from .cleantokens import clean_token
-from .hierarchical import nmrstar
-from .starast import concreteToAST
-from .nmrstarast import build_nmrstar_ast
-from .unparse.combinators import run
-from .unparse.maybeerror import MaybeError
+from nmrpystar.scanner import tokenizer
+from nmrpystar.cleantokens import clean_token
+from nmrpystar.hierarchical import nmrstar
+from nmrpystar.starast import concreteToAST
+from nmrpystar.nmrstarast import build_nmrstar_ast
+from nmrpystar.unparse.combinators import run
+from nmrpystar.unparse.maybeerror import MaybeError
 
 
 def _error(**kwargs):
@@ -65,7 +65,7 @@ def parse_cst(string, f_token=token_handler, f_parser=parser_handler):
     # part 2
     tokens = [t for t in tokenized.value['result'] if t['_name'] not in ['whitespace', 'comment']]
     # part 3
-    cleaned = map(clean_token, tokens)
+    cleaned = [clean_token(t) for t in tokens]
     # part 4
     cst = run(nmrstar, cleaned, _FIRST_TOKEN_INDEX)
     if cst.status != 'success':

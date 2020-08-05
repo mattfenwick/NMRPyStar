@@ -1,5 +1,5 @@
-from .. import parser
-import urllib2
+from nmrpystar import parser
+import urllib.request
 import sys
 import json
 
@@ -40,7 +40,7 @@ def parseFile(path):
 
 def parseUrl(myUrl='http://rest.bmrb.wisc.edu/bmrb/NMR-STAR3/248'): # this is the url of an NMR-Star3 file
     #url2 = 'http://rest.bmrb.wisc.edu/bmrb/NMR-STAR2/248'
-    page = urllib2.urlopen(myUrl)
+    page = urllib.request.urlopen(myUrl)
     inputStr = page.read()
     page.close()
     return withInput(inputStr)
@@ -52,4 +52,4 @@ def parseStdin():
 
 
 if __name__ == "__main__":
-    print json.dumps(parseStdin()[1].toJSONObject())
+    print(json.dumps(parseStdin()[1].toJSONObject()))

@@ -1,5 +1,5 @@
-from .maybeerror import MaybeError
-from .combinators import *
+from nmrpystar.unparse.maybeerror import MaybeError
+from nmrpystar.unparse.combinators import *
 
 
 

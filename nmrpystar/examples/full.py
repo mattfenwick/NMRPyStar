@@ -1,15 +1,13 @@
-from .. import parser
-import json
-import urllib2
+from nmrpystar import parser
+from urllib import request
 import numpy
 import sys
 
 
 def parseUrl(url):
-    page = urllib2.urlopen(url)
-    inputStr = page.read()
-    page.close()
-    return parser.parse_nmrstar_ast(inputStr)
+    with request.urlopen(url) as page:
+        inputStr = page.read().decode('utf-8')
+        return parser.parse_nmrstar_ast(inputStr)
 
 def parseFile(path):
     with open(path, 'r') as my_file:
@@ -33,7 +31,7 @@ def query(model):
     many = [(k, (len(v), numpy.std(v))) for (k, v) in shifts.items()]
     devs = filter(lambda x: x[1][0] > 1, sorted(many, key=lambda x: x[0]))
     for result in sorted(devs, key=lambda x: (x[0][1], x[1][1])):
-        print result
+        print(result)
     return None
 
 def from_url():
@@ -51,13 +49,13 @@ def from_stdin():
     if result.status == 'success':
         return query(result.value)
 
-mode = sys.argv[1]
-if mode == 'url':
-    from_url()
-elif mode == 'file':
-    from_file()
-elif mode == 'stdin':
-    from_stdin()
-else:
-    raise ValueError('invalid mode -- %s' % mode)
-
+if __name__ == "__main__":
+    mode = sys.argv[1]
+    if mode == 'url':
+        from_url()
+    elif mode == 'file':
+        from_file()
+    elif mode == 'stdin':
+        from_stdin()
+    else:
+        raise ValueError('invalid mode -- %s' % mode)
