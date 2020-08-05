@@ -39,13 +39,22 @@ It's easy to start parsing NMR-STAR files:
 ```python
 import nmrpystar
 
-myString = ...read a file/url/stdin/string...
+# read and parse data from STAR-NMR file
+with open("examples/bmrb17661.txt") as str_file:
+    str_string = str_file.read()
+    parsed = nmrpystar.parse_nmrstar_ast(str_string)
 
-parsed = nmrpystar.parse(myString)
-if parsed.status == 'success':
-    print 'it worked!!  ', parsed.value
-else:
-    print 'uh-oh, there was a problem with the string I gave it ... ', parsed
+# get chemical shifts frame data
+chemShiftSave = parsed.value.saves["assigned_chem_shift_list_1"]
+loopShifts = chemShiftSave.loops['Atom_chem_shift']
+
+# loop through chemical shifts frame data
+for entry in range(len(loopShifts.rows)):
+    row = loopShifts.getRowAsDict(entry)
+    key = (row['Comp_ID'], row['Atom_ID'], row['Val'])
+
+    # process / show 
+    print(key)
 ```
 
 Or try out one of the examples:
